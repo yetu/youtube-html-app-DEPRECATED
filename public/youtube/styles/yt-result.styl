@@ -1,0 +1,131 @@
+.yt-result-list{
+  list-style: none;
+  list-style-position: outside;
+  padding: 0;
+  margin: 20px 0;
+}
+.yt-result-list-item{
+  margin: 20px 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  .yt-result-list-item--video{
+    display:none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: rgba(255,255,255,0.5);
+    top: 0;
+    &.visible{
+      display:block;
+    }
+  }
+  .yt-result-list-item--player{
+    width: 80%;
+    height: 600px;
+    position: absolute;
+    z-index: 2000;
+    left: 9%;
+    top: 10%;
+  }
+  .yt-result-list-item--close{
+    position: absolute;
+    top: 9%;
+    left: 87%;
+    background: #c4110b;
+    border-radius: 20px;
+    width: 10px;
+    height: 25px;
+    color: white;
+    padding: 5px 12.5px 5px 12.5px;
+    font-size: 20px;
+    z-index: 2001;
+    cursor: pointer;
+    &:hover{
+      cursor: pointer;
+      background: #333;
+    }
+  }
+
+  .yt-result-list-item--img{
+    float:left;
+    height: 110px;
+  }
+  .yt-result-list-item--playimg{
+    margin: 30px 0 0 -126px;
+    height: 50px;
+    opacity: 0.8;
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+    &:hover{
+      cursor: pointer;
+      opacity: 1.0;
+    }
+  }
+  .yt-result-list-item--rightContent{
+    height: 100px;
+    padding: 5px 10px;
+    margin-left: 196px;
+    margin-right: 130px;
+  }
+  .yt-result-list-item--title{
+    color: #C4110B;
+    padding: 0;
+    margin: 0;
+    font-size: 24px;
+    font-weight: lighter;
+    font-family: source_sans_prolight;
+    .yt-result-list-item--title-container{
+      padding:0;
+      margin: 0;
+      height: 30px;
+    }
+  }
+
+  .yt-result-list-item--subtitle{
+    padding: 0;
+    margin: 5px 0;
+  }
+  .yt-result-list-item--description{
+    padding: 0;
+    margin: 5px 0;
+  }
+  .yt-result-list-item--buttons{
+    float: right;
+    width: 120px;
+    margin-top: -50px;
+    .yt-result-list-item--button{
+      font-family: source_sans_prolight;
+      font-size: 20px;
+      display: block;
+      width: 120px;
+      padding: 5px;
+      background: #C4110B;
+      border: 0;
+      outline: 0;
+      color: #fff;
+    }
+    .yt-result-list-item--button:hover{
+      cursor: pointer;
+      background: #333;
+    }
+  }
+}
+
+.yt-send-overlay{
+  background: rgba(144,144,144,0.9);
+  padding: 0px 20px;
+  position: fixed;
+  left: 35%;
+  top: 15%;
+  color: #fff;
+  display:none;
+  width: 300px;
+}
+
+.yt-send-overlay.visible{
+  display:block;
+}

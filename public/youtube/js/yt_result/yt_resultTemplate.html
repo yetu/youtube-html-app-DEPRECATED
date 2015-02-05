@@ -1,0 +1,20 @@
+<div>
+<div class="yt-send-overlay" ng-class="{visible: sendOverlay}">
+  <p ng-if="playListSended==='YES'">
+    YouTube Playlist "{{playListName}}" is now available on your TV!
+  </p>
+  <p ng-if="playListSended==='ERROR'">
+    YouTube Playlist "{{playListName}}" could not be sent to your TV!
+  </p>
+  <p ng-if="playListSended===401">
+    You are not allowed to send the YouTube Playlist "{{playListName}}" to TV!
+  </p>
+</div>
+<ul class="yt-result-list">
+  <yt-result-item ng-repeat="resultList in resultLists">‚
+  </yt-result-item>
+  <div ng-if="resultListsState==='empty'">
+    No results found.
+  </div>
+</ul>
+</div>

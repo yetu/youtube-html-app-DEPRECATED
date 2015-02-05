@@ -4,11 +4,15 @@ import javax.inject.Inject
 
 import com.mohiva.play.silhouette.api.{Environment, LogoutEvent, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
-import models.User
-import play.api.mvc.Results._
+import models.{InboxMessage, Payload, User}
 import utils.di.YetuProvider
 
 import scala.concurrent.Future
+import play.api.libs.json.{Json, JsValue}
+import play.api.libs.ws.{WSResponse, WS}
+import play.api.Play.current
+import play.api.mvc.Action
+import utils.di.ConfigLoader.Youtube
 
 /**
  * The basic application controller.
@@ -24,7 +28,15 @@ class ApplicationController @Inject() (implicit val env: Environment[User, Sessi
    * @return The result to display.
    */
   def index = SecuredAction.async { implicit request =>
-    Future.successful(Ok(views.html.home(request.identity)))
+    Future.successful(Ok(views.html.youtube(Youtube.devToken)))
+  }
+
+  /**
+   *
+   */
+  def playlist = SecuredAction(parse.json){  implicit request =>
+    request.body
+    NoContent
   }
 
   /**
@@ -51,3 +63,18 @@ class ApplicationController @Inject() (implicit val env: Environment[User, Sessi
     request.authenticator.discard(result)
   }
 }
+
+object InboxService {
+  def sendToInbox(data:JsValue, accessToken:String): Future[WSResponse] = {
+    val url = "http://inbox.yetu.me/publish"
+    val timeToLive = 10000L
+    val timestamp = 1000L
+    val event = "transferPlaylist"
+    val payload = Payload(timeToLive, timestamp, data, event)
+    val message: InboxMessage = InboxMessage(accessToken, payload)
+
+    val jsonMessage: JsValue = Json.toJson(message)
+    WS.url(url).post(jsonMessage)
+  }
+}
+

@@ -10,4 +10,8 @@ object ConfigLoader {
     val profileUrl = config.getString("silhouette.yetu.profileURL")
   }
 
+  object Youtube {
+    val devToken = config.getString("youtube.devToken")
+  }
+
 }

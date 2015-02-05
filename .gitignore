@@ -14,3 +14,6 @@ dist
 /RUNNING_PID
 /.settings
 /bin
+public/node_modules
+public/bower_components
+conf/application.conf
