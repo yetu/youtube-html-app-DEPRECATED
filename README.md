@@ -25,7 +25,12 @@ These configuration values are best overridden in a new file under `conf/applica
 
 ### If you are an internal yetu employee:
 
-You can get these configuration values from this [private repository](https://bitbucket.org/yetu/apphome-youtube-html-app-deployment)
+You can get these configuration values from this [private repository](https://bitbucket.org/yetu/apphome-youtube-html-app-deployment):
+
+```
+git clone git@bitbucket.org:yetu/apphome-youtube-html-app-deployment.git
+cp apphome-youtube-html-app-deployment/application-local.conf conf/application.conf
+```
 
 ### If you are not internal yetu employee:
 
