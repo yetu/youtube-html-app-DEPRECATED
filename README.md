@@ -6,7 +6,15 @@ This sole purpose of this application is to show how :
 
 Most of the scala code that is used in this project are from Activator template which shows how [Silhouette](https://github.com/mohiva/play-silhouette)  can be implemented in a Play Framework
 
-## Try out the application locally:
+
+## Set up:
+
+### sbt (TODO)
+- npm (TODO)
+- bower (TODO)
+- gulp build
+
+## Local configuration:
 
 In order to get the application to function, you need to provide:
 
