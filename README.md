@@ -6,6 +6,9 @@ This sole purpose of this application is to show how :
 
 Most of the scala code that is used in this project are from Activator template which shows how [Silhouette](https://github.com/mohiva/play-silhouette)  can be implemented in a Play Framework
 
+## Warning:
+
+**This is work in progress and not yet production ready, please check back in a few days until this notice is gone before using this project as a starting point for your own yetu-compatible app.**
 
 ## Set up:
 
