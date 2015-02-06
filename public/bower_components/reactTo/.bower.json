@@ -1,0 +1,33 @@
+{
+  "name": "angular-react-to",
+  "version": "1.0.0",
+  "authors": [
+    "Mr_Mig <alexey.migutsky@gmail.com>"
+  ],
+  "description": "reactTo function to use instead of scope.$watch",
+  "main": "reactTo.js",
+  "keywords": [
+    "angular",
+    "react",
+    "watch"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "homepage": "https://github.com/mr-mig/angular-react-to",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "d6b2354e63062274cee2bf50f643e3edfbe5cd57"
+  },
+  "_source": "git://github.com/mr-mig/angular-react-to.git",
+  "_target": "1.0",
+  "_originalSource": "mr-mig/angular-react-to"
+}
