@@ -1,1 +1,0 @@
-var token = "AIzaSyANgf63XOJjLmaVcqMMm36biuCs6fjN6wY"
