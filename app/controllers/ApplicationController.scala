@@ -33,7 +33,7 @@ class ApplicationController @Inject()(oauth2Dao: OAuth2InfoDAO) (implicit val en
    *
    */
   def index = SecuredAction.async { implicit request =>
-    Future.successful(Ok(views.html.youtube(Youtube.devToken)))
+    Future.successful(Ok(views.html.youtube_producer(Youtube.devToken)))
   }
 
 

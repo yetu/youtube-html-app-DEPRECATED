@@ -40,6 +40,6 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "gulp test"
+    "build-youtube-producer": "cd youtube_producer && gulp build"
   }
 }

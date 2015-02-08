@@ -6,8 +6,8 @@
 	    "category": [
         "Entertainment", "yetu", "Web TV"
     ],
-	"url": "http://apps.yetu.me/tiles/apps/youtube/index.html",
-	"logo": "http://apps.yetu.me/tiles/apps/youtube/logo.svg",
+	"url": "http://apps.yetu.me:7575",
+	"logo": "http://apps.yetu.me:7575/assets/appMetaData/assets/logo.svg",
 	"controls": {
 		"form": {
 			"action": "open_app_view",

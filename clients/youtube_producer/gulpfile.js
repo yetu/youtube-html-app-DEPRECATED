@@ -7,7 +7,5 @@
 // the .gulpfile dir is the default base path
 var gulp = require('./gulp')();
 
-//TODO: fix tests
 // define high-level tasks here
-gulp.task('build', ['build-scripts', 'copy-assets','build-style']);
-gulp.task('watch', [ 'dev-scripts', 'dev-style', 'copy-assets','build-style','watcher']); // 'tdd'
+gulp.task('build', ['build-scripts', 'copy-assets', 'copy-main-html', 'build-style']);
