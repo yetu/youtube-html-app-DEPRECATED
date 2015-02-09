@@ -50,10 +50,10 @@ var fonts = {
 
 var views = {
     build: {
-        src: 'youtube_producer.scala.html',
+        src: '*.scala.html',
         dest: distViews('/')
     },
-    watch: 'youtube_producer.scala.html'
+    watch: '*.scala.html'
 };
 
 var img = {
