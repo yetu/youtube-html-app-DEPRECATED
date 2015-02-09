@@ -1,3 +1,5 @@
+#!/bin/sh
+
 cd clients
 
 echo 'build youtube_producer client'
