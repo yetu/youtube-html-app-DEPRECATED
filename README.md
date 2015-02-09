@@ -34,7 +34,7 @@ This project is divided into the following two parts
 ## Set up
 
 Please open two different consoles for working with the app. In one you see the server build process
-and in the other one client build process. Go to the root folder of this project in both consoles.
+and in the other one the client build process. Go to the root folder of this project in both consoles.
 
 ### server setup
 
