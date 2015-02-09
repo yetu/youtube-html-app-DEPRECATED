@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+GET         /health                        com.yetu.youtube.controllers.Health.check
+
 # Silhouette / Authentication routes
 GET         /signOut                       @controllers.ApplicationController.signOut
 GET         /authenticate/:provider        @controllers.SocialAuthController.authenticate(provider)
