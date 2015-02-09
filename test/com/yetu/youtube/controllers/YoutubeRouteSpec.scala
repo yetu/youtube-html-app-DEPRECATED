@@ -2,6 +2,7 @@ package com.yetu.youtube.controllers
 
 import com.yetu.youtube.utils.BaseSpec
 import play.api.libs.json.Json
+import play.api.test.{FakeHeaders, FakeRequest}
 import play.api.test.Helpers._
 
 
@@ -10,7 +11,28 @@ class YoutubeRouteSpec extends BaseSpec {
   val indexUrl = "/"
   val publishUrl = com.yetu.youtube.controllers.routes.YoutubeController.playlist.url
 
-  s"GET request on $indexUrl" must {
+
+
+  s"non-authenticated GET request on $indexUrl" must {
+    "return a 303 response" in {
+
+      val Some(response) = route(FakeRequest(GET, indexUrl))
+      status(response) mustEqual (SEE_OTHER)
+    }
+
+  }
+
+  s"non-authenticated POST request on $publishUrl" must {
+    "return a 303 response" in {
+
+      val Some(response) = route(FakeRequest(POST, publishUrl, FakeHeaders(), jsonDummyValue))
+      log(contentAsString(response))
+      status(response) mustEqual (SEE_OTHER)
+    }
+
+  }
+
+  s"authenticated GET request on $indexUrl" must {
     "return a valid 200 response" in {
 
       val response = getRequestAuthenticated(indexUrl)
@@ -20,11 +42,10 @@ class YoutubeRouteSpec extends BaseSpec {
 
   }
 
-  s"POST request on $publishUrl" must {
+  s"authenticated POST request on $publishUrl" must {
     "make a real request to inbox and get a 401 invalid access_token response" in {
 
-      val someJson = Json parse """{ "some": "test json" }"""
-      val response = postRequestAuthenticated(publishUrl, someJson)
+      val response = postRequestAuthenticated(publishUrl, jsonDummyValue)
       status(response) mustEqual (UNAUTHORIZED)
     }
 

@@ -12,7 +12,6 @@ import models.User
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.concurrent.{AsyncAssertions, ScalaFutures}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.Logger
 import play.api.libs.json.{JsNull, JsValue}
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.{FakeApplication, FakeRequest, FakeHeaders}
@@ -22,14 +21,11 @@ import utils.di.SilhouetteModule
 // used for the withAuthenticator and fake login information as specified in the FakeGlobal
 import com.mohiva.play.silhouette.test.FakeRequestWithAuthenticator
 import scala.concurrent.Future
+import com.mohiva.play.silhouette.api.Logger
 
+class BaseSpec extends PlaySpec with ScalaFutures with AsyncAssertions with OneAppPerSuite with Logger with TestData {
 
-class BaseSpec extends PlaySpec with ScalaFutures with AsyncAssertions with OneAppPerSuite {
-
-  lazy val logger = Logger("TEST")
   def log(s: String) = logger.debug(s)
-
-
 
 
   def getRequestAuthenticated(url: String, headers: FakeHeaders = FakeHeaders()): Future[Result] = {

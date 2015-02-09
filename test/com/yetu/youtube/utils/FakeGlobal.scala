@@ -54,4 +54,7 @@ object FakeGlobal {
    * A Silhouette fake environment.
    */
   implicit val env = FakeEnvironment[User, SessionAuthenticator](Seq(identity.loginInfo -> identity))
+
+
+
 }
