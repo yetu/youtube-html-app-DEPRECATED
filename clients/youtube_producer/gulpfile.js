@@ -8,4 +8,6 @@
 var gulp = require('./gulp')();
 
 // define high-level tasks here
-gulp.task('build', ['build-scripts', 'copy-assets', 'copy-main-html', 'build-style']);
+// copy-ref-templates task is included in copy-assets.js file
+gulp.task('build', ['build-scripts', 'copy-assets', 'copy-ref-templates', 'build-style']);
+gulp.task('watch', ['build-scripts', 'copy-assets', 'copy-ref-templates', 'build-style', 'dev-watch']);

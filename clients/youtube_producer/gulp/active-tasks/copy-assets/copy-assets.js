@@ -10,7 +10,7 @@ gulp.task('clean-dev-dest', function () {
 
 //TODO: remove paths from this file and put them in structure of common-config.js
 gulp.task('copy-assets', function () {
-	gulp.src('fonts/*', {base: './'})
+	gulp.src('styles/fonts/*', {base: './'})
 		.pipe(gulp.dest(assets.build.dest));
 	gulp.src('js/mainTemplate.html', {base: './'})
 		.pipe(gulp.dest(assets.build.dest));
@@ -18,7 +18,7 @@ gulp.task('copy-assets', function () {
 		.pipe(gulp.dest(assets.build.dest));
 });
 
-gulp.task('copy-main-html', function(){
+gulp.task('copy-ref-templates', function(){
 	return gulp.src(views.build.src, {base: './'})
 		.pipe(gulp.dest(views.build.dest));
 });

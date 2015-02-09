@@ -27,18 +27,15 @@ var scripts = {
 	dev: {
 		src: 'app-bundle.js',
 		dest: 'bundle-js'
-	}
+	},
+    watch: 'js/**'
 };
 
 // paths for styles tasks
 var styles = {
 	build: {
 		src: 'styles/app.styl',
-		dest: distAssets('/css')
-	},
-	dev: {
-		src: 'styles/app.styl',
-		dest: 'css'
+		dest: distAssets('/')+'/styles'
 	},
 	watch: 'styles/**'
 };
@@ -47,8 +44,16 @@ var views = {
     build: {
         src: 'youtube_producer.scala.html',
         dest: distViews('/')
-    }
-}
+    },
+    watch: 'youtube_producer.scala.html'
+};
+
+var img = {
+    watch: 'img/*'
+};
+var templates = {
+    watch: 'js/*.html'
+};
 
 module.exports = {
 	path: {
@@ -56,6 +61,8 @@ module.exports = {
 		styles: styles,
 		scripts: scripts,
 		views: views,
+        img: img,
+        templates: templates,
 		tests: {
 			src: 'test/**.spec.js',
 			configDir: 'test'
