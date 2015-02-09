@@ -14,6 +14,8 @@ dist
 /RUNNING_PID
 /.settings
 /bin
-node_modules
+clients/node_modules
 conf/application.conf
 apphome-youtube-html-app-deployment
+clients/npm-debug.log
+projectFilesBackup

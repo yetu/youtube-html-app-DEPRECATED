@@ -5,6 +5,7 @@ import com.mohiva.play.silhouette.api.util.HTTPLayer
 
 import com.mohiva.play.silhouette.impl.exceptions.ProfileRetrievalException
 import com.mohiva.play.silhouette.impl.providers._
+import com.yetu.youtube.utils.ConfigLoader
 import utils.di.YetuProvider.API
 import utils.di.YetuProvider.SpecifiedProfileError
 import utils.di.YetuProvider._

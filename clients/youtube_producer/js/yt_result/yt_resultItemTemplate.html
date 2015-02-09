@@ -1,0 +1,32 @@
+<li class="yt-result-list-item">
+  <div class="yt-result-list-item--img">
+    <img ng-if="resultList.img" class="yt-result-list-item--img" src="{{resultList.img}}"/>
+    <img data-index="{{$index}}" data-id="{{resultList.playlistId}}" class="yt-result-list-item--playimg" src="assets/youtube_producer/img/play-icon.svg" ng-click="onPlay($event)"/>
+  </div>
+  <div class="yt-result-list-item--rightContent">
+    <h1 class="yt-result-list-item--title">
+      <p class="yt-result-list-item--title-container" data-type="title" cw-reveal-label><span>{{resultList.title}}</span></p>
+    </h1>
+    <p class="yt-result-list-item--subtitle">
+      <span>by {{resultList.channel}}</span>
+      <span class="point">*</span>
+      <span>{{resultList.description.createDate}}</span>
+    </p>
+    <p class="yt-result-list-item--description" data-type="description" cw-reveal-label ng-if="resultList.description.text">
+      <span>{{resultList.description.text}}</span>
+    </p>
+    <p class="yt-result-list-item--description" ng-if="!resultList.description.text">No description available.</p>
+  </div>
+  <div class="yt-result-list-item--buttons">
+    <button class="yt-result-list-item--button"
+            ng-click="onPlaylistSendButtonClick($event)"
+            data-title="{{resultList.title}}" data-id="{{resultList.playlistId}}" data-channeltitle="{{resultList.channel}}">
+      Play on TV
+      </button>
+  </div>
+  <div class="yt-result-list-item--video"  ng-class="{'visible':playing}" ng-click="onClose()">
+    <div id="{{'player'+$index}}" class="yt-result-list-item--player">
+    </div>
+    <div ng-click="onClose()" class="yt-result-list-item--close">x</div>
+  </div>
+</li>

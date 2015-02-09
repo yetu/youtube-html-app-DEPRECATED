@@ -3,39 +3,13 @@
   "version": "0.1",
   "private": "true",
   "main": [
-    "dist/app-bundle.js",
-    "dist/app.css",
-    "dist/index.html",
-    "dist/dummy/**/*",
-    "dist/fonts/**/*"
-  ],
-  "ignore": [
-    "node_modules",
-    "bower_components",
-    "gulp",
-    "tests",
-    "scss",
-    ".sass-cache",
-    "data",
-    "deployment",
-    "gulpfile.js",
-    "README.md",
-    "package.json"
+    "js/app-bundle.js"
   ],
   "dependencies": {
     "angular": "1.2.6",
-    "json3": "~3.2.6",
-    "es5-shim": "~2.1.0",
     "angular-resource": "1.2.6",
-    "angular-cookies": "1.2.6",
-    "angular-sanitize": "1.2.6",
     "angular-route": "1.2.6",
-    "angulartics": "~0.15.18",
     "angular-translate": "~2.2.0",
-	  "reactTo" : "mr-mig/angular-react-to#1.0"
-  },
-  "devDependencies": {
-    "angular-mocks": "1.2.6",
-    "angular-scenario": "1.2.6"
+    "reactTo" : "mr-mig/angular-react-to#1.0"
   }
 }

@@ -8,6 +8,7 @@ import com.google.inject.{Guice, AbstractModule}
 import com.mohiva.play.silhouette.api.{Environment, LoginInfo}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import com.mohiva.play.silhouette.test._
+import com.yetu.youtube.utils.ConfigLoader
 import models.User
 import net.codingwell.scalaguice.ScalaModule
 import org.specs2.mock.Mockito
@@ -22,7 +23,8 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
 
   "The `index` action" should {
     "redirect to provider if user is unauthorized" in new WithApplication(FakeApplication(withGlobal = Some(new FakeGlobal))) {
-      val Some(redirectResult) = route(FakeRequest(routes.ApplicationController.index())
+      //TODO: paramterise the index location?
+      val Some(redirectResult) = route(FakeRequest(ConfigLoader.indexUrl)
         .withAuthenticator[SessionAuthenticator](LoginInfo("invalid", "invalid"))
       )
 
@@ -37,7 +39,8 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
     }
 
     "return 200 if user is authorized" in new WithApplication(FakeApplication(withGlobal = Some(new FakeGlobal))) {
-      val Some(result) = route(FakeRequest(routes.ApplicationController.index())
+      //TODO: paramterise the index location?
+      val Some(result) = route(FakeRequest(ConfigLoader.indexUrl)
         .withAuthenticator[SessionAuthenticator](identity.loginInfo)
       )
 
@@ -81,5 +84,5 @@ class ApplicationControllerSpec extends PlaySpecification with Mockito {
   /**
    * A Silhouette fake environment.
    */
-  implicit val env = FakeEnvironment[User, SessionAuthenticator](identity)
+  implicit val env = FakeEnvironment[User, SessionAuthenticator](Seq(identity.loginInfo -> identity))
 }
