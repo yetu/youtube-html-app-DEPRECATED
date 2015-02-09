@@ -40,6 +40,14 @@ var styles = {
 	watch: 'styles/**'
 };
 
+var fonts = {
+    build: {
+        src: 'styles/fonts/*',
+        dest: distAssets('/')
+    }  
+    
+};
+
 var views = {
     build: {
         src: 'youtube_producer.scala.html',
@@ -49,9 +57,17 @@ var views = {
 };
 
 var img = {
+    build: {
+        src: 'img/*',
+        dest: distAssets('/')
+    },
     watch: 'img/*'
 };
 var templates = {
+    build: {
+        src: 'js/*.html',
+        dest: distAssets('/')
+    },
     watch: 'js/*.html'
 };
 
@@ -63,6 +79,7 @@ module.exports = {
 		views: views,
         img: img,
         templates: templates,
+        fonts: fonts,
 		tests: {
 			src: 'test/**.spec.js',
 			configDir: 'test'

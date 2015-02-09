@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
-	assets = require('../../common-config').path.scripts,
+	templates = require('../../common-config').path.templates,
+    fonts = require('../../common-config').path.fonts,
+    img = require('../../common-config').path.img,
 	views = require('../../common-config').path.views,
 	clean = require('gulp-clean');
 
@@ -8,14 +10,13 @@ gulp.task('clean-dev-dest', function () {
 		.pipe(clean());
 });
 
-//TODO: remove paths from this file and put them in structure of common-config.js
 gulp.task('copy-assets', function () {
-	gulp.src('styles/fonts/*', {base: './'})
-		.pipe(gulp.dest(assets.build.dest));
-	gulp.src('js/mainTemplate.html', {base: './'})
-		.pipe(gulp.dest(assets.build.dest));
-	return gulp.src('img/*', {base: './'})
-		.pipe(gulp.dest(assets.build.dest));
+	gulp.src(fonts.build.src, {base: './'})
+		.pipe(gulp.dest(fonts.build.dest));
+	gulp.src(templates.build.src, {base: './'})
+		.pipe(gulp.dest(templates.build.dest));
+	return gulp.src(img.build.src, {base: './'})
+		.pipe(gulp.dest(img.build.dest));
 });
 
 gulp.task('copy-ref-templates', function(){
