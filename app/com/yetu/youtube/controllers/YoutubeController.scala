@@ -45,8 +45,6 @@ class YoutubeController @Inject() (implicit val env: Environment[User, SessionAu
       response = wsResponseToPlayResponse(wsResponse)
     } yield response
 
-    Future.successful(Ok(""))
-
   }
 
   implicit def wsResponseToPlayResponse(response: WSResponse): Result = {

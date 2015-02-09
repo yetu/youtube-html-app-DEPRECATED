@@ -21,11 +21,11 @@ class YoutubeRouteSpec extends BaseSpec {
   }
 
   s"POST request on $publishUrl" must {
-    "return a valid 204 response" in {
+    "make a real request to inbox and get a 401 invalid access_token response" in {
 
       val someJson = Json parse """{ "some": "test json" }"""
       val response = postRequestAuthenticated(publishUrl, someJson)
-      status(response) mustEqual (NO_CONTENT)
+      status(response) mustEqual (UNAUTHORIZED)
     }
 
   }
