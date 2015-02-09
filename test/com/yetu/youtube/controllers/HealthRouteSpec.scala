@@ -11,7 +11,7 @@ class HealthRouteSpec extends BaseSpec {
   s"GET request on $healthUrl" must {
     "return a valid 200 response" in {
 
-      val response = getRequest(healthUrl)
+      val response = getRequestAuthenticated(healthUrl)
       status(response) mustEqual (OK)
       contentAsString(response) must include("alive")
     }

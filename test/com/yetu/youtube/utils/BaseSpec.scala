@@ -1,21 +1,41 @@
 package com.yetu.youtube.utils
 
+import java.util.UUID
+
+import app.Global
+import com.google.inject.{AbstractModule, Guice}
+import com.google.inject.util.Modules
+import com.mohiva.play.silhouette.api.{LoginInfo, Environment}
+import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
+import com.mohiva.play.silhouette.test.FakeEnvironment
+import models.User
+import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.concurrent.{AsyncAssertions, ScalaFutures}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.Logger
+import play.api.libs.json.{JsNull, JsValue}
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.{FakeRequest, FakeHeaders}
+import play.api.test.{FakeApplication, FakeRequest, FakeHeaders}
 import play.api.test.Helpers._
+import utils.di.SilhouetteModule
 
+// used for the withAuthenticator and fake login information as specified in the FakeGlobal
+import com.mohiva.play.silhouette.test.FakeRequestWithAuthenticator
 import scala.concurrent.Future
+
 
 class BaseSpec extends PlaySpec with ScalaFutures with AsyncAssertions with OneAppPerSuite {
 
   lazy val logger = Logger("TEST")
   def log(s: String) = logger.debug(s)
 
-  def getRequest(url: String, headers: FakeHeaders = FakeHeaders()): Future[Result] = {
-    route(FakeRequest(GET, url, headers, AnyContentAsEmpty)) match {
+
+
+
+  def getRequestAuthenticated(url: String, headers: FakeHeaders = FakeHeaders()): Future[Result] = {
+
+    route(FakeRequest(GET, url, headers, AnyContentAsEmpty).withAuthenticator[SessionAuthenticator](FakeGlobal.identity.loginInfo)(FakeGlobal.env)
+      ) match {
       case Some(response) =>
         log(s"content $url: ${contentAsString(response)}")
         log(s"status $url: ${status(response)}")
@@ -28,8 +48,9 @@ class BaseSpec extends PlaySpec with ScalaFutures with AsyncAssertions with OneA
     }
   }
 
-  def postRequest(url: String, parameters: Map[String, Seq[String]] = Map(), fakeHeaders: FakeHeaders = FakeHeaders()): Future[Result] = {
-    route(FakeRequest(POST, url, fakeHeaders, parameters)) match {
+  def postRequestAuthenticated(url: String, parameters: JsValue = JsNull, fakeHeaders: FakeHeaders = FakeHeaders()): Future[Result] = {
+    route(FakeRequest(POST, url, fakeHeaders, parameters)
+      .withAuthenticator[SessionAuthenticator](FakeGlobal.identity.loginInfo)(FakeGlobal.env)) match {
       case Some(response) =>
         log(s"response: ${contentAsString(response)}")
         log(s"response status: ${status(response)}")
@@ -39,5 +60,11 @@ class BaseSpec extends PlaySpec with ScalaFutures with AsyncAssertions with OneA
       case None => throw new Exception(s"The url '$url' is not valid.")
     }
   }
+
+  //for all tests, use the FakeGlobal with Authentication mocked out.
+  implicit override lazy val app: FakeApplication =
+        FakeApplication(withGlobal = Some(new FakeGlobal))
+
+
 
 }
