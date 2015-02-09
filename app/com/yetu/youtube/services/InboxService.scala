@@ -1,6 +1,7 @@
-package models.services
+package com.yetu.youtube.services
 
-import models.{User, InboxMessage, Payload}
+import com.yetu.youtube.models.{Payload, InboxMessage}
+import models.User
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WS, WSResponse}
 
@@ -14,7 +15,7 @@ object InboxService {
 
 
   val publishUrl = "http://inbox.yetu.me/publish"
-  
+
 
   def sendToInbox(data:JsValue, accessToken:String): Future[WSResponse] = {
 
@@ -34,10 +35,7 @@ object InboxService {
     val message: InboxMessage = InboxMessage(accessToken, payload)
     message
   }
-  
 
-  
 
-  
-  
+
 }
