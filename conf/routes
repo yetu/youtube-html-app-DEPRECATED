@@ -4,7 +4,6 @@
 
 # Home page
 GET         /                                @controllers.ApplicationController.index
-GET         /signIn                          @controllers.ApplicationController.signIn
 GET         /signOut                         @controllers.ApplicationController.signOut
 GET         /authenticate/:provider          @controllers.SocialAuthController.authenticate(provider)
 
