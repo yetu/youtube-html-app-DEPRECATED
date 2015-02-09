@@ -18,7 +18,7 @@ import models.User
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import com.yetu.youtube.views.html.youtube_producer
+import com.yetu.youtube.views
 
 /**
 * The Youtube application controller
@@ -33,7 +33,7 @@ class YoutubeController @Inject() (implicit val env: Environment[User, SessionAu
    *
    */
   def index = SecuredAction.async { implicit request =>
-    Future.successful(Ok(youtube_producer(Youtube.devToken)))
+    Future.successful(Ok(views.html.index(Youtube.devToken)))
   }
 
   def playlist = SecuredAction.async(parse.json) {  implicit request =>
