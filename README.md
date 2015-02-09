@@ -15,13 +15,11 @@ Most of the scala code that is used in this project are from Activator template 
 This project is divided into the following two parts
 
 * client-applications, where the sources are placed in the folder `clients`
-    * youtube_producer:
+    * `youtube_producer`:
         * App, which produces videoplaylists as notifications for yetu tv and mobile homescreen
         * Technologies: AngularJS, styl
         * Build-Process: gulp
-    * youtube_consumer_level1 (currently empty)
-        * App, which is shown in the level 1 of the TV (should be as well PC and mobile)
-* server-application which host this clients, provides authentication and configuration to communicate with other services
+* server-application which host the clients, provides authentication and configuration to communicate with other services
     * Technology: Scala
     * Build-Process: sbt
     * after building the clients the destination folders are the following:
@@ -34,6 +32,9 @@ This project is divided into the following two parts
     * furthermore in the `manifest.json` the urls to the different levels apps will be defined
     
 ## Set up
+
+Please open two different consoles for working with the app. In one you see the server build process
+and in the other one client build process. Go to the root folder of this project in both consoles.
 
 ### server setup
 
@@ -51,31 +52,19 @@ which npm
 ```
 It should show you the path, where there are installed on your machine.
 
-Now you have to install the node_modules, which are needed for the clients build process.
-
-```
-cd clients
-npm install
-```
-
 The bower components are committed. So if you want to add a bower dependency for one client, you have to 
 add it in the bower.json on the public folder and then run `bower install`. Please commit this bower component.
 
-To build the clients there is a script defined, which you can run like this.
+To build the clients and watch it during development, there is a script defined, which you can run like this.
 
 ```
-./buildClients.sh
+./buildClients_local.sh
 ```
 
-You have to do this currently, whenever you change stylesheets, scripts or images.
+In this script there is one line, which runs `npm install`. You can remove this line, if you do not want to have it
+in the this flow every time.
 
-If you want to add a client build process, define in the package.json scripts field your command to run the build and
-add to the buildClients.sh the following
-
-```
-echo 'build [client-name] client'
-npm run [build-client-name]
-```
+You have to reload every time you make changes currently (TODO: include browser sync in gulp process).
 
 ### Local configuration
 
