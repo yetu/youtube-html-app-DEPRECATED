@@ -1,6 +1,5 @@
 #TODO
 * integrate npm in sbt life cycle
-* youtube_producer:
-    * gulp produces two css files in destination folder -> only one
+* youtube-producer:
     * gulp needs to execute tests
-* integrate youtube-consumer
+    * browser needs to be updated after watch -> gulp tool browsersync: http://www.browsersync.io/docs/gulp/
