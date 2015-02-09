@@ -38,7 +38,10 @@ and in the other one the client build process. Go to the root folder of this pro
 
 ### server setup
 
-sbt (TODO)
+You need a java jdk and you need sbt. If you have sbt installed, you can use the usual `sbt run` or `sbt test` for local development.
+If you don't have sbt installed, you can just execute `activator` (if on a UNIX-system) or `activator.bat` (if on Windows).
+
+`sbt run` or `./activator run` will by default start a server on port 9000.
 
 ### client setup
 
