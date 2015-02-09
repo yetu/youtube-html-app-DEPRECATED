@@ -49,16 +49,5 @@ trait Global extends GlobalSettings with SecuredSettings with Logger {
     Some(Future.successful(Redirect(routes.SocialAuthController.authenticate(YetuProvider.Yetu))))
   }
 
-  /**
-   * Called when a user is authenticated but not authorized.
-   *
-   * As defined by RFC 2616, the status code of the response should be 403 Forbidden.
-   *
-   * @param request The request header.
-   * @param lang The currently selected language.
-   * @return The result to send to the client.
-   */
-  override def onNotAuthorized(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future.successful(Redirect(routes.ApplicationController.signIn).flashing("error" -> Messages("access.denied"))))
-  }
+
 }

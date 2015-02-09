@@ -54,19 +54,7 @@ class ApplicationController @Inject()(oauth2Dao: OAuth2InfoDAO) (implicit val en
     play.Logger.info(s"response from outbox: status = ${response.status}, body = ${response.body}")
     new Status(response.status)
   }
-
-  /**
-   * Handles the Sign In action.
-   *
-   * @return The result to display.
-   */
-  def signIn = UserAwareAction.async { implicit request =>
-    request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.ApplicationController.index))
-      case None =>   Future.successful(Redirect(routes.SocialAuthController.authenticate(YetuProvider.Yetu)))
-    }
-  }
-
+  
 
   /**
    * Handles the Sign Out action.
