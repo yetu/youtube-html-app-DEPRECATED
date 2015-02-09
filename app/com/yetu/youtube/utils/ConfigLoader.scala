@@ -16,4 +16,8 @@ object ConfigLoader {
 
   val indexUrl = com.yetu.youtube.controllers.routes.YoutubeController.index
 
+  object Inbox {
+    val publishUrl = config.getString("inbox.publishUrl")
+  }
+
 }

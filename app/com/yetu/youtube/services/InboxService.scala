@@ -1,20 +1,19 @@
 package com.yetu.youtube.services
 
 import com.yetu.youtube.models.{Payload, InboxMessage}
-import models.User
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WS, WSResponse}
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.Play.current
+import com.yetu.youtube.utils.ConfigLoader.Inbox.publishUrl
 
 //TODO: convert to class + trait to ease testing
 //TODO: extract configuration values
 object InboxService {
 
 
-  val publishUrl = "http://inbox.yetu.me/publish"
 
 
   def sendToInbox(data:JsValue, accessToken:String): Future[WSResponse] = {
