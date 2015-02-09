@@ -1,4 +1,4 @@
-package utils.di
+package com.yetu.youtube.utils
 
 import com.typesafe.config.ConfigFactory
 
@@ -13,5 +13,7 @@ object ConfigLoader {
   object Youtube {
     val devToken = config.getString("youtube.devToken")
   }
+
+  val indexUrl = com.yetu.youtube.controllers.routes.YoutubeController.index
 
 }

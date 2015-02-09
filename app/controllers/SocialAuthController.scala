@@ -7,6 +7,7 @@ import com.mohiva.play.silhouette.api.exceptions.AuthenticationException
 import com.mohiva.play.silhouette.api.services.AuthInfoService
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import com.mohiva.play.silhouette.impl.providers._
+import com.yetu.youtube.utils.ConfigLoader
 import models.User
 import models.services.UserService
 import play.api.libs.concurrent.Execution.Implicits._
@@ -42,7 +43,8 @@ class SocialAuthController @Inject() (
             authenticator <- env.authenticatorService.create(user.loginInfo)
             value <- env.authenticatorService.init(authenticator)
             result <- env.authenticatorService.embed(value, Future.successful(
-              Redirect(routes.ApplicationController.index)
+            //TODO: parametrise the redirect location?
+              Redirect(ConfigLoader.indexUrl)
             ))
           } yield {
             env.eventBus.publish(LoginEvent(user, request, request2lang))
