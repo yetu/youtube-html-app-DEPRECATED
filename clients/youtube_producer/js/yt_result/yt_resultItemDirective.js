@@ -23,8 +23,7 @@ module.exports = function (ytPlaylistService, ytSearchState) {
 				var playlist = {
 					"name": encodeURI(title),
 					"source" : playlistId,
-					"url" : "https://www.youtube.com/playlist?list="+playlistId,
-					"userId" : ytSearchState.getUserId()
+					"url" : "https://www.youtube.com/playlist?list="+playlistId
 				};
 				ytPlaylistService.sendPlaylist(playlist);
 			};
