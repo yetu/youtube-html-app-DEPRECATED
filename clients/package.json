@@ -40,7 +40,8 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test-youtube-producer": "node_modules/karma/bin/karma start youtube_producer/test/ng-karma-config.js",
+    "test-youtube-producer-local": "node_modules/karma/bin/karma start youtube_producer/test/ng-karma-config.js",
+    "test-youtube-producer-server": "node_modules/karma/bin/karma start youtube_producer/test/ng-karma-config.js --browsers PhantomJS --single-run",
     "build-youtube-producer": "cd youtube_producer && gulp build",
     "watch-youtube-producer": "cd youtube_producer && gulp watch"
   }
