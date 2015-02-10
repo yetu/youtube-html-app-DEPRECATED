@@ -36,9 +36,12 @@ class YoutubeController @Inject() (implicit val env: Environment[User, SessionAu
     Future.successful(Ok(views.html.index(Youtube.devToken)))
   }
 
+  /**
+   * Handles the "send to TV" request
+   */
   def playlist = SecuredAction.async(parse.json) {  implicit request =>
 
-    for { //TODO: refactor
+    for {
       info: Option[OAuth2Info] <- oauth2Dao.find(request.identity.loginInfo)
       accessToken: String = info.map(_.accessToken).getOrElse("Invalid access token")
       wsResponse <- InboxService.sendToInbox(request.body, accessToken)
@@ -47,7 +50,7 @@ class YoutubeController @Inject() (implicit val env: Environment[User, SessionAu
 
   }
 
-  implicit def wsResponseToPlayResponse(response: WSResponse): Result = {
+  private def wsResponseToPlayResponse(response: WSResponse): Result = {
     logger.info(s"response from inbox: status = ${response.status}, body = ${response.body}")
     new Status(response.status)
   }

@@ -18,6 +18,8 @@ object ConfigLoader {
 
   object Inbox {
     val publishUrl = config.getString("inbox.publishUrl")
+    val eventName = config.getString("inbox.eventName")
+    val timeToLive = config.getLong("inbox.timeToLive")
   }
 
 }
