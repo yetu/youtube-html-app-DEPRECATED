@@ -3,10 +3,11 @@ package app
 import com.google.inject.Guice
 import com.mohiva.play.silhouette.api.{Logger, SecuredSettings}
 import controllers.routes
+import filters.AllowAllCorsFilter
 import play.api.GlobalSettings
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Results._
-import play.api.mvc.{RequestHeader, Result}
+import play.api.mvc.{EssentialAction, RequestHeader, Result}
 import utils.di.{YetuProvider, SilhouetteModule}
 
 import scala.concurrent.Future
@@ -49,5 +50,7 @@ trait Global extends GlobalSettings with SecuredSettings with Logger {
     Some(Future.successful(Redirect(routes.SocialAuthController.authenticate(YetuProvider.Yetu))))
   }
 
+
+  override def doFilter(action: EssentialAction) = AllowAllCorsFilter(action)
 
 }
