@@ -10,7 +10,7 @@ import com.yetu.youtube.services.InboxService
 import com.yetu.youtube.utils.ConfigLoader
 import models.daos.OAuth2InfoDAO
 import play.api.libs.ws.WSResponse
-import play.api.mvc.Result
+import play.api.mvc.{Action, Result}
 import ConfigLoader.Youtube
 
 import models.User
@@ -54,7 +54,12 @@ class YoutubeController @Inject() (implicit val env: Environment[User, SessionAu
     logger.info(s"response from inbox: status = ${response.status}, body = ${response.body}")
     new Status(response.status)
   }
-
+  
+  //FIXME: this is not the optimal path to go 
+  // -> discussion needed how we handle our stages synchronized to the apps ones
+  def manifest = Action { implicit request =>
+    Redirect(controllers.routes.Assets.at( ConfigLoader.manifestUrl))
+  };
 
 }
 

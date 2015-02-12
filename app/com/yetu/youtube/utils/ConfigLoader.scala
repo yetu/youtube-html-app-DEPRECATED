@@ -22,4 +22,6 @@ object ConfigLoader {
     val timeToLive = config.getLong("inbox.timeToLive")
   }
 
+  val manifestUrl = config.getString("manifestUrl")
+
 }
