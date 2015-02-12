@@ -32,7 +32,8 @@ class ApplicationController @Inject()(implicit val env: Environment[User, Sessio
   }
 
   def userId = SecuredAction { implicit request =>
-    Ok(s"${request.identity.userID}")
+    //TODO: why is the userID field not the correct one? TODO: fix!
+    Ok(s"${request.identity.loginInfo.providerKey}")
   }
 }
 
