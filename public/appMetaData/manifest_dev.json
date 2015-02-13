@@ -1,21 +1,22 @@
 {
-	"label": "Yetube",
-	"backgroundColor": "#C4110B",
-    "controlsType" : "form",
-	"tileType": "app",
-	    "category": [ "yetu","Web TV"
-    ],
-	"url": "http://apps.yetudev.com:7575",
-	"logo": "http://apps.yetudev.com:7575/assets/appMetaData/assets/logo.svg",
-	"controls": {
-		"form": {
-			"action": "open_app_view",
-			"fields": [
-				{
-					"name": "search",
-					"label": "Search YouTube"
-				}
-			]
-		}
-	}
+  "label": "Yetube",
+  "backgroundColor": "#C4110B",
+  "controlsType": "form",
+  "tileType": "app",
+  "category": [
+    "Web TV"
+  ],
+  "url": "http://apps.yetudev.com:7575",
+  "logo": "http://apps.yetudev.com:7575/assets/appMetaData/assets/logo.svg",
+  "controls": {
+    "form": {
+      "action": "open_app_view",
+      "fields": [
+        {
+          "name": "search",
+          "label": "Search YouTube"
+        }
+      ]
+    }
+  }
 }

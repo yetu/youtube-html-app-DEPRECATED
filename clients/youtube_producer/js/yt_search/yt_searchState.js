@@ -6,10 +6,6 @@ module.exports = function ($location, $http) {
 
 	var that = this;
 
-	this.getUserId = function(){
-		return $location.search().userId;
-	}
-
 	this.getSearchValue = function (searchFromUrl) {
 		if(!searchValue||searchFromUrl){
 			searchValue = $location.search().search;
