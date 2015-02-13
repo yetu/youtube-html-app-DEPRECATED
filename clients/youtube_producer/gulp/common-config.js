@@ -14,10 +14,6 @@ var distAssets = function(){
 	return dist(SINGLE_DIST_DIR);
 };
 
-var distViews = function(){
-	return dist(VIEWS_DIST_DIR);
-}
-
 // paths for scripts tasks
 var scripts = {
 	build: {
@@ -51,7 +47,7 @@ var fonts = {
 var views = {
     build: {
         src: '*.scala.html',
-        dest: distViews('/')
+        dest: VIEWS_DIST_DIR
     },
     watch: '*.scala.html'
 };
