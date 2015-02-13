@@ -1,7 +1,7 @@
 var path = require('path');
 
 var SINGLE_DIST_DIR = '../../public/youtube_producer';
-var VIEWS_DIST_DIR = '../../app/views';
+var VIEWS_DIST_DIR = '../../app/com/yetu/youtube/views';
 
 // create dist-based path
 var dist = function(dir){

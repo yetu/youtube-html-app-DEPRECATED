@@ -1,4 +1,4 @@
-@(devToken: String)
+@(devToken: String)(authUrl: String)(pollingInterval: Int)
 <!doctype html>
 <!--[if lt IE 7]>
 <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="assets/youtube_producer/styles/app.css"/>
     <script>
         var token = "@devToken";
+        var AUTH_SERVER = "@authUrl";
+        var SESSION_POLLING_INTERVAL = "@pollingInterval";
     </script>
     <!--<link rel="stylesheet" href="css/app.css"/>-->
 </head>
