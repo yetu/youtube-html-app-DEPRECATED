@@ -1,10 +1,9 @@
 {
-	"label": "Youtube",
+	"label": "Yetube",
 	"backgroundColor": "#C4110B",
     "controlsType" : "form",
 	"tileType": "app",
-	    "category": [
-        "Entertainment", "yetu", "Web TV"
+	    "category": [ "yetu", "Web TV"
     ],
 	"url": "http://apps.yetu.me:7575",
 	"logo": "http://apps.yetu.me:7575/assets/appMetaData/assets/logo.svg",
