@@ -226,10 +226,7 @@ module.exports = function ($window, $http, $interval, $log) {
 	return {
 		restrict: 'E',
 		link: function(scope, element, attr){
-			//TODO: replace hardcoded strings with params from config
 			//TODO: use more angular.js methods instead of mix of native and angular stuff
-			var AUTH_SERVER = "https://auth.yetudev.com";
-			var SESSION_POLLING_INTERVAL = 3;
 			var userSettings = {
 				userId: ''
 			};
@@ -259,7 +256,7 @@ module.exports = function ($window, $http, $interval, $log) {
 
 			function check_session() {
 					var win = openidIframe.contentWindow;
-					win.postMessage('controlcenter ' + userSettings.userId, AUTH_SERVER);
+					win.postMessage('youtubeApp ' + userSettings.userId, AUTH_SERVER);
 			}
 
 			
@@ -275,7 +272,7 @@ module.exports = function ($window, $http, $interval, $log) {
 					$log.log('poller | received message:' + stat);
 					if (stat == 'invalid') {
 							$log.log('session=invalid! Logging out and redirecting');
-							$http.get('/logout')
+							$http.get('/signOut')
 									.then(logout);
 					}
 			}
