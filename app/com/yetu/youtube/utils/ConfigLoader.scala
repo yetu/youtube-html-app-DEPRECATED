@@ -10,8 +10,11 @@ object ConfigLoader {
     val profileUrl = config.getString("silhouette.yetu.profileURL")
   }
 
-  object Youtube {
-    val devToken = config.getString("youtube.devToken")
+
+  object FrontendConfiguration {
+    val devToken = config.getString("frontendConfig.devToken")
+    val authServerUrl = config.getString("frontendConfig.authServerUrl")
+    val sessionPollingInterval = config.getInt("frontendConfig.sessionPollingInterval")
   }
 
   val indexUrl = com.yetu.youtube.controllers.routes.YoutubeController.index

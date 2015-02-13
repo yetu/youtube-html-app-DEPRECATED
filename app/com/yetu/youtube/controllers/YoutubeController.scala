@@ -11,7 +11,7 @@ import com.yetu.youtube.utils.ConfigLoader
 import models.daos.OAuth2InfoDAO
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, Result}
-import ConfigLoader.Youtube
+import com.yetu.youtube.utils.ConfigLoader.{FrontendConfiguration}
 
 import models.User
 
@@ -32,8 +32,10 @@ class YoutubeController @Inject() (implicit val env: Environment[User, SessionAu
    * Handles the index action.
    *
    */
-  def index = SecuredAction.async { implicit request =>
-    Future.successful(Ok(views.html.index(Youtube.devToken)))
+  def index = SecuredAction { implicit request =>
+
+
+    Ok(views.html.index(FrontendConfiguration.devToken)(FrontendConfiguration.authServerUrl)(FrontendConfiguration.sessionPollingInterval))
   }
 
   /**

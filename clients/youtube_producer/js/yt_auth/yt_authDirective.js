@@ -3,10 +3,7 @@ module.exports = function ($window, $http, $interval, $log) {
 	return {
 		restrict: 'E',
 		link: function(scope, element, attr){
-			//TODO: replace hardcoded strings with params from config
 			//TODO: use more angular.js methods instead of mix of native and angular stuff
-			var AUTH_SERVER = "https://auth.yetudev.com";
-			var SESSION_POLLING_INTERVAL = 3;
 			var userSettings = {
 				userId: ''
 			};
