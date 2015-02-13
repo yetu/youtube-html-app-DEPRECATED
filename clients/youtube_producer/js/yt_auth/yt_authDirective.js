@@ -33,7 +33,7 @@ module.exports = function ($window, $http, $interval, $log) {
 
 			function check_session() {
 					var win = openidIframe.contentWindow;
-					win.postMessage('controlcenter ' + userSettings.userId, AUTH_SERVER);
+					win.postMessage('youtubeApp ' + userSettings.userId, AUTH_SERVER);
 			}
 
 			
@@ -49,7 +49,7 @@ module.exports = function ($window, $http, $interval, $log) {
 					$log.log('poller | received message:' + stat);
 					if (stat == 'invalid') {
 							$log.log('session=invalid! Logging out and redirecting');
-							$http.get('/logout')
+							$http.get('/signOut')
 									.then(logout);
 					}
 			}
