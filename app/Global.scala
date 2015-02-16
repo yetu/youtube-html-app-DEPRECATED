@@ -3,14 +3,15 @@ package app
 import com.google.inject.Guice
 import com.mohiva.play.silhouette.api.{Logger, SecuredSettings}
 import controllers.routes
-import filters.AllowAllCorsFilter
+import com.yetu.play.authenticator.filters.AllowAllCorsFilter
 import play.api.GlobalSettings
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Results._
 import play.api.mvc.{EssentialAction, RequestHeader, Result}
-import utils.di.{YetuProvider, SilhouetteModule}
+import com.yetu.play.authenticator.utils.di.{SilhouetteModule}
 
 import scala.concurrent.Future
+import com.yetu.play.authenticator.utils.di.YetuProvider
 
 /**
  * The global object.
@@ -47,7 +48,7 @@ trait Global extends GlobalSettings with SecuredSettings with Logger {
    * @return The result to send to the client.
    */
    override def onNotAuthenticated(request: RequestHeader, lang: Lang): Option[Future[Result]] = {
-    Some(Future.successful(Redirect(routes.SocialAuthController.authenticate(YetuProvider.Yetu))))
+    Some(Future.successful(Redirect(com.yetu.play.authenticator.controllers.routes.SocialAuthController.authenticate(YetuProvider.Yetu))))
   }
 
 

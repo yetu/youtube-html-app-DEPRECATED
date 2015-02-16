@@ -5,8 +5,8 @@
 GET         /health                        com.yetu.youtube.controllers.Health.check
 
 # Silhouette / Authentication routes
-GET         /signOut                       @controllers.ApplicationController.signOut
-GET         /authenticate/:provider        @controllers.SocialAuthController.authenticate(provider)
+GET         /signOut                       @com.yetu.play.authenticator.controllers.ApplicationController.signOut
+GET         /authenticate/:provider        @com.yetu.play.authenticator.controllers.SocialAuthController.authenticate(provider)
 
 
 # Youtube app routes

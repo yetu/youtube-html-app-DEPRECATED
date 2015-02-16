@@ -9,13 +9,13 @@ import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.yetu.youtube.models.FrontendConfig
 import com.yetu.youtube.services.InboxService
 import com.yetu.youtube.utils.ConfigLoader
-import models.daos.OAuth2InfoDAO
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, Result}
 import com.yetu.youtube.utils.ConfigLoader.{FrontendConfiguration}
 
-import models.User
+import com.yetu.play.authenticator.models.User
+import com.yetu.play.authenticator.models.daos.OAuth2InfoDAO
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
