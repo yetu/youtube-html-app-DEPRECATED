@@ -6,9 +6,11 @@ import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
+import com.yetu.youtube.models.FrontendConfig
 import com.yetu.youtube.services.InboxService
 import com.yetu.youtube.utils.ConfigLoader
 import models.daos.OAuth2InfoDAO
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, Result}
 import com.yetu.youtube.utils.ConfigLoader.{FrontendConfiguration}
@@ -35,7 +37,15 @@ class YoutubeController @Inject() (implicit val env: Environment[User, SessionAu
   def index = SecuredAction { implicit request =>
 
 
-    Ok(views.html.index(FrontendConfiguration.devToken)(FrontendConfiguration.authServerUrl)(FrontendConfiguration.sessionPollingInterval))
+    val config = FrontendConfig(userUUID = request.identity.loginInfo.providerKey,
+    youtubeDeveloperToken = FrontendConfiguration.devToken,
+    authServer = FrontendConfiguration.authServerUrl,
+    sessionPollingInterval = FrontendConfiguration.sessionPollingInterval)
+
+    val configJson = Json.toJson(config)
+
+
+    Ok(views.html.index(configJson))
   }
 
   /**

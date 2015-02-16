@@ -214,7 +214,7 @@ module.exports = angular.module('cw_revealLabel', ['ngResource'])
 
 
 },{"./cw_revealLabelDirective":3}],5:[function(require,module,exports){
-module.exports = "<div class=\"container\">\n  <yt-search class=\"yt-search\"></yt-search>\n  <yt-result class=\"yt-result\"></yt-result>\n\t<yt-auth class=\"ng-hide\"></yt-auth>\n</div>";
+module.exports = "<div class=\"container\">\n  <yt-search class=\"yt-search\"></yt-search>\n  <yt-result class=\"yt-result\"></yt-result>\n\t<!--<yt-auth class=\"ng-hide\"></yt-auth>-->\n</div>";
 
 },{}],6:[function(require,module,exports){
 module.exports = angular.module('yt_auth', ['ngResource'])

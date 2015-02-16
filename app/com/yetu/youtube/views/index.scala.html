@@ -1,4 +1,5 @@
-@(devToken: String)(authUrl: String)(pollingInterval: Int)
+@import play.api.libs.json.JsValue
+@(config: JsValue)
 @{
 // IMPORTANT: the source of this file resides here:
 //      youtube-html-app/clients/youtube_producer/index.scala.html
@@ -24,9 +25,7 @@
 
         <link rel="stylesheet" href="assets/youtube_producer/styles/app.css"/>
         <script>
-        var token = "@devToken";
-        var AUTH_SERVER = "@authUrl";
-        var SESSION_POLLING_INTERVAL = "@pollingInterval";
+        var config = @config.toString;
         </script>
             <!--<link rel="stylesheet" href="css/app.css"/>-->
     </head>
