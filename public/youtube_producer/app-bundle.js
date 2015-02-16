@@ -258,15 +258,10 @@ module.exports = function ($window, $http, $interval, $log) {
 					var stat = e.data;
 					$log.log('poller | received message:' + stat);
 					if (stat == 'invalid') {
-							$log.log('session=invalid! Logging out and redirecting');
-							$http.get('/signOut')
-									.then(logout);
+						$log.log('session=invalid! Logging out and redirecting');
+						clearInterval(timerID);
+						$window.location.href ='/signOut';
 					}
-			}
-
-			function logout() {
-					clearInterval(timerID);
-					$window.location.href = '/';
 			}
 
 			angular.element($window).on('message', receiveMessageP);
