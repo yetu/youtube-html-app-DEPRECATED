@@ -8,8 +8,6 @@ GET         /health                        com.yetu.youtube.controllers.Health.c
 GET         /signOut                       @controllers.ApplicationController.signOut
 GET         /authenticate/:provider        @controllers.SocialAuthController.authenticate(provider)
 
-GET         /userId                        @controllers.ApplicationController.userId
-
 
 # Youtube app routes
 GET         /                              @com.yetu.youtube.controllers.YoutubeController.index
