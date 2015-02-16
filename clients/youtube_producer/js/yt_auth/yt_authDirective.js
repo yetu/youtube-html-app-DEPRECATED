@@ -4,23 +4,10 @@ module.exports = function ($window, $http, $interval, $log) {
 		restrict: 'E',
 		link: function(scope, element, attr){
 			//TODO: use more angular.js methods instead of mix of native and angular stuff
-			var userSettings = {
-				userId: ''
-			};
 
-			var fetchPersonalData = (function () {
-				return $http({method: 'GET', url: '/userId'}).then(function (res) {
-					$log.debug('Fetched personal data', res);
-					userSettings.userId = res.data;
-				}).catch(function (error) {
-					$log.error('Error on perosnal data fetch', error);
-					userSettings.userId = "No user data available!";
-				})
-			})();
-			
 			var openidIframe = document.createElement('iframe');
 
-			openidIframe.src = AUTH_SERVER + '/assets/login_status.html';
+			openidIframe.src = config.authServer + '/assets/login_status.html';
 			openidIframe.id = 'openid-provider';
 			openidIframe.style.visibility = 'hidden';
 			openidIframe.style.display = 'none';
@@ -29,11 +16,11 @@ module.exports = function ($window, $http, $interval, $log) {
 
 			openidIframe.onload = check_session;
 
-			var timerID = setInterval(check_session, SESSION_POLLING_INTERVAL * 1000);
+			var timerID = setInterval(check_session, config.sessionPollingInterval * 1000);
 
 			function check_session() {
 					var win = openidIframe.contentWindow;
-					win.postMessage('youtubeApp ' + userSettings.userId, AUTH_SERVER);
+					win.postMessage('youtubeApp ' + config.userUUID, config.authServer);
 			}
 
 			
@@ -41,7 +28,7 @@ module.exports = function ($window, $http, $interval, $log) {
 					if(e.originalEvent){
 						e = e.originalEvent;
 					}
-					if (e.origin !== AUTH_SERVER) {
+					if (e.origin !== config.authServer) {
 							$log.log('domain does not match!');
 							return;
 					}

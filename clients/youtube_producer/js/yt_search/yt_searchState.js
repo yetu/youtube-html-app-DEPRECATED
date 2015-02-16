@@ -99,7 +99,7 @@ module.exports = function ($location, $http) {
 			$http.get('https://www.googleapis.com/youtube/v3/channels', {
 				params: {
 					id: item.snippet.channelId,
-					key: token,
+					key: config.youtubeDeveloperToken,
 					part: 'snippet'
 				}
 			}).success(function(data){
@@ -121,7 +121,7 @@ module.exports = function ($location, $http) {
 				maxResults: 10,
 				q: searchValue,
 				part: 'snippet',
-				key: token,
+				key: config.youtubeDeveloperToken,
 				type: 'playlist'
 			}
 		}).success(function(data){
