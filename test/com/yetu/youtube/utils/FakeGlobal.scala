@@ -8,9 +8,9 @@ import com.google.inject.util.Modules
 import com.mohiva.play.silhouette.api.{LoginInfo, Environment}
 import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import com.mohiva.play.silhouette.test.FakeEnvironment
-import models.User
+import com.yetu.play.authenticator.utils.di.SilhouetteModule
+import com.yetu.play.authenticator.models.User
 import net.codingwell.scalaguice.ScalaModule
-import utils.di.SilhouetteModule
 
 import FakeGlobal._
 
@@ -41,7 +41,7 @@ object FakeGlobal {
    * An identity.
    */
   val identity = User(
-    userID = UUID.randomUUID(),
+    userUUID = UUID.randomUUID().toString,
     loginInfo = LoginInfo("provider", "user@user.com"),
     firstName = None,
     lastName = None,
