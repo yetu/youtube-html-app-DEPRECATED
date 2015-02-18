@@ -40,6 +40,10 @@ class YoutubeController @Inject()(implicit val env: Environment[User, SessionAut
 
     Ok(views.html.index(Json.toJson(config)))
   }
+  
+  def level2tv = Action { implicit request =>
+    Ok(views.html.youtubeViewerLevel2TV())
+  }
 
   /**
    * Handles the "send to TV" request

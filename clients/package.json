@@ -42,7 +42,9 @@
   "scripts": {
     "test-youtube-producer-local": "node_modules/karma/bin/karma start youtube_producer/test/ng-karma-config.js",
     "test-youtube-producer-server": "node_modules/karma/bin/karma start youtube_producer/test/ng-karma-config.js --browsers PhantomJS --single-run",
-    "build-youtube-producer": "cd youtube_producer && gulp build",
-    "watch-youtube-producer": "cd youtube_producer && gulp watch"
+    "build-youtube-producer": "cd youtube_producer && gulp build-yt-producer",
+    "watch-youtube-producer": "cd youtube_producer && gulp watch-yt-producer",
+    "build-youtube-viewer-level2-tv": "cd youtube_viewer_level2_TV && gulp build-yt-viewer-level2-tv",
+    "watch-youtube-viewer-level2-tv": "cd youtube_viewer_level2_TV && gulp watch-yt-viewer-level2-tv"
   }
 }

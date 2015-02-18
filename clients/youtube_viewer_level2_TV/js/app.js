@@ -3,10 +3,7 @@ var youtubeApp = angular.module('youtubeApp',
 		'ngRoute',
 		'ngResource',
 		'pascalprecht.translate',
-		'reactTo',
-		require('./yt_result').name,
-		require('./yt_search').name,
-		require('./cw_revealLabel').name
+		'reactTo'
 	]);
 
 youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
