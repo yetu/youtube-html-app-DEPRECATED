@@ -6,7 +6,6 @@ var youtubeApp = angular.module('youtubeApp',
 		'reactTo',
 		require('./yt_result').name,
 		require('./yt_search').name,
-		require('./cw_revealLabel').name,
 		require('./yt_auth').name
 	]);
 
@@ -33,5 +32,6 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 });
 
 youtubeApp.constant("SERVERPATHS", {
-    youtubeUrl: "/playlist"
+    youtubeUrl: "/playlist",
+		notificationUrl: "/notification"
 });

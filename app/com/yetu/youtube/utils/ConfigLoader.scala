@@ -21,7 +21,8 @@ object ConfigLoader {
 
   object Inbox {
     val publishUrl = config.getString("inbox.publishUrl")
-    val eventName = config.getString("inbox.eventName")
+    val youtubeEventName = config.getString("inbox.youtubeEventName")
+		val notificationEventName = config.getString("inbox.notificationEventName")
     val timeToLive = config.getLong("inbox.timeToLive")
   }
 

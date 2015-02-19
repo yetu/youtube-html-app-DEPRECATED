@@ -9,7 +9,6 @@ var youtubeApp = angular.module('youtubeApp',
 		'reactTo',
 		require('./yt_result').name,
 		require('./yt_search').name,
-		require('./cw_revealLabel').name,
 		require('./yt_auth').name
 	]);
 
@@ -36,246 +35,108 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 });
 
 youtubeApp.constant("SERVERPATHS", {
-    youtubeUrl: "/playlist"
+    youtubeUrl: "/playlist",
+		notificationUrl: "/notification"
 });
 
-},{"./cw_revealLabel":4,"./mainTemplate.html":5,"./yt_auth":6,"./yt_result":8,"./yt_search":14}],3:[function(require,module,exports){
-
-module.exports = function ($timeout) {
-	'use strict';
-	/**
-	 * Shortens a piece of text in a tile
-	 * by fading out the last characters.
-	 * Complete text will be visible on-focus.
-	 */
-	return {
-		restrict: 'A',
-		link: function (scope, element, attrs) {
-
-			var VISIBLE_LINE_COUNT = 2,
-				GRADIENT_STEPS = 5, // if changed, updated classes in tile-app-label-reveal.scss
-				elementAbove = element.parent()[0],
-				lineHeight,
-				maxHeight,
-				text,
-				spans
-
-
-			// Temporary custom settings for the Discover tile
-			if(element.attr('data-type')==='title') {
-				VISIBLE_LINE_COUNT = 1;
-			}
-
-			/**
-			 * Detects if truncating is needed
-			 */
-			scope.init = function () {
-
-				//reset text to get the right offsetTop of spans (after zooming/resizing)
-				element[0].innerHTML = '<span>'+text+'</span>';
-				var offsetHeight = element.find('span')[0].offsetHeight;
-
-				//reset bottom space to get the right space after zooming/resizing
-				element.css('bottom','20px');
-
-				// wrap each character in a span, and
-				element.html('<span>' + element.find('span').text().split('').join('</span><span>') + '</span>');
-				spans = element[0].querySelectorAll('span');
-
-				// find out the number of lines and calculate an
-				// approximate lineHeight depending on the height of the paragraph
-				var numberOfLines = scope.getNumberOfLines();
-				lineHeight = parseInt(element.prop('offsetHeight')/numberOfLines);
-				maxHeight = VISIBLE_LINE_COUNT * lineHeight;
-
-				if(offsetHeight > maxHeight) {
-					// add tile state
-					elementAbove.classList.add('with-truncated-label');
-					scope.addListeners();
-					scope.initEffect();
-				}
-			};
-
-			scope.getNumberOfLines = function(){
-				var numberOfLines = 1;
-				var currentOffset = spans[0].offsetTop;
-				for (var i = 0, l = spans.length; i < l; i++) {
-					if(spans[i].offsetTop != currentOffset) {
-						numberOfLines++;
-						currentOffset = spans[i].offsetTop;
-					}
-				}
-				return numberOfLines;
-			};
-
-			scope.addListeners = function() {
-
-				scope.$on('ON_FOCUS', function() {
-						scope.showFullLabel();
-				});
-
-				scope.$on('ON_MOUSE_LEAVE', function() {
-					scope.showShortenedLabel();
-				});
-			};
-
-			scope.initEffect = function() {
-
-				// detect the first character that
-				// is placed on the first line that exceeds the visible-line-count
-
-				maxHeight += spans[0].offsetTop;
-
-				var index = scope.getFirstSpanOutside();
-				if(index<spans.length){
-					scope.addTransparency(index);
-				}
-			};
-
-			/**
-			 * Loops through spans and looks for the first span
-			 * placed on line (VISIBLE_LINE_COUNT + 1)
-			 * @return {Number} Index of that first span
-			 */
-			scope.getFirstSpanOutside = function() {
-				var index;
-				for (var i = 0, l = spans.length; i < l; i++) {
-					if(spans[i].offsetTop >= maxHeight) {
-						index = i;
-						break;
-					}
-				}
-				return index;
-			};
-
-			/**
-			 * Cuts off the text making the last x characters semi-transparent
-			 * and wrapping the remaining part in an additional span so we only
-			 * need to hide a single span.
-			 * @param {Number} index - index of first span placed on line "VISIBLE_LINE_COUNT + 1"
-			 */
-			scope.addTransparency = function(index) {
-
-				// manipulating node outside of DOM to reduce amount of repaints
-
-				var spansClone = angular.element(spans).clone(),
-					spansStringArray = [],
-					opacity = 0;
-
-				for (var ii = spansClone.length - 1; ii >= 0; ii--) {
-
-					// add transparency to last characters on line "VISIBLE_LINE_COUNT"
-					if(opacity !== 100 && ii < index && angular.element(spansClone[ii]).text() !== ' ' && spansClone.length>index) {
-
-						opacity += (100 / GRADIENT_STEPS);
-
-						if(opacity < 100) {
-							spansClone[ii].classList.add(
-								'tile-label-semi-transparent',
-								'transitionOpacity03',
-									'tile-label-semi-transparent-' + opacity
-							);
-						}
-					}
-
-					// store outerHTML in an array for further manipulation
-					spansStringArray.push(spansClone[ii].outerHTML);
-				}
-
-				// reverse array since for loop walked backwards
-				spansStringArray.reverse();
-				// wrap part that needs to be invisible (on default state) in separate span
-				spansStringArray.splice(index, 0, '<span class="tile-label-hidden-part transitionOpacity03">');
-				spansStringArray.splice(spansStringArray.length, 0, '</span>');
-
-				// add manipulated spans to DOM
-				element[0].innerHTML = spansStringArray.join('');
-			};
-
-
-
-			$timeout(function() {
-				text = element.find('span').text();
-				scope.init();
-			});
-
-			scope.$on('RESIZE', function(){
-				scope.init();
-			});
-
-		}
-	};
-};
-
-
-},{}],4:[function(require,module,exports){
-module.exports = angular.module('cw_revealLabel', ['ngResource'])
-	.directive('cwRevealLabel', require('./cw_revealLabelDirective'));
-
-
-},{"./cw_revealLabelDirective":3}],5:[function(require,module,exports){
+},{"./mainTemplate.html":3,"./yt_auth":4,"./yt_result":6,"./yt_search":14}],3:[function(require,module,exports){
 module.exports = "<div class=\"container\">\n  <yt-search class=\"yt-search\"></yt-search>\n  <yt-result class=\"yt-result\"></yt-result>\n\t<yt-auth class=\"ng-hide\"></yt-auth>\n</div>";
 
-},{}],6:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 module.exports = angular.module('yt_auth', ['ngResource'])
 	.directive('ytAuth', require('./yt_authDirective'));
 
-},{"./yt_authDirective":7}],7:[function(require,module,exports){
+},{"./yt_authDirective":5}],5:[function(require,module,exports){
 module.exports = function ($window, $http, $interval, $log) {
-	'use strict';
-	return {
-		restrict: 'E',
-		link: function(scope, element, attr){
-			//TODO: use more angular.js methods instead of mix of native and angular stuff
+    'use strict';
+    return {
+        restrict: 'E',
+        link: function (scope, element, attr) {
+            //TODO: use more angular.js methods instead of mix of native and angular stuff
 
-			var openidIframe = document.createElement('iframe');
+            var openidIframe = document.createElement('iframe');
 
-			openidIframe.src = config.authServer + '/assets/login_status.html';
-			openidIframe.id = 'openid-provider';
-			openidIframe.style.visibility = 'hidden';
-			openidIframe.style.display = 'none';
+            openidIframe.src = config.authServer + '/assets/login_status.html';
+            openidIframe.id = 'openid-provider';
+            openidIframe.style.visibility = 'hidden';
+            openidIframe.style.display = 'none';
 
-			document.body.appendChild(openidIframe);
+            document.body.appendChild(openidIframe);
 
-			openidIframe.onload = check_session;
+            openidIframe.onload = check_session;
 
-			var timerID = setInterval(check_session, config.sessionPollingInterval * 1000);
+            var timerID = setInterval(check_session, config.sessionPollingInterval * 1000);
 
-			function check_session() {
-					var win = openidIframe.contentWindow;
-					win.postMessage('youtubeApp ' + config.userUUID, config.authServer);
-			}
+            function check_session() {
+                var win = openidIframe.contentWindow;
+                win.postMessage('youtubeApp ' + config.userUUID, config.authServer);
+            }
 
-			
-			function receiveMessageP(e) {
-					if(e.originalEvent){
-						e = e.originalEvent;
-					}
-					if (e.origin !== config.authServer) {
-							$log.log('domain does not match!');
-							return;
-					}
-					var stat = e.data;
-					$log.log('poller | received message:' + stat);
-					if (stat == 'invalid') {
-						$log.log('session=invalid! Logging out and redirecting');
-						clearInterval(timerID);
-						$window.location.href ='/signOut';
-					}
-			}
 
-			angular.element($window).on('message', receiveMessageP);
-		}
-	}
+            function receiveMessageP(event) {
+                if (event.originalEvent) {
+                    event = event.originalEvent;
+                }
+                if (event.origin !== config.authServer) {
+                    $log.log('event.origin domain [' + event.origin + '] does not match the configured domain [' + config.authServer + ']');
+                    return;
+                }
+                var stat = event.data;
+                $log.log('poller | received message:' + stat);
+                if (stat == 'invalid') {
+                    $log.log('session=invalid! Logging out and redirecting');
+                    clearInterval(timerID);
+                    $window.location.href = '/signOut';
+                }
+            }
+
+            angular.element($window).on('message', receiveMessageP);
+        }
+    }
 };
-},{}],8:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = angular.module('yt_result', ['ngResource', 'pascalprecht.translate', 'reactTo'])
 	.directive('ytResult', require('./yt_resultDirective'))
 	.service('ytPlaylistService', require('./yt_playlistService'))
-	.directive('ytResultItem', require('./yt_resultItemDirective'));
+	.directive('ytResultItem', require('./yt_resultItemDirective'))
+	.directive('ytNotification', require('./yt_notificationDirective'));
 
 
-},{"./yt_playlistService":9,"./yt_resultDirective":10,"./yt_resultItemDirective":11}],9:[function(require,module,exports){
+},{"./yt_notificationDirective":7,"./yt_playlistService":9,"./yt_resultDirective":10,"./yt_resultItemDirective":11}],7:[function(require,module,exports){
+
+module.exports = function ($http, SERVERPATHS) {
+	return {
+		restrict: 'E',
+		template: require('./yt_notificationTemplate.html'),
+		link: function(scope, element){
+
+			var payload = {
+				notification: {
+					image: 'http://yetu.nerdgeschoss.de/wp-content/uploads/2014/08/logo@2x.png',
+					title: 'The Smart Home Platform',
+					subtitle: 'Your applications on every device and operating system.',
+					backgroundColor: 'rgb(0, 153, 0)'
+				}
+			};
+
+			scope.sendNotification = function(e){
+				$http.post(SERVERPATHS.notificationUrl, payload).success(function(data){
+
+				}).error(function(data, status){
+
+				})
+
+			};
+
+
+		}
+	}
+};
+
+},{"./yt_notificationTemplate.html":8}],8:[function(require,module,exports){
+module.exports = "<div class=\"yt-result-list-item--buttons\">\n    <button class=\"yt-result-list-item--button\"\n            ng-click=\"sendNotification($event)\">\n      Send general notification to TV\n      </button>\n  </div>\n";
+
+},{}],9:[function(require,module,exports){
 module.exports = function ($http, SERVERPATHS) {
 	'use strict';
 	this.playlistSendResult = null;
@@ -435,7 +296,7 @@ module.exports = function (ytPlaylistService, ytSearchState) {
 module.exports = "<li class=\"yt-result-list-item\">\n  <div class=\"yt-result-list-item--img\">\n    <img ng-if=\"resultList.img\" class=\"yt-result-list-item--img\" src=\"{{resultList.img}}\"/>\n    <img data-index=\"{{$index}}\" data-id=\"{{resultList.playlistId}}\" class=\"yt-result-list-item--playimg\" src=\"assets/youtube_producer/img/play-icon.svg\" ng-click=\"onPlay($event)\"/>\n  </div>\n  <div class=\"yt-result-list-item--rightContent\">\n    <h1 class=\"yt-result-list-item--title\">\n      <p class=\"yt-result-list-item--title-container\" data-type=\"title\" cw-reveal-label><span>{{resultList.title}}</span></p>\n    </h1>\n    <p class=\"yt-result-list-item--subtitle\">\n      <span>by {{resultList.channel}}</span>\n      <span class=\"point\">*</span>\n      <span>{{resultList.description.createDate}}</span>\n    </p>\n    <p class=\"yt-result-list-item--description\" data-type=\"description\" cw-reveal-label ng-if=\"resultList.description.text\">\n      <span>{{resultList.description.text}}</span>\n    </p>\n    <p class=\"yt-result-list-item--description\" ng-if=\"!resultList.description.text\">No description available.</p>\n  </div>\n  <div class=\"yt-result-list-item--buttons\">\n    <button class=\"yt-result-list-item--button\"\n            ng-click=\"onPlaylistSendButtonClick($event)\"\n            data-title=\"{{resultList.title}}\" data-id=\"{{resultList.playlistId}}\" data-channeltitle=\"{{resultList.channel}}\">\n      Play on TV\n      </button>\n  </div>\n  <div class=\"yt-result-list-item--video\"  ng-class=\"{'visible':playing}\" ng-click=\"onClose()\">\n    <div id=\"{{'player'+$index}}\" class=\"yt-result-list-item--player\">\n    </div>\n    <div ng-click=\"onClose()\" class=\"yt-result-list-item--close\">x</div>\n  </div>\n</li>";
 
 },{}],13:[function(require,module,exports){
-module.exports = "<div>\n<div class=\"yt-send-overlay\" ng-class=\"{visible: sendOverlay}\">\n  <p ng-if=\"playListSended==='YES'\">\n    YouTube Playlist \"{{playListName}}\" is now sent to your TV!\n  </p>\n  <p ng-if=\"playListSended==='ERROR'\">\n    YouTube Playlist \"{{playListName}}\" could not be sent to your TV!\n  </p>\n  <p ng-if=\"playListSended===401\">\n    You are not allowed to send the YouTube Playlist \"{{playListName}}\" to TV!\n  </p>\n</div>\n<ul class=\"yt-result-list\">\n  <yt-result-item ng-repeat=\"resultList in resultLists\">‚\n  </yt-result-item>\n  <div ng-if=\"resultListsState==='empty'\">\n    No results found.\n  </div>\n</ul>\n</div>";
+module.exports = "<div>\n<div class=\"yt-send-overlay\" ng-class=\"{visible: sendOverlay}\">\n  <p ng-if=\"playListSended==='YES'\">\n    YouTube Playlist \"{{playListName}}\" is now sent to your TV!\n  </p>\n  <p ng-if=\"playListSended==='ERROR'\">\n    YouTube Playlist \"{{playListName}}\" could not be sent to your TV!\n  </p>\n  <p ng-if=\"playListSended===401\">\n    You are not allowed to send the YouTube Playlist \"{{playListName}}\" to TV!\n  </p>\n</div>\n<ul class=\"yt-result-list\">\n  <yt-result-item ng-repeat=\"resultList in resultLists\">‚\n  </yt-result-item>\n  <div ng-if=\"resultListsState==='empty'\">\n    No results found.\n  </div>\n\t<div ng-if=\"resultListsState==='empty'\">\n    <yt-notification></yt-notification>\n  </div>\n</ul>\n</div>";
 
 },{}],14:[function(require,module,exports){
 module.exports = angular.module('yt_search', ['ngResource','pascalprecht.translate'])

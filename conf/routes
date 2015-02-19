@@ -12,6 +12,7 @@ GET         /authenticate/:provider        @com.yetu.play.authenticator.controll
 # Youtube app routes
 GET         /                              @com.yetu.youtube.controllers.YoutubeController.index
 POST        /playlist                      @com.yetu.youtube.controllers.YoutubeController.playlist
+POST        /notification                  @com.yetu.youtube.controllers.YoutubeController.notification
 
 
 GET         /assets/appMetaData/manifest.json @com.yetu.youtube.controllers.YoutubeController.manifest
