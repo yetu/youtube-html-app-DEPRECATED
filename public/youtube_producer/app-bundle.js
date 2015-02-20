@@ -9,7 +9,8 @@ var youtubeApp = angular.module('youtubeApp',
 		'reactTo',
 		require('./yt_result').name,
 		require('./yt_search').name,
-		require('./yt_auth').name
+		require('./yt_auth').name,
+		require('./yt_notification').name
 	]);
 
 youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
@@ -39,7 +40,14 @@ youtubeApp.constant("SERVERPATHS", {
 		notificationUrl: "/notification"
 });
 
-},{"./mainTemplate.html":3,"./yt_auth":4,"./yt_result":6,"./yt_search":14}],3:[function(require,module,exports){
+youtubeApp.constant("SPECIALPURPOSE", {
+    notificationTriggers: ["yetu", "is", "awesome"],
+		successOnSentNotification: "A general notification was sent successfully!",
+		errorOnSentNotification: "There was an error sending the general notification",
+		displayTimeout: 2000
+});
+
+},{"./mainTemplate.html":3,"./yt_auth":4,"./yt_notification":6,"./yt_result":8,"./yt_search":14}],3:[function(require,module,exports){
 module.exports = "<div class=\"container\">\n  <yt-search class=\"yt-search\"></yt-search>\n  <yt-result class=\"yt-result\"></yt-result>\n\t<yt-auth class=\"ng-hide\"></yt-auth>\n</div>";
 
 },{}],4:[function(require,module,exports){
@@ -95,48 +103,50 @@ module.exports = function ($window, $http, $interval, $log) {
     }
 };
 },{}],6:[function(require,module,exports){
+module.exports = angular.module('yt_notification', ['ngResource'])
+.service('ytNotification', require('./ytNotification'));
+},{"./ytNotification":7}],7:[function(require,module,exports){
+module.exports = function ($http, SERVERPATHS, SPECIALPURPOSE) {
+	'use strict';
+	//TODO: add more payloads
+	//TODO: randomize payloads
+	var payload = {
+		notification: {
+			image: 'http://i4.mirror.co.uk/incoming/article141978.ece/alternates/s2197/burglar-trying-to-pry-open-window-on-house-pic-getty-images-123608196.jpg',
+			title: 'Outdoor camera',
+			subtitle: 'Motion detected',
+			backgroundColor: 'rgb(40, 153, 80)'
+		}
+	};
+	this.isSpecialTrigger = function(inputValue){
+		var result = [];
+		angular.forEach(SPECIALPURPOSE.notificationTriggers, function(value, key) {
+			if(inputValue.toLowerCase().indexOf(value) === -1){
+				result.push(0);
+			} else {
+				result.push(1);
+			}
+		});
+
+		if (result.indexOf(0) !== -1){
+			return false;
+		} else {
+			return true;
+		}
+	};
+	this.sendGeneralNotification = function(){
+		return $http.post(SERVERPATHS.notificationUrl, payload);
+	};
+};
+
+},{}],8:[function(require,module,exports){
 module.exports = angular.module('yt_result', ['ngResource', 'pascalprecht.translate', 'reactTo'])
 	.directive('ytResult', require('./yt_resultDirective'))
 	.service('ytPlaylistService', require('./yt_playlistService'))
-	.directive('ytResultItem', require('./yt_resultItemDirective'))
-	.directive('ytNotification', require('./yt_notificationDirective'));
+	.directive('ytResultItem', require('./yt_resultItemDirective'));
 
 
-},{"./yt_notificationDirective":7,"./yt_playlistService":9,"./yt_resultDirective":10,"./yt_resultItemDirective":11}],7:[function(require,module,exports){
-
-module.exports = function ($http, SERVERPATHS) {
-	return {
-		restrict: 'E',
-		template: require('./yt_notificationTemplate.html'),
-		link: function(scope, element){
-
-			var payload = {
-				notification: {
-					image: 'http://yetu.nerdgeschoss.de/wp-content/uploads/2014/08/logo@2x.png',
-					title: 'The Smart Home Platform',
-					subtitle: 'Your applications on every device and operating system.',
-					backgroundColor: 'rgb(0, 153, 0)'
-				}
-			};
-
-			scope.sendNotification = function(e){
-				$http.post(SERVERPATHS.notificationUrl, payload).success(function(data){
-
-				}).error(function(data, status){
-
-				})
-
-			};
-
-
-		}
-	}
-};
-
-},{"./yt_notificationTemplate.html":8}],8:[function(require,module,exports){
-module.exports = "<div class=\"yt-result-list-item--buttons\">\n    <button class=\"yt-result-list-item--button\"\n            ng-click=\"sendNotification($event)\">\n      Send general notification to TV\n      </button>\n  </div>\n";
-
-},{}],9:[function(require,module,exports){
+},{"./yt_playlistService":9,"./yt_resultDirective":10,"./yt_resultItemDirective":11}],9:[function(require,module,exports){
 module.exports = function ($http, SERVERPATHS) {
 	'use strict';
 	this.playlistSendResult = null;
@@ -296,7 +306,7 @@ module.exports = function (ytPlaylistService, ytSearchState) {
 module.exports = "<li class=\"yt-result-list-item\">\n  <div class=\"yt-result-list-item--img\">\n    <img ng-if=\"resultList.img\" class=\"yt-result-list-item--img\" src=\"{{resultList.img}}\"/>\n    <img data-index=\"{{$index}}\" data-id=\"{{resultList.playlistId}}\" class=\"yt-result-list-item--playimg\" src=\"assets/youtube_producer/img/play-icon.svg\" ng-click=\"onPlay($event)\"/>\n  </div>\n  <div class=\"yt-result-list-item--rightContent\">\n    <h1 class=\"yt-result-list-item--title\">\n      <p class=\"yt-result-list-item--title-container\" data-type=\"title\" cw-reveal-label><span>{{resultList.title}}</span></p>\n    </h1>\n    <p class=\"yt-result-list-item--subtitle\">\n      <span>by {{resultList.channel}}</span>\n      <span class=\"point\">*</span>\n      <span>{{resultList.description.createDate}}</span>\n    </p>\n    <p class=\"yt-result-list-item--description\" data-type=\"description\" cw-reveal-label ng-if=\"resultList.description.text\">\n      <span>{{resultList.description.text}}</span>\n    </p>\n    <p class=\"yt-result-list-item--description\" ng-if=\"!resultList.description.text\">No description available.</p>\n  </div>\n  <div class=\"yt-result-list-item--buttons\">\n    <button class=\"yt-result-list-item--button\"\n            ng-click=\"onPlaylistSendButtonClick($event)\"\n            data-title=\"{{resultList.title}}\" data-id=\"{{resultList.playlistId}}\" data-channeltitle=\"{{resultList.channel}}\">\n      Play on TV\n      </button>\n  </div>\n  <div class=\"yt-result-list-item--video\"  ng-class=\"{'visible':playing}\" ng-click=\"onClose()\">\n    <div id=\"{{'player'+$index}}\" class=\"yt-result-list-item--player\">\n    </div>\n    <div ng-click=\"onClose()\" class=\"yt-result-list-item--close\">x</div>\n  </div>\n</li>";
 
 },{}],13:[function(require,module,exports){
-module.exports = "<div>\n<div class=\"yt-send-overlay\" ng-class=\"{visible: sendOverlay}\">\n  <p ng-if=\"playListSended==='YES'\">\n    YouTube Playlist \"{{playListName}}\" is now sent to your TV!\n  </p>\n  <p ng-if=\"playListSended==='ERROR'\">\n    YouTube Playlist \"{{playListName}}\" could not be sent to your TV!\n  </p>\n  <p ng-if=\"playListSended===401\">\n    You are not allowed to send the YouTube Playlist \"{{playListName}}\" to TV!\n  </p>\n</div>\n<ul class=\"yt-result-list\">\n  <yt-result-item ng-repeat=\"resultList in resultLists\">‚\n  </yt-result-item>\n  <div ng-if=\"resultListsState==='empty'\">\n    No results found.\n  </div>\n\t<div ng-if=\"resultListsState==='empty'\">\n    <yt-notification></yt-notification>\n  </div>\n</ul>\n</div>";
+module.exports = "<div>\n<div class=\"yt-send-overlay\" ng-class=\"{visible: sendOverlay}\">\n  <p ng-if=\"playListSended==='YES'\">\n    YouTube Playlist \"{{playListName}}\" is now sent to your TV!\n  </p>\n  <p ng-if=\"playListSended==='ERROR'\">\n    YouTube Playlist \"{{playListName}}\" could not be sent to your TV!\n  </p>\n  <p ng-if=\"playListSended===401\">\n    You are not allowed to send the YouTube Playlist \"{{playListName}}\" to TV!\n  </p>\n</div>\n<ul class=\"yt-result-list\">\n  <yt-result-item ng-repeat=\"resultList in resultLists\">‚\n  </yt-result-item>\n  <div ng-if=\"resultListsState==='empty'\">\n    No results found.\n  </div>\n</ul>\n</div>";
 
 },{}],14:[function(require,module,exports){
 module.exports = angular.module('yt_search', ['ngResource','pascalprecht.translate'])
@@ -304,7 +314,7 @@ module.exports = angular.module('yt_search', ['ngResource','pascalprecht.transla
 	.directive('ytSearch', require('./yt_searchDirective'));
 
 },{"./yt_searchDirective":15,"./yt_searchState":16}],15:[function(require,module,exports){
-module.exports = function (ytSearchState) {
+module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeout) {
 	return {
 		restrict: 'E',
 		template: require('./yt_searchTemplate.html'),
@@ -322,9 +332,24 @@ module.exports = function (ytSearchState) {
 				}
 			};
 			scope.initSearch = function(value){
-				ytSearchState.setSearchValue(value);
-				scope.searchValue = ytSearchState.getSearchValue(false);
-				ytSearchState.setSearchResult()
+				//if a special search query is entered we send a general notification
+				if(ytNotification.isSpecialTrigger(value)){
+					var result = ytNotification.sendGeneralNotification();
+					result.then(function(result) {
+						element.find('input')[0].value = SPECIALPURPOSE.successOnSentNotification;
+					}, function(err) {
+						element.find('input')[0].value = SPECIALPURPOSE.errorOnSentNotification;
+					});
+					$timeout(function(){
+						element.find('input')[0].value = '';
+					}, SPECIALPURPOSE.displayTimeout);
+					return;
+				//from here on it is normal search
+				} else {
+					ytSearchState.setSearchValue(value);
+					scope.searchValue = ytSearchState.getSearchValue(false);
+					ytSearchState.setSearchResult();
+				}
 			}
 		}
 	}

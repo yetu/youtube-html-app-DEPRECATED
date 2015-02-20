@@ -6,7 +6,8 @@ var youtubeApp = angular.module('youtubeApp',
 		'reactTo',
 		require('./yt_result').name,
 		require('./yt_search').name,
-		require('./yt_auth').name
+		require('./yt_auth').name,
+		require('./yt_notification').name
 	]);
 
 youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
@@ -34,4 +35,11 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 youtubeApp.constant("SERVERPATHS", {
     youtubeUrl: "/playlist",
 		notificationUrl: "/notification"
+});
+
+youtubeApp.constant("SPECIALPURPOSE", {
+    notificationTriggers: ["yetu", "is", "awesome"],
+		successOnSentNotification: "A general notification was sent successfully!",
+		errorOnSentNotification: "There was an error sending the general notification",
+		displayTimeout: 2000
 });
