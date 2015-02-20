@@ -1,12 +1,14 @@
-var youtubeApp = angular.module('youtubeApp',
+var youtubeViewerApp = angular.module('youtubeViewerApp',
 	[
 		'ngRoute',
 		'ngResource',
 		'pascalprecht.translate',
-		'reactTo'
+		'reactTo',
+        require('./ytv_detailInformation').name,
+        require('./ytv_detailView').name
 	]);
 
-youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
+youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
@@ -26,8 +28,39 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 
 	$translateProvider.preferredLanguage('en');
 
+
 });
 
-youtubeApp.constant("SERVERPATHS", {
-    youtubeUrl: "/playlist"
+youtubeViewerApp.run(function(detailInformationService){
+    detailInformationService.data = {
+        feed: {
+            entries: [{
+                containsVideo: true,
+                imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
+                title: "Can We Genetically Improve Intelligence?",
+                truncatedTitle: "Can We Genetically Improve...",
+                videourl: "vr5n_ZOZ6E8"
+            },
+                {
+                    containsVideo: true,
+                    imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
+                    title: "Can We Genetically Improve Intelligence?",
+                    truncatedTitle: "Can We Genetically Improve...",
+                    videourl: "vr5n_ZOZ6E8"
+                }],
+            title: "AsapSCIENCE",
+            truncatedTitle: "AsapSCIENCE - "
+            
+        }
+        
+    }
+});
+
+youtubeViewerApp.constant('CONFIG',{
+    video: {
+        highlightTimeout: 250,
+        FAST_FORWARD: 20,
+        FAST_REWIND: -20
+    }
 })
+

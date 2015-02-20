@@ -1,0 +1,86 @@
+/* 
+    Created on : 14.08.2014, 14:24:03
+    Author     : meefinb
+*/
+
+/*a bit hacky*/
+controlbar {
+  position: fixed;
+}
+
+.preview-overlay-container {
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.7) 0%, rgba(1, 1, 1, 1) 100%);
+  background-image: -moz-linear-gradient(rgba(0, 0, 0, 0.7) 0%, rgba(1, 1, 1, 1) 100%);
+  background-image: -o-linear-gradient(rgba(0, 0, 0, 0.7) 0%, rgba(1, 1, 1, 1) 100%);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7) 0%, rgba(1, 1, 1, 1) 100%);
+}
+
+.preview-grid-container {
+  position: absolute;
+  top: 400px;
+  left: 0;
+  display: -webkit-inline-box; /* compass one */
+  display: inline-flex;
+  transition: 0.5s;
+}
+
+.preview-overlay-title {
+  color: #f2f2f2;
+  position: absolute;
+  font-size: 62px;
+  left: 400px;
+  top: 30px;
+}
+
+.preview-grid {
+  color: white;
+  transition: 0.5s;
+  // Prevent columns from collapsing when empty
+  min-height: 300px;
+  width: 500px;
+  height: 300px;
+  background-size: 500px 300px;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, .15) 100%);
+  background-color: #ffffff;
+}
+
+.preview-grid-content {
+  text-align: center;
+  padding-top: 60px;
+  color: #333333;
+  font-size: 24px;
+  font-family: Georgia;
+  margin: 10px;
+}
+
+.preview-logo {
+  margin: 20px;
+}
+
+.active-element {
+  position: absolute;
+  top: 400px;
+  left: 700px;
+  min-height: 300px;
+  height: 300px;
+  width: 500px;
+  min-width: 500px;
+  border-style: solid;
+  border-color: #ffffff;
+}
+
+.active-element-title {
+  color: #f2f2f2;
+  position: absolute;
+  font-size: 50px;
+  top: 720px;
+  left: 600px;
+  width: 700px;
+  text-align: center;
+}

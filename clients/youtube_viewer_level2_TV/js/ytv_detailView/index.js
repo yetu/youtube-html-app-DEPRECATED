@@ -1,0 +1,10 @@
+module.exports = angular.module('ytv_detailView', ['ytv_detailInformation', 'pascalprecht.translate'])
+    .service('playerState', require('./playerState'))
+    .controller('DetailViewCtrl', require('./detailViewController'))
+    .directive('detailView', require('./detailViewDirective'))
+    .directive('detailViewYoutube', require('./youtube/detailViewYoutube'))
+    .directive('previewOverlay', require('./preview/previewOverlayDirective'))
+    .directive('topbar', require('./topbar/topbarDirective'))
+    .directive('controlbar', require('./controlbar/controlbarDirective'))
+    .filter('controlbarTimeFilter', require('./controlbar/controlbarTimeFilter'))
+;
