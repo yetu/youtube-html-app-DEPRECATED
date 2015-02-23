@@ -114,15 +114,17 @@ module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
 
 				};
 
-				react(playerState, 'togglePlay', function () {
-					vidplay();
-				});
-				react(playerState, 'toggleRewind', function () {
-					skip(CONFIG.video.FAST_REWIND);
-				});
-				react(playerState, 'toggleForward', function () {
-					skip(CONFIG.video.FAST_FORWARD);
-				});
+                if(yetu){
+                    yetu.onActionPlay = function () {
+                        vidplay();
+                    };
+                    yetu.onActionRewind = function(){
+                        skip(CONFIG.video.FAST_REWIND);
+                    };
+                    yetu.onActionForward = function(){
+                        skip(CONFIG.video.FAST_FORWARD);
+                    };
+                }
 				//TODO: implement when right pressed and preview of all videos shown to stop video and when the preview is left to play video
 				//react(stateLevelService, 'level', function (n) {
 				//	if (typeof player === 'undefined' || player === null) {
