@@ -19,6 +19,14 @@ This project is divided into the following two parts
         * App, which produces videoplaylists as notifications for yetu tv and mobile homescreen
         * Technologies: AngularJS, styl
         * Build-Process: gulp
+    * `youtube_viewer_level2_TV`:
+        * App, which plays the videos of a youtube playlist
+        * path to app ist /level2TV
+        * parameters are the following:
+            * playlistId: id of the youtube playlist
+            * playlistItemIndex: number of item which should be shown
+        * Technologies: AngularJS, styl
+        * Build-Process: gulp
 * server-application which host the clients, provides authentication and configuration to communicate with other services
     * Technology: Scala
     * Build-Process: sbt

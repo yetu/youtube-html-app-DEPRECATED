@@ -670,8 +670,8 @@ module.exports = function ($http, feedDataGenerator, CONFIG, $location) {
     
     this.setFeedItemIndex = function(){
         var params = $location.search();
-        if(params.feedItemIndex){
-            that.dataFeedEntriesIndex = params.feedItemIndex
+        if(params.playlistItemIndex){
+            that.dataFeedEntriesIndex = params.playlistItemIndex
         }
     };
 };
