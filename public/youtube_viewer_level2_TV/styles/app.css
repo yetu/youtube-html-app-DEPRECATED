@@ -17,6 +17,9 @@ body {
   margin: 0;
   left: 0;
   top: 0;
+  font-family: source_sans_prolight;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 500;
 }
 .topbar-overlay-container {
   width: 1920px;
@@ -54,7 +57,7 @@ body {
   margin-left: 100px;
 }
 .topbar-menu-icon {
-  background-image: url("../img/icons/colon.svg");
+  background-image: url("../img/colon.svg");
   background-repeat: no-repeat;
   width: 55px;
   height: 60px;
@@ -79,7 +82,7 @@ controlbar {
   transition: 0.5s;
 }
 #btn_forward {
-  background-image: url("../img/icons/forward.svg");
+  background-image: url("../img/forward.svg");
   background-repeat: no-repeat;
   background-position: center;
   width: 100px;
@@ -99,13 +102,13 @@ controlbar {
   left: 900px;
 }
 #btn_play {
-  background-image: url("../img/icons/play.svg");
+  background-image: url("../img/play.svg");
 }
 #btn_pause {
-  background-image: url("../img/icons/pause.svg");
+  background-image: url("../img/pause.svg");
 }
 #btn_rewind {
-  background-image: url("../img/icons/forward.svg");
+  background-image: url("../img/forward.svg");
   background-repeat: no-repeat;
   background-position: center;
   width: 100px;
@@ -118,10 +121,10 @@ controlbar {
   transform: matrix(-1, 0, 0, 1, 0, 0);
 }
 #btn_forward.highlight {
-  background-image: url("../img/icons/forward_highlight.svg");
+  background-image: url("../img/forward_highlight.svg");
 }
 #btn_rewind.highlight {
-  background-image: url("../img/icons/forward_highlight.svg");
+  background-image: url("../img/forward_highlight.svg");
 }
 progress[value] {
 /* Reset the default appearance */
@@ -169,14 +172,9 @@ progress[value]::-webkit-progress-value {
 .detail-view-wrapper {
   width: 100%;
   height: 100%;
+  display: block;
   z-index: 2;
   position: relative;
-}
-.detail-view-wrapper.is-visible {
-  display: block;
-}
-.detail-view-wrapper.discover {
-  background-color: rgba(0,0,0,0.75) !important;
 }
 .detail-view-background {
   opacity: 0.1;

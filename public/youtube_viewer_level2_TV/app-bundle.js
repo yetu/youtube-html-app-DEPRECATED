@@ -7,7 +7,7 @@ var youtubeViewerApp = angular.module('youtubeViewerApp',
 		'ngResource',
 		'pascalprecht.translate',
 		'reactTo',
-        require('./ytv_detailInformation').name,
+        require('./ytv_information').name,
         require('./ytv_detailView').name
 	]);
 
@@ -34,29 +34,30 @@ youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, 
 
 });
 
-youtubeViewerApp.run(function(detailInformationService){
-    detailInformationService.data = {
-        feed: {
-            entries: [{
-                containsVideo: true,
-                imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
-                title: "Can We Genetically Improve Intelligence?",
-                truncatedTitle: "Can We Genetically Improve...",
-                videourl: "vr5n_ZOZ6E8"
-            },
-                {
-                    containsVideo: true,
-                    imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
-                    title: "Can We Genetically Improve Intelligence?",
-                    truncatedTitle: "Can We Genetically Improve...",
-                    videourl: "vr5n_ZOZ6E8"
-                }],
-            title: "AsapSCIENCE",
-            truncatedTitle: "AsapSCIENCE - "
-            
-        }
-        
-    }
+youtubeViewerApp.run(function(){
+    //informationService.data = {
+    
+    //    feed: {
+    //        entries: [{
+    //            containsVideo: true,
+    //            imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
+    //            title: "Can We Genetically Improve Intelligence?",
+    //            truncatedTitle: "Can We Genetically Improve...",
+    //            videourl: "vr5n_ZOZ6E8"
+    //        },
+    //            {
+    //                containsVideo: true,
+    //                imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
+    //                title: "Can We Genetically Improve Intelligence?",
+    //                truncatedTitle: "Can We Genetically Improve...",
+    //                videourl: "vr5n_ZOZ6E8"
+    //            }],
+    //        title: "AsapSCIENCE",
+    //        truncatedTitle: "AsapSCIENCE - ",
+    //        logo: "http://apps.yetudev.com:7575/assets/appMetaData/assets/logo.svg"
+    //    }
+    //
+    //}
 });
 
 youtubeViewerApp.constant('CONFIG',{
@@ -64,33 +65,16 @@ youtubeViewerApp.constant('CONFIG',{
         highlightTimeout: 250,
         FAST_FORWARD: 20,
         FAST_REWIND: -20
-    }
+    },
+    playlistMaxItemCount: 20,
+    pathToLogo: "/assets/appMetaData/assets/logo.svg"
 })
 
 
-},{"./mainTemplate.html":3,"./ytv_detailInformation":5,"./ytv_detailView":12}],3:[function(require,module,exports){
+},{"./mainTemplate.html":3,"./ytv_detailView":10,"./ytv_information":19}],3:[function(require,module,exports){
 module.exports = "<detail-view></detail-view>\n";
 
 },{}],4:[function(require,module,exports){
-/**
- * Service to share the data for the opened detailed view between
- * Dashboard and Detail view.
- * @Class DetailService
- */
-module.exports = function () {
-	'use strict';
-	this.data;
-	this.dataFeedEntriesIndex = 0; //default index for videos inside a playlist, later overwritten by user selection
-	this.isEnhancedFocussedView;
-	this.enhancedFocussedViewIsLoading;
-	this.enhancedFocussedViewHasError;
-};
-
-},{}],5:[function(require,module,exports){
-module.exports = angular.module('ytv_detailInformation',[])
-    .service('detailInformationService', require('./detailInformationService'));
-
-},{"./detailInformationService":4}],6:[function(require,module,exports){
 module.exports = function ($timeout, CONFIG, reactTo, playerState) {
 		'use strict';
 		return {
@@ -137,10 +121,10 @@ module.exports = function ($timeout, CONFIG, reactTo, playerState) {
 		};
 	};
 
-},{"./controlbarTemplate.html":7}],7:[function(require,module,exports){
+},{"./controlbarTemplate.html":5}],5:[function(require,module,exports){
 module.exports = "<div class=\"controlbar-overlay-container\" style=\"transform: translate(0px, 400px);\" ng-style=\"{'transform': cbIsVisible ? 'translate(0px,0px)':'translate(0px, 400px)'}\">\n  <div class=\"controlbar-container\">\n    <div id=\"btn_rewind\" ng-class=\"{highlight: highlightRewind }\"></div>\n    <div id=\"btn_pause\" ng-show=\"info.isPlaying\"></div>\n    <div id=\"btn_play\" ng-show=\"!info.isPlaying\"></div>\n    <div id=\"btn_forward\" ng-class=\"{highlight: highlightForward }\"></div>\n\n    <div id=\"actTime\">{{info.actTime | controlbarTimeFilter}}</div>\n    <progress id=\"progressbar\" max=\"100\" value=\"{{info.percentage}}\"></progress>\n    <div id=\"duration\">{{ info.duration | controlbarTimeFilter }}</div>\n  </div>\n  <div class=\"controlbar-title\">\n    {{data.feed.entries[currentIndex].title}}\n  </div>\n</div>\n";
 
-},{}],8:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = function () {
 	'use strict';
 
@@ -161,13 +145,14 @@ module.exports = function () {
 	};
 };
 
-},{}],9:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * @class DetailViewController
  */
-module.exports = function (detailInformationService, $scope, $rootScope, $timeout, reactTo) {
+module.exports = function (informationService, $scope, $rootScope, $timeout, reactTo, CONFIG) {
     'use strict';
     var react = reactTo($scope);
+    $scope.error = false;
 
     var setKeyHandler = function () {
 
@@ -188,12 +173,24 @@ module.exports = function (detailInformationService, $scope, $rootScope, $timeou
 
     setKeyHandler();
     
-    $scope.data = detailInformationService.data;
-    $scope.currentIndex = detailInformationService.dataFeedEntriesIndex;
-    
-    console.log($scope.data);
+    //TODO: get this from url
+    //var playlistID = "FLLtA9_lHZUPRSJcFKmCxYUA";
+    //var itemIndex = 0;
+    var playlistId = informationService.getPlaylistId();
+    informationService.setFeedItemIndex();
 
-    react(detailInformationService, 'dataFeedEntriesIndex', function (n, o) {
+    informationService.loadYTData(playlistId)
+        .then(function(feedData){
+            $scope.data = {
+                feed : feedData,
+                logo : CONFIG.pathToLogo
+            };
+        }, function(response){
+            $scope.error = true;
+            console.error('Youtube playlist request failed:',response.data.error.message)
+        });
+    
+    react(informationService, 'dataFeedEntriesIndex', function (n, o) {
         if (n != o) {
             $scope.currentIndex = n;
         }
@@ -201,7 +198,7 @@ module.exports = function (detailInformationService, $scope, $rootScope, $timeou
 
 };
 
-},{}],10:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function () {
 	'use strict';
 
@@ -220,11 +217,11 @@ module.exports = function () {
 	};
 };
 
-},{"./detailViewTemplate.html":11}],11:[function(require,module,exports){
-module.exports = "<div class=\"detail-view-wrapper\"\n     ng-controller=\"DetailViewCtrl\"\n     class=\"is-visible\">\n    <!--\n     style=\"{{data.fromHeaderStyle}} background-color: {{data['detail-view-background-color']}};-->\n  <div detail-view-youtube\n       class=\"detail-view-content\">\n  </div>\n  <preview-overlay></preview-overlay>\n  <topbar></topbar>\n  <controlbar></controlbar>\n</div>\n";
+},{"./detailViewTemplate.html":9}],9:[function(require,module,exports){
+module.exports = "<div class=\"detail-view-wrapper\"\n     ng-controller=\"DetailViewCtrl\">\n    <div ng-if=\"data\">\n        <div detail-view-youtube\n             class=\"detail-view-content\">\n        </div>\n        <preview-overlay></preview-overlay>\n        <topbar></topbar>\n        <controlbar></controlbar>\n    </div>\n    <div ng-if=\"error\">\n        Error. No youtube data available.\n    </div>\n</div>\n";
 
-},{}],12:[function(require,module,exports){
-module.exports = angular.module('ytv_detailView', ['ytv_detailInformation', 'pascalprecht.translate'])
+},{}],10:[function(require,module,exports){
+module.exports = angular.module('ytv_detailView', ['ytv_information', 'pascalprecht.translate'])
     .service('playerState', require('./playerState'))
     .controller('DetailViewCtrl', require('./detailViewController'))
     .directive('detailView', require('./detailViewDirective'))
@@ -235,15 +232,15 @@ module.exports = angular.module('ytv_detailView', ['ytv_detailInformation', 'pas
     .filter('controlbarTimeFilter', require('./controlbar/controlbarTimeFilter'))
 ;
 
-},{"./controlbar/controlbarDirective":6,"./controlbar/controlbarTimeFilter":8,"./detailViewController":9,"./detailViewDirective":10,"./playerState":13,"./preview/previewOverlayDirective":14,"./topbar/topbarDirective":16,"./youtube/detailViewYoutube":18}],13:[function(require,module,exports){
+},{"./controlbar/controlbarDirective":4,"./controlbar/controlbarTimeFilter":6,"./detailViewController":7,"./detailViewDirective":8,"./playerState":11,"./preview/previewOverlayDirective":12,"./topbar/topbarDirective":14,"./youtube/detailViewYoutube":16}],11:[function(require,module,exports){
 module.exports = function () {
 	this.togglePlay = false;
 	this.toggleForward = false;
 	this.toggleRewind = false
 };
 
-},{}],14:[function(require,module,exports){
-module.exports = function (detailInformationService) {
+},{}],12:[function(require,module,exports){
+module.exports = function (informationService) {
     'use strict';
 
     var translateFactor = 700,
@@ -292,7 +289,7 @@ module.exports = function (detailInformationService) {
             $scope.$on('$destroy', function () {
                 var selectedIndex = $scope.selectedIndex;
                 console.info("selectedIndex: " + selectedIndex);
-                detailInformationService.dataFeedEntriesIndex = selectedIndex;
+                informationServices.dataFeedEntriesIndex = selectedIndex;
                 //keyboardService.unbind(keyboardService.keys.LEFT, leftKeyId);
                 //keyboardService.unbind(keyboardService.keys.RIGHT, rightKeyId);
                 //keyboardService.unbind(keyboardService.keys.BACK, backKeyId);
@@ -301,10 +298,10 @@ module.exports = function (detailInformationService) {
     };
 };
 
-},{"./previewOverlayTemplate.html":15}],15:[function(require,module,exports){
+},{"./previewOverlayTemplate.html":13}],13:[function(require,module,exports){
 module.exports = "<div class=\"preview-overlay-container\">\n  <div class=\"preview-overlay-title\">{{data.name}}</div>\n  <div class=\"preview-grid-container\" ng-style=\"{'transform': translate}\">\n    <div ng-repeat=\"item in data.feed.entries\" class=\"preview-grid\"\n         ng-style=\"item.imageUrl && item.imageUrl !== '' && {'background-image':'url('+item.imageUrl+')', 'opacity' : selectedIndex===$index ? '1' : '0.3'}\">\n      <img ng-if=\"!item.imageUrl && data.logo\" class=\"preview-logo\" ng-src=\"{{data.logo}}\" alt=\"logo\">\n\n      <div class=\"preview-grid-content\" ng-if=\"!item.imageUrl\">\n        {{item.title}}\n      </div>\n    </div>\n  </div>\n  <div class=\"active-element\"></div>\n  <div class=\"active-element-title\">{{data.feed.entries[selectedIndex].title}}</div>\n</div>";
 
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function () {
 	'use strict';
 	return {
@@ -322,10 +319,10 @@ module.exports = function () {
 	};
 };
 
-},{"./topbarTemplate.html":17}],17:[function(require,module,exports){
+},{"./topbarTemplate.html":15}],15:[function(require,module,exports){
 module.exports = "<div class=\"topbar-overlay-container\" style=\"transform: translate(0px, -200px);\" ng-style=\"{'transform': tbIsVisible ? 'translate(0px,0px)':'translate(0px, -200px)'}\">\n  <div class=\"topbar-title-container\">\n    <div class=\"topbar-title-typo-bold\">{{'TOPBAR_SIMILAR' | translate}}</div>\n    <div class=\"topbar-title-typo\">{{'TOPBAR_WATCH_LATER' | translate}}</div>\n    <div class=\"topbar-title-typo\">{{'TOPBAR_SHARE' | translate}}</div>\n    <div class=\"topbar-menu-icon\"></div>\n  </div>\n</div>\n";
 
-},{}],18:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
 		'use strict';
 
@@ -504,7 +501,179 @@ module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
 		};
 	};
 
-},{"./detailViewYoutubeTemplate.html":19}],19:[function(require,module,exports){
+},{"./detailViewYoutubeTemplate.html":17}],17:[function(require,module,exports){
 module.exports = "<div id=\"player\"></div>";
+
+},{}],18:[function(require,module,exports){
+module.exports = function ($sce, $q) {
+    'use strict';
+
+    var truncateTitle = function (entry, feedData) {
+        var maxLength = 45;
+        feedData.title = feedData.title.replace('(320x240)', '');
+        if (feedData.title) {
+            maxLength = maxLength - feedData.title.length;
+        }
+        if (maxLength < 0) {
+            maxLength = 45;
+            feedData.truncatedTitle = S(feedData.title).truncate(maxLength).s;
+            entry.truncatedTitle = '';
+        }
+        else {
+            feedData.truncatedTitle = feedData.title + ' - ';
+            if (entry.title.indexOf('- tagesschau') != -1) {
+                entry.title = entry.title.substring(0, entry.title.indexOf('- tagesschau'));
+            }
+            entry.truncatedTitle =
+                new S(entry.title).truncate(maxLength).s;
+        }
+
+    };
+
+    var isImage = function isImage(entry) {
+        var deferred = $q.defer();
+        if (entry.imageUrl) {
+            var image = new Image();
+            image.onerror = function () {
+                deferred.resolve(false);
+                entry.imageUrl = undefined;
+            };
+            image.onload = function () {
+                deferred.resolve(true);
+            };
+            image.src = entry.imageUrl;
+        }
+        else {
+            deferred.resolve(false);
+        }
+        return deferred.promise;
+    };
+
+    var truncateTitlesAndCheckImages = function (feedData) {
+        var promises = [],
+            length = feedData.entries.length;
+        for (var i = 0; i < length; i++) {
+            promises.push(isImage(feedData.entries[i]));
+        }
+        return $q.all(promises).then(function () {
+            for (var i = 0; i < length; i++) {
+                truncateTitle(feedData.entries[i], feedData);
+            }
+            return feedData;
+        });
+    };
+    /**
+     * Parse data object from RSS feed
+     * @param  {object} data
+     * @return {object} parsed feed object
+     */
+    var parseYoutubeData = function (data) {
+        var items = data.items,
+            feedData = {};
+        if (items.length > 0) {
+            feedData.entries = [];
+            if (items[0] && items[0].snippet) {
+                feedData.title = items[0].snippet.channelTitle || '';
+            }
+
+            var item;
+            for (var j = 0, length = items.length; j < length; j++) {
+                item = items[j];
+                if (item && item.snippet) {
+                    var entry = {
+                        title: item.snippet.title || '',
+                        truncatedTitle: ''
+                    };
+
+                    entry.containsVideo = true;
+                    if (item.snippet.resourceId) {
+                        entry.videourl = item.snippet.resourceId.videoId || '';
+                    } else {
+                        entry.videourl = '';
+                    }
+                    if (item.snippet.thumbnails && item.snippet.thumbnails.maxres && item.snippet.thumbnails.maxres.url) {
+                        entry.imageUrl = item.snippet.thumbnails.maxres.url;
+                    }
+                    else if (item.snippet.thumbnails && item.snippet.thumbnails.high && item.snippet.thumbnails.high.url) {
+                        entry.imageUrl = item.snippet.thumbnails.high.url;
+                    }
+                    else if (item.snippet.thumbnails && item.snippet.thumbnails.medium && item.snippet.thumbnails.medium.url) {
+                        entry.imageUrl = item.snippet.thumbnails.medium.url;
+                    }
+                    else if (item.snippet.thumbnails && item.snippet.thumbnails.standard && item.snippet.thumbnails.standard.url) {
+                        entry.imageUrl = item.snippet.thumbnails.standard.url;
+                    }
+                    else if (item.snippet.thumbnails && item.snippet.thumbnails.default && item.snippet.thumbnails.default.url) {
+                        entry.imageUrl = item.snippet.thumbnails.default.url;
+                    } else {
+                        entry.imageUrl = '';
+                    }
+                    feedData.entries.push(entry);
+                }
+
+            }
+        }
+        var promise = truncateTitlesAndCheckImages(feedData);
+        return promise.then(function (feedData) {
+            return feedData;
+        });
+    };
+
+    return {
+        parseYoutubeData: parseYoutubeData
+    };
+
+
+}
+},{}],19:[function(require,module,exports){
+module.exports = angular.module('ytv_information',[])
+    .service('informationService', require('./informationService'))
+    .service('feedDataGenerator', require('./feedDataGenerator'));
+
+},{"./feedDataGenerator":18,"./informationService":20}],20:[function(require,module,exports){
+/**
+ * Service to share the data for the opened detailed view between
+ * Dashboard and Detail view.
+ * @Class DetailService
+ */
+module.exports = function ($http, feedDataGenerator, CONFIG, $location) {
+    'use strict';
+    var that = this;
+    var defaultIndex = 0;
+    this.dataFeedEntriesIndex = defaultIndex; //default index for videos inside a playlist, later overwritten by user selection
+
+    var pluck = function pluck(field) {
+        return function (obj) {
+            return obj[field];
+        }
+    };
+
+    this.loadYTData = function (playlistId) {
+        return $http({
+            method: 'GET',
+            url: 'https://www.googleapis.com/youtube/v3/playlistItems',
+            params: {
+                playlistId: playlistId,
+                key: config.youtubeDeveloperToken,
+                maxResults: CONFIG.playlistMaxItemCount,
+                part: 'snippet'
+            }
+        }).then(pluck('data'))
+            .then(feedDataGenerator.parseYoutubeData)
+    };
+
+    this.getPlaylistId = function() {
+        var params = $location.search();
+        return params.playlistId;
+        
+    };
+    
+    this.setFeedItemIndex = function(){
+        var params = $location.search();
+        if(params.feedItemIndex){
+            that.dataFeedEntriesIndex = params.feedItemIndex
+        }
+    };
+};
 
 },{}]},{},[1])

@@ -1,4 +1,4 @@
-module.exports = function (detailInformationService) {
+module.exports = function (informationService) {
     'use strict';
 
     var translateFactor = 700,
@@ -47,7 +47,7 @@ module.exports = function (detailInformationService) {
             $scope.$on('$destroy', function () {
                 var selectedIndex = $scope.selectedIndex;
                 console.info("selectedIndex: " + selectedIndex);
-                detailInformationService.dataFeedEntriesIndex = selectedIndex;
+                informationServices.dataFeedEntriesIndex = selectedIndex;
                 //keyboardService.unbind(keyboardService.keys.LEFT, leftKeyId);
                 //keyboardService.unbind(keyboardService.keys.RIGHT, rightKeyId);
                 //keyboardService.unbind(keyboardService.keys.BACK, backKeyId);

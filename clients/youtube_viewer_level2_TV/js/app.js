@@ -4,7 +4,7 @@ var youtubeViewerApp = angular.module('youtubeViewerApp',
 		'ngResource',
 		'pascalprecht.translate',
 		'reactTo',
-        require('./ytv_detailInformation').name,
+        require('./ytv_information').name,
         require('./ytv_detailView').name
 	]);
 
@@ -31,29 +31,30 @@ youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, 
 
 });
 
-youtubeViewerApp.run(function(detailInformationService){
-    detailInformationService.data = {
-        feed: {
-            entries: [{
-                containsVideo: true,
-                imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
-                title: "Can We Genetically Improve Intelligence?",
-                truncatedTitle: "Can We Genetically Improve...",
-                videourl: "vr5n_ZOZ6E8"
-            },
-                {
-                    containsVideo: true,
-                    imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
-                    title: "Can We Genetically Improve Intelligence?",
-                    truncatedTitle: "Can We Genetically Improve...",
-                    videourl: "vr5n_ZOZ6E8"
-                }],
-            title: "AsapSCIENCE",
-            truncatedTitle: "AsapSCIENCE - "
-            
-        }
-        
-    }
+youtubeViewerApp.run(function(){
+    //informationService.data = {
+    
+    //    feed: {
+    //        entries: [{
+    //            containsVideo: true,
+    //            imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
+    //            title: "Can We Genetically Improve Intelligence?",
+    //            truncatedTitle: "Can We Genetically Improve...",
+    //            videourl: "vr5n_ZOZ6E8"
+    //        },
+    //            {
+    //                containsVideo: true,
+    //                imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
+    //                title: "Can We Genetically Improve Intelligence?",
+    //                truncatedTitle: "Can We Genetically Improve...",
+    //                videourl: "vr5n_ZOZ6E8"
+    //            }],
+    //        title: "AsapSCIENCE",
+    //        truncatedTitle: "AsapSCIENCE - ",
+    //        logo: "http://apps.yetudev.com:7575/assets/appMetaData/assets/logo.svg"
+    //    }
+    //
+    //}
 });
 
 youtubeViewerApp.constant('CONFIG',{
@@ -61,6 +62,8 @@ youtubeViewerApp.constant('CONFIG',{
         highlightTimeout: 250,
         FAST_FORWARD: 20,
         FAST_REWIND: -20
-    }
+    },
+    playlistMaxItemCount: 20,
+    pathToLogo: "/assets/appMetaData/assets/logo.svg"
 })
 

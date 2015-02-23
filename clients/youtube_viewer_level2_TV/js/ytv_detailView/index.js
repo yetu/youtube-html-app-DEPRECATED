@@ -1,4 +1,4 @@
-module.exports = angular.module('ytv_detailView', ['ytv_detailInformation', 'pascalprecht.translate'])
+module.exports = angular.module('ytv_detailView', ['ytv_information', 'pascalprecht.translate'])
     .service('playerState', require('./playerState'))
     .controller('DetailViewCtrl', require('./detailViewController'))
     .directive('detailView', require('./detailViewDirective'))

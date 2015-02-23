@@ -1,9 +1,10 @@
 /**
  * @class DetailViewController
  */
-module.exports = function (detailInformationService, $scope, $rootScope, $timeout, reactTo) {
+module.exports = function (informationService, $scope, $rootScope, $timeout, reactTo, CONFIG) {
     'use strict';
     var react = reactTo($scope);
+    $scope.error = false;
 
     var setKeyHandler = function () {
 
@@ -24,12 +25,24 @@ module.exports = function (detailInformationService, $scope, $rootScope, $timeou
 
     setKeyHandler();
     
-    $scope.data = detailInformationService.data;
-    $scope.currentIndex = detailInformationService.dataFeedEntriesIndex;
-    
-    console.log($scope.data);
+    //TODO: get this from url
+    //var playlistID = "FLLtA9_lHZUPRSJcFKmCxYUA";
+    //var itemIndex = 0;
+    var playlistId = informationService.getPlaylistId();
+    informationService.setFeedItemIndex();
 
-    react(detailInformationService, 'dataFeedEntriesIndex', function (n, o) {
+    informationService.loadYTData(playlistId)
+        .then(function(feedData){
+            $scope.data = {
+                feed : feedData,
+                logo : CONFIG.pathToLogo
+            };
+        }, function(response){
+            $scope.error = true;
+            console.error('Youtube playlist request failed:',response.data.error.message)
+        });
+    
+    react(informationService, 'dataFeedEntriesIndex', function (n, o) {
         if (n != o) {
             $scope.currentIndex = n;
         }

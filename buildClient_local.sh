@@ -3,14 +3,19 @@ cd clients
 echo 'npm install'
 npm install
 
-echo 'test youtube_producer client'
-npm run test-youtube-producer-local &
+#COMMENT IN WHICH CLIENT YOU WANT TO RUN LOCALLY
 
-echo 'watch youtube_producer client'
-npm run watch-youtube-producer &
+#youtube producer
+#echo 'test youtube_producer client'
+#npm run test-youtube-producer-local &
 
-#TODO: add tests here
+#echo 'watch youtube_producer client'
+#npm run watch-youtube-producer &
 
+#-----
+
+#youtube_viewer_level2_TV
+#TODO: add tests 
 echo 'watch youtube_viewer_level2_TV client'
 npm run watch-youtube-viewer-level2-tv
 
