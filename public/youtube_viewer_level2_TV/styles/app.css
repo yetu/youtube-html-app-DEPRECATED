@@ -68,6 +68,82 @@ body {
 controlbar {
   position: fixed;
 }
+.preview-overlay-container {
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: -webkit-linear-gradient(rgba(0,0,0,0.7) 0%, #010101 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.7)), to(#010101));
+  background-image: linear-gradient(rgba(0,0,0,0.7) 0%, #010101 100%);
+}
+.preview-grid-container {
+  position: absolute;
+  top: 400px;
+  left: 0;
+  display: -webkit-inline-box; /* compass one */
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+.preview-overlay-title {
+  color: #f2f2f2;
+  position: absolute;
+  font-size: 62px;
+  left: 400px;
+  top: 30px;
+}
+.preview-grid {
+  color: #fff;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  min-height: 300px;
+  width: 500px;
+  height: 300px;
+  -webkit-background-size: 500px 300px;
+  background-size: 500px 300px;
+  background-repeat: no-repeat;
+  background-image: -webkit-linear-gradient(315deg, rgba(0,0,0,0) 0, rgba(0,0,0,0.15) 100%);
+  background-image: linear-gradient(135deg, rgba(0,0,0,0) 0, rgba(0,0,0,0.15) 100%);
+  background-color: #fff;
+}
+.preview-grid-content {
+  text-align: center;
+  padding-top: 60px;
+  color: #333;
+  font-size: 24px;
+  font-family: Georgia;
+  margin: 10px;
+}
+.preview-logo {
+  margin: 20px;
+}
+.active-element {
+  position: absolute;
+  top: 400px;
+  left: 700px;
+  min-height: 300px;
+  height: 300px;
+  width: 500px;
+  min-width: 500px;
+  border-style: solid;
+  border-color: #fff;
+}
+.active-element-title {
+  color: #f2f2f2;
+  position: absolute;
+  font-size: 50px;
+  top: 720px;
+  left: 600px;
+  width: 700px;
+  text-align: center;
+}
+controlbar {
+  position: fixed;
+}
 .controlbar-overlay-container {
   width: 1920px;
   height: 400px;

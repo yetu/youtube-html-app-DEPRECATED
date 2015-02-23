@@ -37,12 +37,14 @@ module.exports = function (informationService, $scope, $rootScope, $timeout, rea
                 feed : feedData,
                 logo : CONFIG.pathToLogo
             };
+            console.log($scope.data);
         }, function(response){
             $scope.error = true;
             console.error('Youtube playlist request failed:',response.data.error.message)
         });
     
     react(informationService, 'dataFeedEntriesIndex', function (n, o) {
+        console.log("test",n);
         if (n != o) {
             $scope.currentIndex = n;
         }

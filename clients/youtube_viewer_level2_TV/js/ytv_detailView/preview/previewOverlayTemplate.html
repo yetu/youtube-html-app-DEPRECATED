@@ -1,4 +1,4 @@
-<div class="preview-overlay-container">
+<div class="preview-overlay-container" ng-if="show">
   <div class="preview-overlay-title">{{data.name}}</div>
   <div class="preview-grid-container" ng-style="{'transform': translate}">
     <div ng-repeat="item in data.feed.entries" class="preview-grid"

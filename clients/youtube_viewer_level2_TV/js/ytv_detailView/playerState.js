@@ -1,5 +1,5 @@
 module.exports = function () {
-	this.togglePlay = false;
-	this.toggleForward = false;
-	this.toggleRewind = false
+	this.preview = false;
+    this.toggleRewind = true;
+    this.toggleForward = true;
 };

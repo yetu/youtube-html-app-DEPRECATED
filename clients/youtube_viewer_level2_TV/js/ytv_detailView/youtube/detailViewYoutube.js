@@ -107,7 +107,7 @@ module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
 						});
 					}
                     if (player.getVideoUrl && player.getVideoUrl().indexOf(scope.data.feed.entries[scope.currentIndex].videourl) === -1) {
-                        player.loadVideoById(scope.data.feed.entries[scope.currentIndex].videourl, 0, CONFIG.youtube.SUGGESTED_QUALITY);
+                        player.loadVideoById(scope.data.feed.entries[scope.currentIndex].videourl, 0, CONFIG.SUGGESTED_QUALITY);
                     } else if (player.getPlayerState && player.getPlayerState() !== YT.PlayerState.PLAYING) {
                         player.playVideo();
                     }
@@ -120,34 +120,34 @@ module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
                     };
                     yetu.onActionRewind = function(){
                         skip(CONFIG.video.FAST_REWIND);
+                        playerState.toggleRewind = !playerState.toggleRewind;
                     };
                     yetu.onActionForward = function(){
                         skip(CONFIG.video.FAST_FORWARD);
+                        playerState.toggleForward = !playerState.toggleForward;
                     };
                 }
-				//TODO: implement when right pressed and preview of all videos shown to stop video and when the preview is left to play video
-				//react(stateLevelService, 'level', function (n) {
-				//	if (typeof player === 'undefined' || player === null) {
-				//		return;
-				//	}
-				//	if (n === STATE_CONST.level.PREVIEW_VIEW) {
-				//		if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-				//			player.pauseVideo();
-				//		}
-				//	} else if (n === STATE_CONST.level.APP_FEED_VIEW) {
-				//		if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-				//			player.playVideo();
-				//		}
-				//	}
-				//});
+				react(playerState, 'preview', function (n) {
+					if (typeof player === 'undefined' || player === null) {
+						return;
+					}
+					if (n) {
+						if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+							player.pauseVideo();
+						}
+					} else {
+                        if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+							player.playVideo();
+						}
+					}
+				});
 
                 //TODO: remove this timeout
                 $timeout(function(){
                     if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined'){
                         loadPlayerAndVideo();
                     }
-                })
-                
+                });
 
 				scope.$watch('currentIndex', function (n, o) {
 					if (typeof YT === 'undefined' || typeof YT.Player === 'undefined' || typeof n === 'undefined') {

@@ -1,4 +1,4 @@
-module.exports = function (informationService) {
+module.exports = function (playerState) {
     'use strict';
 
     var translateFactor = 700,
@@ -12,45 +12,77 @@ module.exports = function (informationService) {
     return {
         restrict: 'E',
         template: require('./previewOverlayTemplate.html'),
-        controller: function ($scope) {
+        controller: function ($scope, informationService) {
+            $scope.show = false;
             $scope.selectedIndex = $scope.currentIndex;
             var oldIndex = $scope.currentIndex;
             $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
 
-            //TODO: apply actions on left, back, right
-            //var backKeyId = keyboardService.on(keyboardService.keys.BACK, function () {
-            //    $scope.selectedIndex = oldIndex;
-            //});
-            //
-            //var rightKeyId = keyboardService.on(keyboardService.keys.RIGHT, function () {
-            //    var nextIndex = $scope.selectedIndex + 1;
-            //    if (nextIndex >= $scope.data.feed.entries.length) {
-            //        console.info("no further feed entry... nothing to do");
-            //        return;
-            //    } else {
-            //        $scope.selectedIndex = nextIndex;
-            //        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
-            //    }
-            //});
-            //
-            //var leftKeyId = keyboardService.on(keyboardService.keys.LEFT, function () {
-            //    var nextIndex = $scope.selectedIndex - 1;
-            //    if (nextIndex < 0) {
-            //        console.info("no further feed entry... nothing to do");
-            //        return;
-            //    } else {
-            //        $scope.selectedIndex = nextIndex;
-            //        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
-            //    }
-            //});
+            var showView = function(show){
+                $scope.show = show;
+                playerState.preview = show;
+                $scope.$apply();
+            };
+            
+            if(yetu){
+                yetu.onActionBack = function () {
+                    if(playerState.preview){
+                        $scope.selectedIndex = oldIndex;
+                        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
+                        showView(false);
+                        $scope.$apply();
+                    }
+                    else{
+                        //yetu.sendQuit();
+                        flyer.wrapper.broadcast({
+                            channel: 'yetu',
+                            topic: 'control.quit',
+                            data: {}
+                        });
+                    }
+                };
+                
+                yetu.onActionEnter = function() {
+                    informationService.dataFeedEntriesIndex = $scope.selectedIndex;
+                    showView(false);
+                    $scope.$apply();
+                }
+                    
+                yetu.onActionRight = function () {
+                    if(playerState.preview){
+                        var nextIndex = $scope.selectedIndex + 1;
+                        if (nextIndex >= $scope.data.feed.entries.length) {
+                            console.info("no further feed entry... nothing to do");
+                            return;
+                        } else {
+                            $scope.selectedIndex = nextIndex;
+                            $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
+                        }
+                        $scope.$apply();
+                    }
+                    else{
+                        oldIndex = $scope.selectedIndex;
+                        showView(true);
+                    }
+                };
+                
+                yetu.onActionLeft = function () {
+                    var nextIndex = $scope.selectedIndex - 1;
+                    if (nextIndex < 0) {
+                        console.info("no further feed entry... nothing to do");
+                        return;
+                    } else {
+                        $scope.selectedIndex = nextIndex;
+                        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
+                    }
+                    $scope.$apply();
+                };
+            }
+            
 
             $scope.$on('$destroy', function () {
                 var selectedIndex = $scope.selectedIndex;
-                console.info("selectedIndex: " + selectedIndex);
                 informationServices.dataFeedEntriesIndex = selectedIndex;
-                //keyboardService.unbind(keyboardService.keys.LEFT, leftKeyId);
-                //keyboardService.unbind(keyboardService.keys.RIGHT, rightKeyId);
-                //keyboardService.unbind(keyboardService.keys.BACK, backKeyId);
             });
         }
     };

@@ -1,0 +1,31 @@
+{
+  "name": "yetu-tv-message-client",
+  "version": "1.0.2",
+  "license": "MIT",
+  "main": "dist/yetu-tv-message-client-min.js",
+  "ignore": [
+    "scripts",
+    "doc",
+    "example",
+    "node_modules",
+    "bower_components",
+    "dist/yetu-tv-message-client.zip",
+    ".gitignore",
+    "gulpfile.js",
+    "package.json",
+    "csscomb.json"
+  ],
+  "dependencies": {
+    "flyer": "https://github.com/benzap/flyer.js/releases/download/v1.0.4/flyer.js"
+  },
+  "homepage": "https://github.com/yetu/yetu-tv-message-client",
+  "_release": "1.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.2",
+    "commit": "8fb9c82e5551ac91e81afc622154f5eb5ecb443c"
+  },
+  "_source": "https://github.com/yetu/yetu-tv-message-client.git",
+  "_target": "v1.0.2",
+  "_originalSource": "https://github.com/yetu/yetu-tv-message-client.git"
+}

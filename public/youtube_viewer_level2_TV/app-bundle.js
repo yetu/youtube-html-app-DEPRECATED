@@ -66,6 +66,7 @@ youtubeViewerApp.constant('CONFIG',{
         FAST_FORWARD: 20,
         FAST_REWIND: -20
     },
+    SUGGESTED_QUALITY: 'highres',
     playlistMaxItemCount: 20,
     pathToLogo: "/assets/appMetaData/assets/logo.svg"
 })
@@ -76,51 +77,50 @@ module.exports = "<detail-view></detail-view>\n";
 
 },{}],4:[function(require,module,exports){
 module.exports = function ($timeout, CONFIG, reactTo, playerState) {
-		'use strict';
-		return {
-			restrict: 'E',
-			template: require('./controlbarTemplate.html'),
-			link: function (scope, element, attrs) {
-				var react = reactTo(scope);
-				scope.cbIsVisible = false;
-				scope.highlightForward = false;
-				scope.highlightRewind = false;
+    'use strict';
+    return {
+        restrict: 'E',
+        template: require('./controlbarTemplate.html'),
+        link: function (scope, element, attrs) {
+            var react = reactTo(scope);
+            scope.cbIsVisible = false;
+            scope.highlightForward = false;
+            scope.highlightRewind = false;
 
-				var resetHighlight = function () {
-					scope.highlightForward = false;
-					scope.highlightRewind = false;
-				};
+            var resetHighlight = function () {
+                scope.highlightForward = false;
+                scope.highlightRewind = false;
+            };
 
-                //TODO: make it visible after down key pressed
-				//keyboardService.on(keyboardService.keys.DOWN, function () {
-				//	scope.$apply(function () {
-				//			scope.cbIsVisible = !scope.cbIsVisible;
-				//		});
-				//	
-				//});
+            if (yetu) {
+                yetu.onActionDown = function () {
+                    scope.$apply(function () {
+                        scope.cbIsVisible = !scope.cbIsVisible;
+                    });
+                };
+            }
 
-				react(playerState, 'toggleRewind', function () {
-					scope.highlightRewind = true;
-					if (!scope.$$phase) {
-						scope.$apply();
-					}
+            react(playerState, 'toggleRewind', function () {
+                scope.highlightRewind = true;
+                if (!scope.$$phase) {
+                    scope.$apply();
+                }
 
-					$timeout(resetHighlight, CONFIG.video.highlightTimeout);
+                $timeout(resetHighlight, CONFIG.video.highlightTimeout);
 
-				});
+            });
 
-				react(playerState, 'toggleForward', function () {
-					scope.highlightForward = true;
-					if (!scope.$$phase) {
-						scope.$apply();
-					}
+            react(playerState, 'toggleForward', function () {
+                scope.highlightForward = true;
+                if (!scope.$$phase) {
+                    scope.$apply();
+                }
 
-					$timeout(resetHighlight, CONFIG.video.highlightTimeout);
-				});
-			}
-		};
-	};
-
+                $timeout(resetHighlight, CONFIG.video.highlightTimeout);
+            });
+        }
+    }
+};
 },{"./controlbarTemplate.html":5}],5:[function(require,module,exports){
 module.exports = "<div class=\"controlbar-overlay-container\" style=\"transform: translate(0px, 400px);\" ng-style=\"{'transform': cbIsVisible ? 'translate(0px,0px)':'translate(0px, 400px)'}\">\n  <div class=\"controlbar-container\">\n    <div id=\"btn_rewind\" ng-class=\"{highlight: highlightRewind }\"></div>\n    <div id=\"btn_pause\" ng-show=\"info.isPlaying\"></div>\n    <div id=\"btn_play\" ng-show=\"!info.isPlaying\"></div>\n    <div id=\"btn_forward\" ng-class=\"{highlight: highlightForward }\"></div>\n\n    <div id=\"actTime\">{{info.actTime | controlbarTimeFilter}}</div>\n    <progress id=\"progressbar\" max=\"100\" value=\"{{info.percentage}}\"></progress>\n    <div id=\"duration\">{{ info.duration | controlbarTimeFilter }}</div>\n  </div>\n  <div class=\"controlbar-title\">\n    {{data.feed.entries[currentIndex].title}}\n  </div>\n</div>\n";
 
@@ -185,12 +185,14 @@ module.exports = function (informationService, $scope, $rootScope, $timeout, rea
                 feed : feedData,
                 logo : CONFIG.pathToLogo
             };
+            console.log($scope.data);
         }, function(response){
             $scope.error = true;
             console.error('Youtube playlist request failed:',response.data.error.message)
         });
     
     react(informationService, 'dataFeedEntriesIndex', function (n, o) {
+        console.log("test",n);
         if (n != o) {
             $scope.currentIndex = n;
         }
@@ -234,13 +236,13 @@ module.exports = angular.module('ytv_detailView', ['ytv_information', 'pascalpre
 
 },{"./controlbar/controlbarDirective":4,"./controlbar/controlbarTimeFilter":6,"./detailViewController":7,"./detailViewDirective":8,"./playerState":11,"./preview/previewOverlayDirective":12,"./topbar/topbarDirective":14,"./youtube/detailViewYoutube":16}],11:[function(require,module,exports){
 module.exports = function () {
-	this.togglePlay = false;
-	this.toggleForward = false;
-	this.toggleRewind = false
+	this.preview = false;
+    this.toggleRewind = true;
+    this.toggleForward = true;
 };
 
 },{}],12:[function(require,module,exports){
-module.exports = function (informationService) {
+module.exports = function (playerState) {
     'use strict';
 
     var translateFactor = 700,
@@ -254,52 +256,84 @@ module.exports = function (informationService) {
     return {
         restrict: 'E',
         template: require('./previewOverlayTemplate.html'),
-        controller: function ($scope) {
+        controller: function ($scope, informationService) {
+            $scope.show = false;
             $scope.selectedIndex = $scope.currentIndex;
             var oldIndex = $scope.currentIndex;
             $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
 
-            //TODO: apply actions on left, back, right
-            //var backKeyId = keyboardService.on(keyboardService.keys.BACK, function () {
-            //    $scope.selectedIndex = oldIndex;
-            //});
-            //
-            //var rightKeyId = keyboardService.on(keyboardService.keys.RIGHT, function () {
-            //    var nextIndex = $scope.selectedIndex + 1;
-            //    if (nextIndex >= $scope.data.feed.entries.length) {
-            //        console.info("no further feed entry... nothing to do");
-            //        return;
-            //    } else {
-            //        $scope.selectedIndex = nextIndex;
-            //        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
-            //    }
-            //});
-            //
-            //var leftKeyId = keyboardService.on(keyboardService.keys.LEFT, function () {
-            //    var nextIndex = $scope.selectedIndex - 1;
-            //    if (nextIndex < 0) {
-            //        console.info("no further feed entry... nothing to do");
-            //        return;
-            //    } else {
-            //        $scope.selectedIndex = nextIndex;
-            //        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
-            //    }
-            //});
+            var showView = function(show){
+                $scope.show = show;
+                playerState.preview = show;
+                $scope.$apply();
+            };
+            
+            if(yetu){
+                yetu.onActionBack = function () {
+                    if(playerState.preview){
+                        $scope.selectedIndex = oldIndex;
+                        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
+                        showView(false);
+                        $scope.$apply();
+                    }
+                    else{
+                        //yetu.sendQuit();
+                        flyer.wrapper.broadcast({
+                            channel: 'yetu',
+                            topic: 'control.quit',
+                            data: {}
+                        });
+                    }
+                };
+                
+                yetu.onActionEnter = function() {
+                    informationService.dataFeedEntriesIndex = $scope.selectedIndex;
+                    showView(false);
+                    $scope.$apply();
+                }
+                    
+                yetu.onActionRight = function () {
+                    if(playerState.preview){
+                        var nextIndex = $scope.selectedIndex + 1;
+                        if (nextIndex >= $scope.data.feed.entries.length) {
+                            console.info("no further feed entry... nothing to do");
+                            return;
+                        } else {
+                            $scope.selectedIndex = nextIndex;
+                            $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
+                        }
+                        $scope.$apply();
+                    }
+                    else{
+                        oldIndex = $scope.selectedIndex;
+                        showView(true);
+                    }
+                };
+                
+                yetu.onActionLeft = function () {
+                    var nextIndex = $scope.selectedIndex - 1;
+                    if (nextIndex < 0) {
+                        console.info("no further feed entry... nothing to do");
+                        return;
+                    } else {
+                        $scope.selectedIndex = nextIndex;
+                        $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
+                    }
+                    $scope.$apply();
+                };
+            }
+            
 
             $scope.$on('$destroy', function () {
                 var selectedIndex = $scope.selectedIndex;
-                console.info("selectedIndex: " + selectedIndex);
                 informationServices.dataFeedEntriesIndex = selectedIndex;
-                //keyboardService.unbind(keyboardService.keys.LEFT, leftKeyId);
-                //keyboardService.unbind(keyboardService.keys.RIGHT, rightKeyId);
-                //keyboardService.unbind(keyboardService.keys.BACK, backKeyId);
             });
         }
     };
 };
 
 },{"./previewOverlayTemplate.html":13}],13:[function(require,module,exports){
-module.exports = "<div class=\"preview-overlay-container\">\n  <div class=\"preview-overlay-title\">{{data.name}}</div>\n  <div class=\"preview-grid-container\" ng-style=\"{'transform': translate}\">\n    <div ng-repeat=\"item in data.feed.entries\" class=\"preview-grid\"\n         ng-style=\"item.imageUrl && item.imageUrl !== '' && {'background-image':'url('+item.imageUrl+')', 'opacity' : selectedIndex===$index ? '1' : '0.3'}\">\n      <img ng-if=\"!item.imageUrl && data.logo\" class=\"preview-logo\" ng-src=\"{{data.logo}}\" alt=\"logo\">\n\n      <div class=\"preview-grid-content\" ng-if=\"!item.imageUrl\">\n        {{item.title}}\n      </div>\n    </div>\n  </div>\n  <div class=\"active-element\"></div>\n  <div class=\"active-element-title\">{{data.feed.entries[selectedIndex].title}}</div>\n</div>";
+module.exports = "<div class=\"preview-overlay-container\" ng-if=\"show\">\n  <div class=\"preview-overlay-title\">{{data.name}}</div>\n  <div class=\"preview-grid-container\" ng-style=\"{'transform': translate}\">\n    <div ng-repeat=\"item in data.feed.entries\" class=\"preview-grid\"\n         ng-style=\"item.imageUrl && item.imageUrl !== '' && {'background-image':'url('+item.imageUrl+')', 'opacity' : selectedIndex===$index ? '1' : '0.3'}\">\n      <img ng-if=\"!item.imageUrl && data.logo\" class=\"preview-logo\" ng-src=\"{{data.logo}}\" alt=\"logo\">\n\n      <div class=\"preview-grid-content\" ng-if=\"!item.imageUrl\">\n        {{item.title}}\n      </div>\n    </div>\n  </div>\n  <div class=\"active-element\"></div>\n  <div class=\"active-element-title\">{{data.feed.entries[selectedIndex].title}}</div>\n</div>";
 
 },{}],14:[function(require,module,exports){
 module.exports = function () {
@@ -309,12 +343,13 @@ module.exports = function () {
 		template: require('./topbarTemplate.html'),
 		link: function (scope, element, attrs) {
 			scope.tbIsVisible = false;
-            //TODO: make it visible after up key
-			//keyboardService.on(keyboardService.keys.UP, function () {
-			//		scope.$apply(function () {
-			//			scope.tbIsVisible = !scope.tbIsVisible;
-			//		})
-			//});
+            if(yetu){
+            	yetu.onActionUp = function(){
+                        scope.$apply(function () {
+						scope.tbIsVisible = !scope.tbIsVisible;
+					})
+			    }
+			}
 		}
 	};
 };
@@ -432,45 +467,47 @@ module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
 						});
 					}
                     if (player.getVideoUrl && player.getVideoUrl().indexOf(scope.data.feed.entries[scope.currentIndex].videourl) === -1) {
-                        player.loadVideoById(scope.data.feed.entries[scope.currentIndex].videourl, 0, CONFIG.youtube.SUGGESTED_QUALITY);
+                        player.loadVideoById(scope.data.feed.entries[scope.currentIndex].videourl, 0, CONFIG.SUGGESTED_QUALITY);
                     } else if (player.getPlayerState && player.getPlayerState() !== YT.PlayerState.PLAYING) {
                         player.playVideo();
                     }
 
 				};
 
-				react(playerState, 'togglePlay', function () {
-					vidplay();
+                if(yetu){
+                    yetu.onActionPlay = function () {
+                        vidplay();
+                    };
+                    yetu.onActionRewind = function(){
+                        skip(CONFIG.video.FAST_REWIND);
+                        playerState.toggleRewind = !playerState.toggleRewind;
+                    };
+                    yetu.onActionForward = function(){
+                        skip(CONFIG.video.FAST_FORWARD);
+                        playerState.toggleForward = !playerState.toggleForward;
+                    };
+                }
+				react(playerState, 'preview', function (n) {
+					if (typeof player === 'undefined' || player === null) {
+						return;
+					}
+					if (n) {
+						if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+							player.pauseVideo();
+						}
+					} else {
+                        if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+							player.playVideo();
+						}
+					}
 				});
-				react(playerState, 'toggleRewind', function () {
-					skip(CONFIG.video.FAST_REWIND);
-				});
-				react(playerState, 'toggleForward', function () {
-					skip(CONFIG.video.FAST_FORWARD);
-				});
-				//TODO: implement when right pressed and preview of all videos shown to stop video and when the preview is left to play video
-				//react(stateLevelService, 'level', function (n) {
-				//	if (typeof player === 'undefined' || player === null) {
-				//		return;
-				//	}
-				//	if (n === STATE_CONST.level.PREVIEW_VIEW) {
-				//		if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-				//			player.pauseVideo();
-				//		}
-				//	} else if (n === STATE_CONST.level.APP_FEED_VIEW) {
-				//		if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-				//			player.playVideo();
-				//		}
-				//	}
-				//});
 
                 //TODO: remove this timeout
                 $timeout(function(){
                     if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined'){
                         loadPlayerAndVideo();
                     }
-                })
-                
+                });
 
 				scope.$watch('currentIndex', function (n, o) {
 					if (typeof YT === 'undefined' || typeof YT.Player === 'undefined' || typeof n === 'undefined') {

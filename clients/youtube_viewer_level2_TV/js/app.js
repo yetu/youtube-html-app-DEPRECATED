@@ -63,6 +63,7 @@ youtubeViewerApp.constant('CONFIG',{
         FAST_FORWARD: 20,
         FAST_REWIND: -20
     },
+    SUGGESTED_QUALITY: 'highres',
     playlistMaxItemCount: 20,
     pathToLogo: "/assets/appMetaData/assets/logo.svg"
 })
