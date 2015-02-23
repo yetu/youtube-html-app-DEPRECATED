@@ -11,7 +11,7 @@ module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeo
 				scope.initSearch(element.find('input')[0].value);
 			};
 			scope.searchOnKeyUp = function (event) {
-				if (event.keyCode === 13 && event.target.value!="") {
+				if (event.keyCode === 13 && event.target.value !== "") {
 					scope.initSearch(event.target.value);
 				}
 			};
@@ -19,9 +19,9 @@ module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeo
 				//if a special search query is entered we send a general notification
 				if(ytNotification.isSpecialTrigger(value)){
 					var result = ytNotification.sendGeneralNotification();
-					result.then(function(result) {
+					result.then(function() {
 						element.find('input')[0].value = SPECIALPURPOSE.successOnSentNotification;
-					}, function(err) {
+					}, function() {
 						element.find('input')[0].value = SPECIALPURPOSE.errorOnSentNotification;
 					});
 					$timeout(function(){
@@ -34,8 +34,8 @@ module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeo
 					scope.searchValue = ytSearchState.getSearchValue(false);
 					ytSearchState.setSearchResult();
 				}
-			}
+			};
 		}
-	}
+	};
 };
 

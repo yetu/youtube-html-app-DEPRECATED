@@ -106,36 +106,50 @@ module.exports = function ($window, $http, $interval, $log) {
 module.exports = angular.module('yt_notification', ['ngResource'])
 .service('ytNotification', require('./ytNotification'));
 },{"./ytNotification":7}],7:[function(require,module,exports){
-module.exports = function ($http, SERVERPATHS, SPECIALPURPOSE) {
+module.exports = function($http, SERVERPATHS, SPECIALPURPOSE) {
 	'use strict';
-	//TODO: add more payloads
-	//TODO: randomize payloads
-	var payload = {
+	//array object with possible payloads
+	var payloads = [{
 		notification: {
-			image: 'http://i4.mirror.co.uk/incoming/article141978.ece/alternates/s2197/burglar-trying-to-pry-open-window-on-house-pic-getty-images-123608196.jpg',
-			title: 'Outdoor camera',
-			subtitle: 'Motion detected',
-			backgroundColor: 'rgb(40, 153, 80)'
+			title: 'CamBot',
+			subTitle: 'motion detected outside back window',
+			backgroundColor: 'rgba(0, 0, 0, 0.75)',
+			image: 'http://i4.mirror.co.uk/incoming/article141978.ece/alternates/s2197/burglar-trying-to-pry-open-window-on-house-pic-getty-images-123608196.jpg'
 		}
-	};
-	this.isSpecialTrigger = function(inputValue){
+	}, {
+		notification: {
+			title: 'WaterBot',
+			subTitle: 'basement water sensor activated',
+			backgroundColor: 'rgba(0, 0, 0, 0.75)',
+			image: 'http://www.smbywills.com/core/images/waterproofing/basement-flooding/flooded-basement-home-lg.jpg'
+		}
+	}, {
+		notification: {
+			title: 'DoorBot',
+			subTitle: 'doorbell activated',
+			backgroundColor: 'rgba(0, 0, 0, 0.75)',
+			image: 'http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2011/9/4/1315149322196/Man-at-front-door-007.jpg'
+		}
+	}];
+	//checks if the special triggerphrase was entered
+	this.isSpecialTrigger = function(inputValue) {
 		var result = [];
 		angular.forEach(SPECIALPURPOSE.notificationTriggers, function(value, key) {
-			if(inputValue.toLowerCase().indexOf(value) === -1){
+			if (inputValue.toLowerCase().indexOf(value) === -1) {
 				result.push(0);
 			} else {
 				result.push(1);
 			}
 		});
-
-		if (result.indexOf(0) !== -1){
+		if (result.indexOf(0) !== -1) {
 			return false;
 		} else {
 			return true;
 		}
 	};
-	this.sendGeneralNotification = function(){
-		return $http.post(SERVERPATHS.notificationUrl, payload);
+	//returns a random element of the payloads object
+	this.sendGeneralNotification = function() {
+		return $http.post(SERVERPATHS.notificationUrl, payloads[Math.floor((Math.random() * payloads.length))]);
 	};
 };
 
@@ -327,7 +341,7 @@ module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeo
 				scope.initSearch(element.find('input')[0].value);
 			};
 			scope.searchOnKeyUp = function (event) {
-				if (event.keyCode === 13 && event.target.value!="") {
+				if (event.keyCode === 13 && event.target.value !== "") {
 					scope.initSearch(event.target.value);
 				}
 			};
@@ -335,9 +349,9 @@ module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeo
 				//if a special search query is entered we send a general notification
 				if(ytNotification.isSpecialTrigger(value)){
 					var result = ytNotification.sendGeneralNotification();
-					result.then(function(result) {
+					result.then(function() {
 						element.find('input')[0].value = SPECIALPURPOSE.successOnSentNotification;
-					}, function(err) {
+					}, function() {
 						element.find('input')[0].value = SPECIALPURPOSE.errorOnSentNotification;
 					});
 					$timeout(function(){
@@ -350,9 +364,9 @@ module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeo
 					scope.searchValue = ytSearchState.getSearchValue(false);
 					ytSearchState.setSearchResult();
 				}
-			}
+			};
 		}
-	}
+	};
 };
 
 
