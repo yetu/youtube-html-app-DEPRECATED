@@ -33,12 +33,7 @@ module.exports = function (playerState) {
                         $scope.$apply();
                     }
                     else{
-                        //yetu.sendQuit();
-                        flyer.wrapper.broadcast({
-                            channel: 'yetu',
-                            topic: 'control.quit',
-                            data: {}
-                        });
+                        yetu.sendQuit();
                     }
                 };
                 

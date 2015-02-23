@@ -277,12 +277,7 @@ module.exports = function (playerState) {
                         $scope.$apply();
                     }
                     else{
-                        //yetu.sendQuit();
-                        flyer.wrapper.broadcast({
-                            channel: 'yetu',
-                            topic: 'control.quit',
-                            data: {}
-                        });
+                        yetu.sendQuit();
                     }
                 };
                 
@@ -501,13 +496,9 @@ module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
 						}
 					}
 				});
-
-                //TODO: remove this timeout
-                $timeout(function(){
-                    if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined'){
-                        loadPlayerAndVideo();
-                    }
-                });
+                if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined'){
+                    loadPlayerAndVideo();
+                }
 
 				scope.$watch('currentIndex', function (n, o) {
 					if (typeof YT === 'undefined' || typeof YT.Player === 'undefined' || typeof n === 'undefined') {
