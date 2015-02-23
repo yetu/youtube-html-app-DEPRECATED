@@ -34,7 +34,8 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 
 youtubeApp.constant("SERVERPATHS", {
     youtubeUrl: "/playlist",
-		notificationUrl: "/notification"
+		notificationUrl: "/notification",
+		level2Url: "/level2tv"
 });
 
 youtubeApp.constant("SPECIALPURPOSE", {
@@ -42,4 +43,16 @@ youtubeApp.constant("SPECIALPURPOSE", {
 		successOnSentNotification: "A general notification was sent successfully!",
 		errorOnSentNotification: "There was an error sending the general notification",
 		displayTimeout: 2000
+});
+
+youtubeApp.constant("YOUTUBEREQUESTS", {
+	maxResults: 1,
+	playlistItems:{
+		url: 'https://www.googleapis.com/youtube/v3/playlistItems',
+		part: 'snippet'
+	},
+	video: {
+		url: 'https://www.googleapis.com/youtube/v3/videos',
+		part:'snippet,contentDetails,statistics'
+	}
 });
