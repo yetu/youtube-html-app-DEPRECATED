@@ -14,7 +14,7 @@ bintrayResolverSettings
 
 resolvers += bintray.Opts.resolver.mavenRepo("yetu")
 
-val yetuPlayAuthenticatorVersion = "0.1.2"
+val yetuPlayAuthenticatorVersion = "0.1.4"
 
 libraryDependencies ++= Seq(
   "com.mohiva" %% "play-silhouette-testkit" % "2.0-RC1" % "test",
