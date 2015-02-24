@@ -33,6 +33,7 @@ module.exports = function (ytv_playerState, ytv_informationService) {
                         $scope.$apply();
                     }
                     else{
+                        yetu.sendFeedItemIndex(ytv_informationService.playlistItemIndex);
                         yetu.sendQuit();
                     }
                 };

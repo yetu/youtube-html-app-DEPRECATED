@@ -11,7 +11,7 @@ var youtubeViewerApp = angular.module('youtubeViewerApp',
         require('./ytv_view').name
 	]);
 
-youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider, i18n) {
+youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvider, $locationProvider, i18n) {
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
@@ -49,7 +49,7 @@ youtubeViewerApp.constant('CONFIG',{
     SUGGESTED_QUALITY: 'highres',
     playlistMaxItemCount: 20,
     pathToLogo: '/assets/appMetaData/assets/logo.svg'
-})
+});
 
 youtubeViewerApp.constant('i18n', {
     languagesAvailable: ['en', 'de'],
@@ -77,7 +77,7 @@ module.exports = angular.module('ytv_information',[])
     .service('ytv_dataGenerator', require('./ytv_dataGenerator'));
 
 },{"./ytv_dataGenerator":5,"./ytv_informationService":6}],5:[function(require,module,exports){
-module.exports = function ($sce, $q) {
+module.exports = function ($q) {
     'use strict';
 
     var truncateTitle = function (entry, feedData) {
@@ -93,9 +93,6 @@ module.exports = function ($sce, $q) {
         }
         else {
             feedData.truncatedTitle = feedData.title + ' - ';
-            if (entry.title.indexOf('- tagesschau') != -1) {
-                entry.title = entry.title.substring(0, entry.title.indexOf('- tagesschau'));
-            }
             entry.truncatedTitle =
                 new S(entry.title).truncate(maxLength).s;
         }
@@ -325,9 +322,9 @@ module.exports = function () {
 
 },{}],11:[function(require,module,exports){
 /**
- * @class DetailViewController
+ * @class ytv_mainController
  */
-module.exports = function (ytv_informationService, $scope, $rootScope, $timeout, reactTo, CONFIG) {
+module.exports = function (ytv_informationService, $scope, reactTo, CONFIG) {
     'use strict';
     var react = reactTo($scope);
     $scope.error = false;
@@ -337,7 +334,7 @@ module.exports = function (ytv_informationService, $scope, $rootScope, $timeout,
         percentage: 0,
         isPlaying: true
     };
-    
+
     var playlistId = ytv_informationService.getPlaylistId();
     ytv_informationService.setPlaylistItemIndex();
     $scope.currentIndex = ytv_informationService.playlistItemIndex;
@@ -349,11 +346,11 @@ module.exports = function (ytv_informationService, $scope, $rootScope, $timeout,
             };
         }, function(response){
             $scope.error = true;
-            console.error('Youtube playlist request failed:',response.data.error.message)
+            console.error('Youtube playlist request failed:',response.data.error.message);
         });
-    
+
     react(ytv_informationService, 'playlistItemIndex', function (n, o) {
-        if (n != o) {
+        if (n !== o) {
             $scope.currentIndex = n;
         }
     });
@@ -582,6 +579,7 @@ module.exports = function (ytv_playerState, ytv_informationService) {
                         $scope.$apply();
                     }
                     else{
+                        yetu.sendFeedItemIndex(ytv_informationService.playlistItemIndex);
                         yetu.sendQuit();
                     }
                 };
