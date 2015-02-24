@@ -1,7 +1,7 @@
 /**
- * @class DetailViewController
+ * @class ytv_mainController
  */
-module.exports = function (ytv_informationService, $scope, $rootScope, $timeout, reactTo, CONFIG) {
+module.exports = function (ytv_informationService, $scope, reactTo, CONFIG) {
     'use strict';
     var react = reactTo($scope);
     $scope.error = false;
@@ -11,7 +11,7 @@ module.exports = function (ytv_informationService, $scope, $rootScope, $timeout,
         percentage: 0,
         isPlaying: true
     };
-    
+
     var playlistId = ytv_informationService.getPlaylistId();
     ytv_informationService.setPlaylistItemIndex();
     $scope.currentIndex = ytv_informationService.playlistItemIndex;
@@ -23,11 +23,11 @@ module.exports = function (ytv_informationService, $scope, $rootScope, $timeout,
             };
         }, function(response){
             $scope.error = true;
-            console.error('Youtube playlist request failed:',response.data.error.message)
+            console.error('Youtube playlist request failed:',response.data.error.message);
         });
-    
+
     react(ytv_informationService, 'playlistItemIndex', function (n, o) {
-        if (n != o) {
+        if (n !== o) {
             $scope.currentIndex = n;
         }
     });
