@@ -2,20 +2,21 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /health                        com.yetu.youtube.controllers.Health.check
+GET         /health                                  com.yetu.youtube.controllers.Health.check
 
 # Silhouette / Authentication routes
-GET         /signOut                       @com.yetu.play.authenticator.controllers.ApplicationController.signOut
-GET         /authenticate/:provider        @com.yetu.play.authenticator.controllers.SocialAuthController.authenticate(provider)
+GET         /signOut                                 @com.yetu.play.authenticator.controllers.ApplicationController.signOut
+GET         /authenticate/:provider                  @com.yetu.play.authenticator.controllers.SocialAuthController.authenticate(provider)
 
 
 # Youtube app routes
-GET         /                              @com.yetu.youtube.controllers.YoutubeController.index
-POST        /playlist                      @com.yetu.youtube.controllers.YoutubeController.playlist
+GET         /                                        @com.yetu.youtube.controllers.YoutubeController.index
+GET         /level2tv                                @com.yetu.youtube.controllers.YoutubeController.level2tv
+POST        /playlist                                @com.yetu.youtube.controllers.YoutubeController.playlist
 
 
-GET         /assets/appMetaData/manifest.json @com.yetu.youtube.controllers.YoutubeController.manifest
+GET         /assets/appMetaData/manifest.json        @com.yetu.youtube.controllers.YoutubeController.manifest
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                  controllers.Assets.at(path="/public", file)
+GET         /assets/*file                            controllers.Assets.at(path="/public", file)
 

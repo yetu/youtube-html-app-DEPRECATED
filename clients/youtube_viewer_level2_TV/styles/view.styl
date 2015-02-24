@@ -1,0 +1,142 @@
+/* ==========================================================================
+	 Detail View
+	 ========================================================================== */
+
+// General
+// ==========================================================================
+
+.detail-view-wrapper {
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 2;
+  position: relative;
+}
+
+.detail-view-background {
+  opacity: 0.1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+// Header
+// ===========================================================================
+
+body.state-detail-view {
+
+  .header {
+    display: block;
+    height: 100px;
+    width: 100%;
+    z-index: z-index-header;
+
+    &.is-fixed {
+      position: fixed;
+      top: (-1 * header-offset-top);
+    }
+  }
+
+  .detail-view-header,
+  .detail-view-header-background {
+    display: block;
+  }
+}
+
+// Detailview Header
+// ==========================================================================
+
+.detail-view-header {
+  display: none;
+  z-index: z-index-detail-view-header - 1;
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 200px;
+  padding-top: 25px;
+
+  & + div {
+    padding: 0 20px;
+    background-color: #fff;
+  }
+}
+
+.detail-view-header-app {
+  width: 100%;
+  margin-left: 0;
+}
+
+.detail-view-header-discover-subheadline {
+  display: inline-block;
+  margin-left: 30px;
+  margin-top: 20px;
+  font-size: 26px;
+}
+
+.detail-view-header-content {
+  height: 50px;
+  padding-top: 80px;
+}
+
+.detail-view-header-logo {
+  display: inline-block;
+  margin: 7px 0 0 25px;
+
+  & > img {
+    height: 35px;
+    width: auto;
+  }
+}
+
+.detail-view-header-headline {
+  display: inline-block;
+  margin: 0;
+  font-weight: 500;
+  font-size: 42px;
+  vertical-align: top;
+  line-height: 55px;
+  color: #333;
+  margin-left: 20px;
+}
+
+.detail-view-header-dropdown {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: top;
+  margin-top: 19px;
+  color: #808080;
+}
+
+// Content
+// ==========================================================================
+
+.detail-view-content {
+  height: 100%;
+  & iframe {
+    border: 0;
+    display: block;
+    background-color: #fff;
+
+  }
+
+  form {
+    display: none;
+  }
+
+  & > div {
+    height: 100%;
+  }
+}
+
+embed, video {
+  width: 100%;
+  height: 100%;
+  margin-left: 0px;
+}
+
+// YOUTUBE TILE
+// ==========================================================================
+.videoplayer {
+  /*margin-left:270px;*/
+}

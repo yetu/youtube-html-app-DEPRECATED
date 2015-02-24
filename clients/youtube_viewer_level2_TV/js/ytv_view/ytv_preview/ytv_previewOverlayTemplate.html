@@ -1,0 +1,15 @@
+<div class="preview-overlay-container" ng-if="show">
+  <div class="preview-overlay-title">{{data.name}}</div>
+  <div class="preview-grid-container" ng-style="{'transform': translate}">
+    <div ng-repeat="item in data.feed.entries" class="preview-grid"
+         ng-style="item.imageUrl && item.imageUrl !== '' && {'background-image':'url('+item.imageUrl+')', 'opacity' : selectedIndex===$index ? '1' : '0.3'}">
+      <img ng-if="!item.imageUrl && data.logo" class="preview-logo" ng-src="{{data.logo}}" alt="logo">
+
+      <div class="preview-grid-content" ng-if="!item.imageUrl">
+        {{item.title}}
+      </div>
+    </div>
+  </div>
+  <div class="active-element"></div>
+  <div class="active-element-title">{{data.feed.entries[selectedIndex].title}}</div>
+</div>

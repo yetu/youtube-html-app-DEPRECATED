@@ -8,7 +8,7 @@ import com.mohiva.play.silhouette.impl.authenticators.SessionAuthenticator
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.yetu.play.authenticator.models.User
 import com.yetu.play.authenticator.models.daos.OAuth2InfoDAO
-import com.yetu.youtube.models.FrontendConfig
+import com.yetu.youtube.models.{SimpleFrontendConfig, FrontendConfig}
 import com.yetu.youtube.services.InboxService
 import com.yetu.youtube.utils.ConfigLoader
 import com.yetu.youtube.utils.ConfigLoader.FrontendConfiguration
@@ -37,8 +37,12 @@ class YoutubeController @Inject()(implicit val env: Environment[User, SessionAut
       youtubeDeveloperToken = FrontendConfiguration.devToken,
       authServer = FrontendConfiguration.authServerUrl,
       sessionPollingInterval = FrontendConfiguration.sessionPollingInterval)
-
     Ok(views.html.index(Json.toJson(config)))
+  }
+  
+  def level2tv = Action { implicit request =>
+    val config = SimpleFrontendConfig(youtubeDeveloperToken = FrontendConfiguration.devToken)
+    Ok(views.html.youtubeViewerLevel2TV(Json.toJson(config)))
   }
 
   /**

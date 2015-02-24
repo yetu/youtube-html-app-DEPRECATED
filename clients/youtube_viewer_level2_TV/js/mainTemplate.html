@@ -1,0 +1,14 @@
+<div class="detail-view-wrapper"
+     ng-controller="ytv_MainController">
+    <div ng-if="data">
+        <div ytv-player
+             class="detail-view-content">
+        </div>
+        <ytv-preview-overlay></ytv-preview-overlay>
+        <ytv-topbar></ytv-topbar>
+        <ytv-controlbar></ytv-controlbar>
+    </div>
+    <div ng-if="error">
+        Error. No youtube data available.
+    </div>
+</div>

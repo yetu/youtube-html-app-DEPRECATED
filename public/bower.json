@@ -10,6 +10,8 @@
     "angular-resource": "1.2.6",
     "angular-route": "1.2.6",
     "angular-translate": "~2.2.0",
-    "reactTo" : "mr-mig/angular-react-to#1.0"
+    "reactTo" : "mr-mig/angular-react-to#1.0",
+    "stringjs": "~1.8.0",
+    "yetu-tv-message-client": "https://github.com/yetu/yetu-tv-message-client.git#v1.0.2"
   }
 }

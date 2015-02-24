@@ -1,0 +1,15 @@
+<div class="controlbar-overlay-container" style="transform: translate(0px, 400px);" ng-style="{'transform': cbIsVisible ? 'translate(0px,0px)':'translate(0px, 400px)'}">
+  <div class="controlbar-container">
+    <div id="btn_rewind" ng-class="{highlight: highlightRewind }"></div>
+    <div id="btn_pause" ng-show="info.isPlaying"></div>
+    <div id="btn_play" ng-show="!info.isPlaying"></div>
+    <div id="btn_forward" ng-class="{highlight: highlightForward }"></div>
+
+    <div id="actTime">{{info.actTime | ytv_ControlbarTimeFilter}}</div>
+    <progress id="progressbar" max="100" value="{{info.percentage}}"></progress>
+    <div id="duration">{{ info.duration | ytv_ControlbarTimeFilter }}</div>
+  </div>
+  <div class="controlbar-title">
+    {{data.feed.entries[currentIndex].title}}
+  </div>
+</div>

@@ -1,0 +1,117 @@
+controlbar {
+  position: fixed;
+}
+
+.controlbar-overlay-container {
+  width: 1920px;
+  height: 400px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-image: -webkit-linear-gradient(#fff 0%, #000 100%);
+  background-image: -moz-linear-gradient(#fff 0%, #000 100%);
+  background-image: -o-linear-gradient(#fff 0%, #000 100%);
+  background-image: linear-gradient(#fff 0%, #000 100%);
+  opacity: 0.9;
+  transition: 0.5s;
+}
+
+#btn_forward {
+  background-image: url("../img/forward.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50px;
+  left: 1100px;
+}
+
+#btn_play, #btn_pause {
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50px;
+  left: 900px;
+}
+
+#btn_play {
+  background-image: url("../img/play.svg");
+}
+
+#btn_pause {
+  background-image: url("../img/pause.svg");
+}
+
+#btn_rewind {
+  background-image: url("../img/forward.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 50px;
+  left: 700px;
+  transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+#btn_forward.highlight {
+  background-image: url("../img/forward_highlight.svg");
+}
+
+#btn_rewind.highlight {
+  background-image: url("../img/forward_highlight.svg");
+}
+
+progress[value] {
+  /* Reset the default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 1500px;
+  height: 10px;
+  position: absolute;
+  top: 200px;
+  left: 200px;
+}
+
+#actTime {
+  position: absolute;
+  left: 130px;
+  top: 186px;
+  color: #f2f2f2;
+  font-size: 30px;
+
+}
+
+#duration {
+  position: absolute;
+  left: 1710px;
+  top: 186px;
+  color: #f2f2f2;
+  font-size: 30px;
+
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #989898;
+  border-radius: 5px;
+}
+
+progress[value]::-webkit-progress-value {
+  background-color: #CDCCCC;
+  border-radius: 5px;
+  transition: 1s;
+}
+
+.controlbar-title {
+  color: #f2f2f2;
+  font-size: 30px;
+  text-align: center;
+  width: 1980px;
+  position: absolute;
+  top: 300px;
+  left: 0;
+}
