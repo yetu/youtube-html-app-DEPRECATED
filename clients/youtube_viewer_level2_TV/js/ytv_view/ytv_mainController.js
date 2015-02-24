@@ -5,7 +5,6 @@ module.exports = function (ytv_informationService, $scope, $rootScope, $timeout,
     'use strict';
     var react = reactTo($scope);
     $scope.error = false;
-    $scope.currentIndex = 0;
     $scope.info = {
         duration: 0,
         actTime: 0,
@@ -15,7 +14,7 @@ module.exports = function (ytv_informationService, $scope, $rootScope, $timeout,
     
     var playlistId = ytv_informationService.getPlaylistId();
     ytv_informationService.setPlaylistItemIndex();
-
+    $scope.currentIndex = ytv_informationService.playlistItemIndex;
     ytv_informationService.loadPlaylistData(playlistId)
         .then(function(playlistData){
             $scope.data = {

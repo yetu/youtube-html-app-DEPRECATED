@@ -37,7 +37,7 @@ module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
     this.setPlaylistItemIndex = function(){
         var params = $location.search();
         if(params.playlistItemIndex){
-            that.playlistItemIndex = params.playlistItemIndex
+            that.playlistItemIndex = parseInt(params.playlistItemIndex)
         }
     };
 };
