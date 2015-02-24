@@ -1,4 +1,4 @@
-module.exports = function ($sce, $q) {
+module.exports = function ($q) {
     'use strict';
 
     var truncateTitle = function (entry, feedData) {
@@ -14,9 +14,6 @@ module.exports = function ($sce, $q) {
         }
         else {
             feedData.truncatedTitle = feedData.title + ' - ';
-            if (entry.title.indexOf('- tagesschau') != -1) {
-                entry.title = entry.title.substring(0, entry.title.indexOf('- tagesschau'));
-            }
             entry.truncatedTitle =
                 new S(entry.title).truncate(maxLength).s;
         }

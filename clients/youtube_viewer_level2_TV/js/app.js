@@ -8,7 +8,7 @@ var youtubeViewerApp = angular.module('youtubeViewerApp',
         require('./ytv_view').name
 	]);
 
-youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider, i18n) {
+youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvider, $locationProvider, i18n) {
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
@@ -46,7 +46,7 @@ youtubeViewerApp.constant('CONFIG',{
     SUGGESTED_QUALITY: 'highres',
     playlistMaxItemCount: 20,
     pathToLogo: '/assets/appMetaData/assets/logo.svg'
-})
+});
 
 youtubeViewerApp.constant('i18n', {
     languagesAvailable: ['en', 'de'],
