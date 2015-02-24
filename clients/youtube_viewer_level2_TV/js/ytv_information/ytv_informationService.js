@@ -32,7 +32,6 @@ module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
     this.getPlaylistId = function() {
         var params = $location.search();
         return params.playlistId;
-        
     };
     
     this.setPlaylistItemIndex = function(){

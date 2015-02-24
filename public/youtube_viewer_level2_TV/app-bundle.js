@@ -11,7 +11,7 @@ var youtubeViewerApp = angular.module('youtubeViewerApp',
         require('./ytv_view').name
 	]);
 
-youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
+youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider, i18n) {
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
@@ -25,13 +25,19 @@ youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, 
 			redirectTo: '/'
 		});
 
-	$translateProvider.translations('en', {
+    //initialize the $translateProvider with all languages including their strings that are in i18n config file
+    for(var i=0; i<i18n.languagesAvailable.length; i++){
+        var language = i18n.languagesAvailable[i];
+        $translateProvider.translations(language, i18n.languages[language]);
+    };
+    $translateProvider.preferredLanguage('en');
+});
 
-	});
-
-	$translateProvider.preferredLanguage('en');
-
-
+youtubeViewerApp.run(function($location,$translate){
+    var params = $location.search();
+    if(params.lang){
+        $translate.use(params.lang);
+    }
 });
 
 youtubeViewerApp.constant('CONFIG',{
@@ -44,6 +50,22 @@ youtubeViewerApp.constant('CONFIG',{
     playlistMaxItemCount: 20,
     pathToLogo: '/assets/appMetaData/assets/logo.svg'
 })
+
+youtubeViewerApp.constant('i18n', {
+    languagesAvailable: ['en', 'de'],
+    languages: {
+        en:{
+            TOPBAR_SIMILAR: 'Similar',
+            TOPBAR_WATCH_LATER: 'Watch later',
+            TOPBAR_SHARE: 'Share'
+        },
+        de:{
+            TOPBAR_SIMILAR: 'Ähnliche',
+            TOPBAR_WATCH_LATER: 'Später ansehen',
+            TOPBAR_SHARE: 'Teilen'
+        }
+    }
+});
 
 
 },{"./mainTemplate.html":3,"./ytv_information":4,"./ytv_view":7}],3:[function(require,module,exports){
@@ -210,7 +232,6 @@ module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
     this.getPlaylistId = function() {
         var params = $location.search();
         return params.playlistId;
-        
     };
     
     this.setPlaylistItemIndex = function(){
