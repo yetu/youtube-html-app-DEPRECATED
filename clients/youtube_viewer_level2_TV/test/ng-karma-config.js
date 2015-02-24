@@ -17,8 +17,11 @@ module.exports = function (config) {
             '../../public/bower_components/angular-resource/angular-resource.js',
             '../../public/bower_components/angular-route/angular-route.js',
             '../../public/bower_components/angular-translate/angular-translate.min.js',
-            '../../public/bower_components/reactTo/reactTo.js',
-            //include all test helpers from /test folder
+            '../../public/bower_components/reactTo/reactTo.js', 
+            '../../public/bower_components/stringjs/lib/string.js',
+            '../../public/bower_components/yetu-tv-message-client/dist/yetu-tv-message-client-min.js',
+
+        //include all test helpers from /test folder
             {pattern: 'test/**/!(spec.js)+(.js)'},
             // include templates fo ng-html2js
             {pattern: 'js/**/*.html'}

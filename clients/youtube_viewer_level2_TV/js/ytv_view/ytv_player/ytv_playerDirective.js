@@ -1,20 +1,19 @@
-module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
+module.exports =  function ($interval, CONFIG, reactTo, ytv_playerState) {
 		'use strict';
-
-		var player;
-		// 2. This code loads the IFrame Player API code asynchronously.
-		var tag = document.createElement('script');
-
-		tag.src = "https://www.youtube.com/iframe_api";
-		var firstScriptTag = document.getElementsByTagName('script')[0];
-		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-		var timeupdater;
 		return {
 			restrict: 'A',
-			template: require('./detailViewYoutubeTemplate.html'),
+			template: require('./ytv_playerTemplate.html'),
 			link: function (scope, element, attrs) {
 				var react = reactTo(scope);
+                var player;
+                // 2. This code loads the IFrame Player API code asynchronously.
+                var tag = document.createElement('script');
+
+                tag.src = "https://www.youtube.com/iframe_api";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                var timeupdater;
 				var updateTime = function () {
 					if (typeof player === 'undefined' || player === null) {
 						return;
@@ -120,14 +119,14 @@ module.exports =  function ($interval, CONFIG, reactTo, playerState, $timeout) {
                     };
                     yetu.onActionRewind = function(){
                         skip(CONFIG.video.FAST_REWIND);
-                        playerState.toggleRewind = !playerState.toggleRewind;
+                        ytv_playerState.toggleRewind = !ytv_playerState.toggleRewind;
                     };
                     yetu.onActionForward = function(){
                         skip(CONFIG.video.FAST_FORWARD);
-                        playerState.toggleForward = !playerState.toggleForward;
+                        ytv_playerState.toggleForward = !ytv_playerState.toggleForward;
                     };
                 }
-				react(playerState, 'preview', function (n) {
+				react(ytv_playerState, 'preview', function (n) {
 					if (typeof player === 'undefined' || player === null) {
 						return;
 					}

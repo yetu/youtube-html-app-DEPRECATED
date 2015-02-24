@@ -1,8 +1,8 @@
-module.exports = function ($timeout, CONFIG, reactTo, playerState) {
+module.exports = function ($timeout, CONFIG, reactTo, ytv_playerState) {
     'use strict';
     return {
         restrict: 'E',
-        template: require('./controlbarTemplate.html'),
+        template: require('./ytv_controlbarTemplate.html'),
         link: function (scope, element, attrs) {
             var react = reactTo(scope);
             scope.cbIsVisible = false;
@@ -22,7 +22,7 @@ module.exports = function ($timeout, CONFIG, reactTo, playerState) {
                 };
             }
 
-            react(playerState, 'toggleRewind', function () {
+            react(ytv_playerState, 'toggleRewind', function () {
                 scope.highlightRewind = true;
                 if (!scope.$$phase) {
                     scope.$apply();
@@ -32,7 +32,7 @@ module.exports = function ($timeout, CONFIG, reactTo, playerState) {
 
             });
 
-            react(playerState, 'toggleForward', function () {
+            react(ytv_playerState, 'toggleForward', function () {
                 scope.highlightForward = true;
                 if (!scope.$$phase) {
                     scope.$apply();

@@ -21,8 +21,8 @@ This project is divided into the following two parts
         * Build-Process: gulp
     * `youtube_viewer_level2_TV`:
         * App, which plays the videos of a youtube playlist
-        * path to app ist /level2TV
-        * parameters are the following:
+        * path to app is /level2TV
+        * parameters, which should be append to the url, are the following:
             * playlistId: id of the youtube playlist
             * playlistItemIndex: number of item which should be shown
         * Technologies: AngularJS, styl
@@ -36,7 +36,7 @@ This project is divided into the following two parts
 * appMetaData, which contains static data, which is used by the yetu platform
     * this data is placed in `public/appMetaData`
     * the `store` folder holds information for the yetu appstore
-    * the `assets` and the `manifest.json` define the tile which you can see in the yetu homescreen (accross devices)
+    * the `assets` and the `manifest.json` define the tile which you can see in the yetu homescreen (across devices)
     * furthermore in the `manifest.json` the urls to the different levels apps will be defined
     
 ## Set up
@@ -69,13 +69,16 @@ add it in the bower.json on the public folder and then run `bower install`. Plea
 To build the clients and watch it during development, there is a script defined, which you can run like this.
 
 ```
-./buildClients_local.sh
+./buildClient_local.sh
 ```
 
-In this script there is one line, which runs `npm install`. You can remove this line, if you do not want to have it
+In this script you can find commands, which watch both clients. We recommend to only use the lines for the client, you
+will work on.
+
+Furthermore there is one line in the script, which runs `npm install`. You can remove this line, if you do not want to have it
 in the this flow every time.
 
-You have to reload every time you make changes currently (TODO: include browser sync in gulp process).
+You have to reload currently in your browser every time you make changes (TODO: include browser sync in gulp process).
 
 ### Local configuration
 

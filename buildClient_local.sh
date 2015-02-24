@@ -16,7 +16,9 @@ npm install
 #-----
 
 #youtube_viewer_level2_TV
-#TODO: add tests
+
+echo 'test youtube-viewer-level2-TV client'
+npm run test-youtube-viewer-level2-tv-local &
 echo 'watch youtube_viewer_level2_TV client'
 npm run watch-youtube-viewer-level2-tv
 

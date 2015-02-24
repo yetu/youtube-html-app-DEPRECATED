@@ -2,7 +2,7 @@ module.exports = function () {
 	'use strict';
 	return {
 		restrict: 'E',
-		template: require('./topbarTemplate.html'),
+		template: require('./ytv_topbarTemplate.html'),
 		link: function (scope, element, attrs) {
 			scope.tbIsVisible = false;
             if(yetu){

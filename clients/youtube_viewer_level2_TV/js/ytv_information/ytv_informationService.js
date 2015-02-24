@@ -3,11 +3,11 @@
  * Dashboard and Detail view.
  * @Class DetailService
  */
-module.exports = function ($http, feedDataGenerator, CONFIG, $location) {
+module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
     'use strict';
     var that = this;
     var defaultIndex = 0;
-    this.dataFeedEntriesIndex = defaultIndex; //default index for videos inside a playlist, later overwritten by user selection
+    this.playlistItemIndex = defaultIndex; //default index for videos inside a playlist, later overwritten by user selection
 
     var pluck = function pluck(field) {
         return function (obj) {
@@ -15,7 +15,7 @@ module.exports = function ($http, feedDataGenerator, CONFIG, $location) {
         }
     };
 
-    this.loadYTData = function (playlistId) {
+    this.loadPlaylistData = function (playlistId) {
         return $http({
             method: 'GET',
             url: 'https://www.googleapis.com/youtube/v3/playlistItems',
@@ -26,7 +26,7 @@ module.exports = function ($http, feedDataGenerator, CONFIG, $location) {
                 part: 'snippet'
             }
         }).then(pluck('data'))
-            .then(feedDataGenerator.parseYoutubeData)
+            .then(ytv_dataGenerator.parseYoutubeData)
     };
 
     this.getPlaylistId = function() {
@@ -35,10 +35,10 @@ module.exports = function ($http, feedDataGenerator, CONFIG, $location) {
         
     };
     
-    this.setFeedItemIndex = function(){
+    this.setPlaylistItemIndex = function(){
         var params = $location.search();
         if(params.playlistItemIndex){
-            that.dataFeedEntriesIndex = params.playlistItemIndex
+            that.playlistItemIndex = params.playlistItemIndex
         }
     };
 };

@@ -1,3 +1,3 @@
 module.exports = angular.module('ytv_information',[])
-    .service('informationService', require('./informationService'))
-    .service('feedDataGenerator', require('./feedDataGenerator'));
+    .service('ytv_informationService', require('./ytv_informationService'))
+    .service('ytv_dataGenerator', require('./ytv_dataGenerator'));

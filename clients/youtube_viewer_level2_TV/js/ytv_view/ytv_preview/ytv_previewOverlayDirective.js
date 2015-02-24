@@ -1,4 +1,4 @@
-module.exports = function (playerState) {
+module.exports = function (ytv_playerState, ytv_informationService) {
     'use strict';
 
     var translateFactor = 700,
@@ -11,8 +11,8 @@ module.exports = function (playerState) {
 
     return {
         restrict: 'E',
-        template: require('./previewOverlayTemplate.html'),
-        controller: function ($scope, informationService) {
+        template: require('./ytv_previewOverlayTemplate.html'),
+        controller: function ($scope) {
             $scope.show = false;
             $scope.selectedIndex = $scope.currentIndex;
             var oldIndex = $scope.currentIndex;
@@ -20,13 +20,13 @@ module.exports = function (playerState) {
 
             var showView = function(show){
                 $scope.show = show;
-                playerState.preview = show;
+                ytv_playerState.preview = show;
                 $scope.$apply();
             };
             
             if(yetu){
                 yetu.onActionBack = function () {
-                    if(playerState.preview){
+                    if(ytv_playerState.preview){
                         $scope.selectedIndex = oldIndex;
                         $scope.translate = 'translateX(' + calcTranslate($scope.selectedIndex) + 'px)';
                         showView(false);
@@ -38,13 +38,13 @@ module.exports = function (playerState) {
                 };
                 
                 yetu.onActionEnter = function() {
-                    informationService.dataFeedEntriesIndex = $scope.selectedIndex;
+                    ytv_informationService.playlistItemIndex = $scope.selectedIndex;
                     showView(false);
                     $scope.$apply();
                 }
                     
                 yetu.onActionRight = function () {
-                    if(playerState.preview){
+                    if(ytv_playerState.preview){
                         var nextIndex = $scope.selectedIndex + 1;
                         if (nextIndex >= $scope.data.feed.entries.length) {
                             console.info("no further feed entry... nothing to do");
@@ -77,7 +77,7 @@ module.exports = function (playerState) {
 
             $scope.$on('$destroy', function () {
                 var selectedIndex = $scope.selectedIndex;
-                informationServices.dataFeedEntriesIndex = selectedIndex;
+                ytv_informationService.playlistItemIndex = selectedIndex;
             });
         }
     };

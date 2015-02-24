@@ -5,7 +5,7 @@ var youtubeViewerApp = angular.module('youtubeViewerApp',
 		'pascalprecht.translate',
 		'reactTo',
         require('./ytv_information').name,
-        require('./ytv_detailView').name
+        require('./ytv_view').name
 	]);
 
 youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
@@ -31,32 +31,6 @@ youtubeViewerApp.config(function ($provide, $routeProvider, $translateProvider, 
 
 });
 
-youtubeViewerApp.run(function(){
-    //informationService.data = {
-    
-    //    feed: {
-    //        entries: [{
-    //            containsVideo: true,
-    //            imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
-    //            title: "Can We Genetically Improve Intelligence?",
-    //            truncatedTitle: "Can We Genetically Improve...",
-    //            videourl: "vr5n_ZOZ6E8"
-    //        },
-    //            {
-    //                containsVideo: true,
-    //                imageUrl: "https://i.ytimg.com/vi/vr5n_ZOZ6E8/maxresdefault.jpg",
-    //                title: "Can We Genetically Improve Intelligence?",
-    //                truncatedTitle: "Can We Genetically Improve...",
-    //                videourl: "vr5n_ZOZ6E8"
-    //            }],
-    //        title: "AsapSCIENCE",
-    //        truncatedTitle: "AsapSCIENCE - ",
-    //        logo: "http://apps.yetudev.com:7575/assets/appMetaData/assets/logo.svg"
-    //    }
-    //
-    //}
-});
-
 youtubeViewerApp.constant('CONFIG',{
     video: {
         highlightTimeout: 250,
@@ -65,6 +39,6 @@ youtubeViewerApp.constant('CONFIG',{
     },
     SUGGESTED_QUALITY: 'highres',
     playlistMaxItemCount: 20,
-    pathToLogo: "/assets/appMetaData/assets/logo.svg"
+    pathToLogo: '/assets/appMetaData/assets/logo.svg'
 })
 

@@ -5,9 +5,9 @@
     <div id="btn_play" ng-show="!info.isPlaying"></div>
     <div id="btn_forward" ng-class="{highlight: highlightForward }"></div>
 
-    <div id="actTime">{{info.actTime | controlbarTimeFilter}}</div>
+    <div id="actTime">{{info.actTime | ytv_ControlbarTimeFilter}}</div>
     <progress id="progressbar" max="100" value="{{info.percentage}}"></progress>
-    <div id="duration">{{ info.duration | controlbarTimeFilter }}</div>
+    <div id="duration">{{ info.duration | ytv_ControlbarTimeFilter }}</div>
   </div>
   <div class="controlbar-title">
     {{data.feed.entries[currentIndex].title}}
