@@ -1,15 +1,13 @@
 # Youtube App
 This sole purpose of this application is to show how :
 
-* yetu oauth2 client can be implemented in a play framework
+* yetu oauth2 client can be implemented in a play framework. For this, also see [the library this project makes use of](https://github.com/yetu/yetu-play-authenticator)
 * how communication between different screens are accomplished (e.g. message from a pc to tv)
 * (what an app for current yetu homescreen across devices have to have)
 
-Most of the scala code that is used in this project are from Activator template which shows how [Silhouette](https://github.com/mohiva/play-silhouette)  can be implemented in a Play Framework
-
 ## Warning:
 
-**This is work in progress and not yet production ready, please check back in a few days until this notice is gone before using this project as a starting point for your own yetu-compatible app.**
+**This is work in progress and as of right now only allows you to send a message into our messaging system, but not receive/display it yet. **
 
 ## Project structure
 This project is divided into the following two parts
@@ -84,7 +82,7 @@ You have to reload currently in your browser every time you make changes (TODO: 
 
 In order to get the application to function, you need to provide:
 
-- an OAuth2 `clientId` and `clientSecret`. Please see `conf/silhouette.conf` for the configuration keys.
+- an OAuth2 `clientId` and `clientSecret`, and `redirectURI`. Please see `conf/reference.conf` for the configuration keys.
 - a youtube developer token. Please see `conf/reference.conf` for the configuration keys.
 
 These configuration values are best overridden in a new file under `conf/application.conf`
@@ -100,5 +98,8 @@ cp apphome-youtube-html-app-deployment/application-local.conf conf/application.c
 
 #### If you are not internal yetu employee:
 
-TODO: information how to obtain a clientId/clientSecret
-TODO: information how to obtain a youtube developer token.
+Currently please contact dev-support@yetu.com to obtain OAuth2 credentials.
+
+For more information on how to develop yetu apps, please see [this page](https://github.com/yetu/app-development-workflow/wiki/How-to-develop-Apps-for-the-yetu-platform%3F)
+
+You also have to obtain a youtube developer token, please refer to the official youtube documentation for this.

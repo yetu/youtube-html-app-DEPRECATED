@@ -14,14 +14,12 @@ bintrayResolverSettings
 
 resolvers += bintray.Opts.resolver.mavenRepo("yetu")
 
+val yetuPlayAuthenticatorVersion = "0.1.4"
+
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "2.0-SNAPSHOT",
-  "org.webjars" %% "webjars-play" % "2.3.0",
-  "org.webjars" % "bootstrap" % "3.1.1",
-  "org.webjars" % "jquery" % "1.11.0",
-  "net.codingwell" %% "scala-guice" % "4.0.0-beta4",
-  "com.yetu" %% "yetu-play-authenticator" % "0.1.0",
-  "com.mohiva" %% "play-silhouette-testkit" % "2.0-SNAPSHOT" % "test",
+  "com.mohiva" %% "play-silhouette-testkit" % "2.0-RC1" % "test",
+  "com.yetu" %% "yetu-play-authenticator" % yetuPlayAuthenticatorVersion,
+  "com.yetu" %% "yetu-play-authenticator" % yetuPlayAuthenticatorVersion % "test" classifier "tests",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "org.scalatestplus"  %% "play"  % "1.2.0" % "test",
   cache

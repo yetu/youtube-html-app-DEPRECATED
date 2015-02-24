@@ -14,8 +14,7 @@ object InboxService extends Logger {
   def sendToInbox(data: JsValue, accessToken: String): Future[WSResponse] = {
 
     // create message to send
-    val timestamp = 1000L //TODO: what to do here?
-    val payload = Payload(timeToLive, timestamp, data, eventName)
+    val payload = Payload(data, eventName)
     val message = InboxMessage(accessToken, payload)
     val jsonMessage: JsValue = Json.toJson(message)
 
