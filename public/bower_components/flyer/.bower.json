@@ -1,0 +1,15 @@
+{
+  "name": "flyer",
+  "_cacheHeaders": {
+    "ETag": "\"41e529ec55674ae545b23f0005d80be1\"",
+    "Last-Modified": "Tue, 07 Oct 2014 20:29:34 GMT",
+    "Content-Length": "897647",
+    "Content-Type": "application/octet-stream",
+    "Content-Disposition": "attachment; filename=flyer.js"
+  },
+  "_release": "e-tag:41e529ec5",
+  "main": "index.js",
+  "_source": "https://github.com/benzap/flyer.js/releases/download/v1.0.4/flyer.js",
+  "_target": "*",
+  "_originalSource": "https://github.com/benzap/flyer.js/releases/download/v1.0.4/flyer.js"
+}

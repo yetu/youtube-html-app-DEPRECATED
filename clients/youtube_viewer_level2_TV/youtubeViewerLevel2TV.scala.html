@@ -1,0 +1,39 @@
+@import play.api.libs.json.JsValue
+@(config: JsValue)
+@{
+    // IMPORTANT: the source of this file resides here:
+    //      youtube-html-app/clients/youtube_producer/index.scala.html
+    // it is copied via gulp to
+    //      youtube-html-app/app/com/yetu/youtube/views/index.scala.html
+
+}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>YeTube TV Detail View</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="assets/youtube_viewer_level2_TV/styles/app.css"/>
+        <script>
+        var config = @Html(config.toString);
+        </script>
+        <script src="https://www.youtube.com/iframe_api"></script>
+    </head>
+    <body ng-app="youtubeViewerApp">
+
+        <div class="tp-container" ng-include="'assets/youtube_viewer_level2_TV/js/mainTemplate.html'"></div>
+
+        <script src="assets/bower_components/angular/angular.js"></script>
+        <script src="assets/bower_components/angular-resource/angular-resource.js"></script>
+        <script src="assets/bower_components/angular-route/angular-route.js"></script>
+        <script src="assets/bower_components/angular-translate/angular-translate.min.js"></script>
+        <script src="assets/bower_components/reactTo/reactTo.js"></script>
+        <script src="assets/bower_components/stringjs/lib/string.js"></script>
+        <script src="assets/bower_components/yetu-tv-message-client/dist/yetu-tv-message-client-min.js"></script>
+
+        <script type="text/javascript" src="assets/youtube_viewer_level2_TV/app-bundle.js"></script>
+    </body>
+</html>

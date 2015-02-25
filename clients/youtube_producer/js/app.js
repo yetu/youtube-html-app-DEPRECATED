@@ -7,7 +7,8 @@ var youtubeApp = angular.module('youtubeApp',
 		require('./yt_result').name,
 		require('./yt_search').name,
 		require('./yt_auth').name,
-		require('./yt_notification').name
+		require('./yt_notification').name,
+                require('./cw_revealLabel').name,
 	]);
 
 youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
@@ -56,4 +57,3 @@ youtubeApp.constant("YOUTUBEREQUESTS", {
 		url: 'https://www.googleapis.com/youtube/v3/videos',
 		part:'snippet,contentDetails,statistics'
 	}
-});

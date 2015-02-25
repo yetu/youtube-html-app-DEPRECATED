@@ -10,3 +10,10 @@ case class FrontendConfig(youtubeDeveloperToken: String,
 object FrontendConfig {
   implicit val PayloadFormat = Json.format[FrontendConfig]
 }
+
+
+case class SimpleFrontendConfig(youtubeDeveloperToken: String)
+
+object SimpleFrontendConfig {
+  implicit val PayloadFormat = Json.format[SimpleFrontendConfig]
+}
