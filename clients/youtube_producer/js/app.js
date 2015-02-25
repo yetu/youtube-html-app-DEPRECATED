@@ -25,7 +25,7 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 		});
 
 	$translateProvider.translations('en', {
-
+		COMMIT_BUTTON_LABEL: 'Play'
 	});
 
 	$translateProvider.preferredLanguage('en');
@@ -35,7 +35,8 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 youtubeApp.constant("SERVERPATHS", {
     youtubeUrl: "/playlist",
 		notificationUrl: "/notification",
-		level2Url: "/level2tv"
+		level2Url: "/level2tv",
+		imageUrl: "/assets/youtube_producer/img/"
 });
 
 youtubeApp.constant("SPECIALPURPOSE", {

@@ -1,4 +1,4 @@
-module.exports = function ($http, $location, SERVERPATHS, YOUTUBEREQUESTS) {
+module.exports = function ($http, $location, $translate, SERVERPATHS, YOUTUBEREQUESTS) {
 	'use strict';
 	this.playlistSendResult = null;
 	var that = this;
@@ -104,25 +104,35 @@ module.exports = function ($http, $location, SERVERPATHS, YOUTUBEREQUESTS) {
 			playlistItem = parseYtPlaylistItems(ptData.items);
 			getYtVideo(playlistItem.videoId).success(function(vData){
 				videoItem = parseYtVideoData(vData);
-				var urlToApp = $location.host() + ":" + $location.port() + SERVERPATHS.level2Url;
-				var playlist = {
-					app:{
-						url: urlToApp, //TODO: set right app Url
-						parameter:"playlistId=" + playlistId
-					},
-					stream: {
-						owner:playlistItem.owner,
-						streamTitle:encodeURI(playlistTitle),
-						title: encodeURI(playlistItem.title),
-						backgroundColor:'rgba(0, 0, 0, 0.75)',
-						image: playlistItem.image,
-						duration: videoItem.duration,
-						publishDate: videoItem.publishDate,
-						viewCount: videoItem.viewCount,
-						resolution: videoItem.resolution
-					}
-				};
-				sendPlaylist(playlist);
+
+				$translate(['COMMIT_BUTTON_LABEL']).then(function (translations) {
+					var url = $location.host() + ":" + $location.port();
+					var playlist = {
+						action:{
+							url: url + SERVERPATHS.level2Url,
+							type: 'open',
+							parameter:{
+								playlistId: playlistId,
+								itemIndex: 0
+							},
+							button:{
+								icon: SERVERPATHS.imageUrl + "notification_play.svg",
+								label: translations.COMMIT_BUTTON_LABEL
+							}
+						},
+						headline: encodeURI(playlistTitle),
+						stream: {
+							owner:playlistItem.owner,
+							title: encodeURI(playlistItem.title),
+							image: playlistItem.image,
+							duration: videoItem.duration,
+							publishDate: videoItem.publishDate,
+							viewCount: videoItem.viewCount,
+							resolution: videoItem.resolution
+						}
+					};
+					sendPlaylist(playlist);
+				});
 
 			}).error(function(data){
 				alert(data);
