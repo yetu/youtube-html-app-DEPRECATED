@@ -7,7 +7,7 @@ module.exports = function ($http, $location, $translate, SERVERPATHS, YOUTUBEREQ
 	};
 
 	var sendPlaylist = function(playlist){
-		var streamTitle = playlist.stream.streamTitle || '';
+		var streamTitle = playlist.headline || '';
 		$http.post(SERVERPATHS.youtubeUrl,playlist).success(function(data){
 			that.playlistSendResult = {
 				name: decodeURI(streamTitle),
