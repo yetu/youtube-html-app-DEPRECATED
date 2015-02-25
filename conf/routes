@@ -13,6 +13,7 @@ GET         /authenticate/:provider                  @com.yetu.play.authenticato
 GET         /                                        @com.yetu.youtube.controllers.YoutubeController.index
 GET         /level2tv                                @com.yetu.youtube.controllers.YoutubeController.level2tv
 POST        /playlist                                @com.yetu.youtube.controllers.YoutubeController.playlist
+POST        /notification                  @com.yetu.youtube.controllers.YoutubeController.notification
 
 
 GET         /assets/appMetaData/manifest.json        @com.yetu.youtube.controllers.YoutubeController.manifest

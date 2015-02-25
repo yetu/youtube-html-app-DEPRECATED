@@ -11,7 +11,7 @@ import scala.concurrent.Future
 
 object InboxService extends Logger {
 
-  def sendToInbox(data: JsValue, accessToken: String): Future[WSResponse] = {
+  def sendToInbox(data: JsValue, accessToken: String, eventName: String): Future[WSResponse] = {
 
     // create message to send
     val payload = Payload(data, eventName)

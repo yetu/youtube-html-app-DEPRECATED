@@ -18,16 +18,11 @@ module.exports = function (ytPlaylistService, ytSearchState) {
 				loadPlayerAndVideo(playlistId);
 			}
 			scope.onPlaylistSendButtonClick = function(e){
-				var title = angular.element(e.target).attr('data-title');
+				var title = angular.element(e.target).attr('data-title')
 				var playlistId = angular.element(e.target).attr('data-id');
-				var playlist = {
-					"name": encodeURI(title),
-					"source" : playlistId,
-					"url" : "https://www.youtube.com/playlist?list="+playlistId
-				};
-				ytPlaylistService.sendPlaylist(playlist);
+				ytPlaylistService.sendPlaylistItem(playlistId, title);
 			};
-
+			
 			scope.onClose = function(){
 				angular.element(element.find('iframe')[0]).remove();
 				angular.element(element.find('div')[3]).append('<div id="player'+index+'" class="yt-result-list-item--player">');

@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require('./js/app');
 },{"./js/app":2}],2:[function(require,module,exports){
 var youtubeApp = angular.module('youtubeApp',
@@ -9,7 +9,8 @@ var youtubeApp = angular.module('youtubeApp',
 		'reactTo',
 		require('./yt_result').name,
 		require('./yt_search').name,
-		require('./cw_revealLabel').name
+		require('./yt_auth').name,
+		require('./yt_notification').name
 	]);
 
 youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
@@ -27,7 +28,7 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 		});
 
 	$translateProvider.translations('en', {
-
+		COMMIT_BUTTON_LABEL: 'Play'
 	});
 
 	$translateProvider.preferredLanguage('en');
@@ -35,225 +36,292 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 });
 
 youtubeApp.constant("SERVERPATHS", {
-    youtubeUrl: "/playlist"
-})
+    youtubeUrl: "/playlist",
+		notificationUrl: "/notification",
+		level2Url: "/level2tv",
+		imageUrl: "/assets/youtube_producer/img/"
+});
 
-},{"./cw_revealLabel":4,"./mainTemplate.html":5,"./yt_result":6,"./yt_search":12}],3:[function(require,module,exports){
+youtubeApp.constant("SPECIALPURPOSE", {
+    notificationTriggers: ["yetu", "is", "awesome"],
+		successOnSentNotification: "A general notification was sent successfully!",
+		errorOnSentNotification: "There was an error sending the general notification",
+		displayTimeout: 2000
+});
 
-module.exports = function ($timeout) {
+youtubeApp.constant("YOUTUBEREQUESTS", {
+	maxResults: 1,
+	playlistItems:{
+		url: 'https://www.googleapis.com/youtube/v3/playlistItems',
+		part: 'snippet'
+	},
+	video: {
+		url: 'https://www.googleapis.com/youtube/v3/videos',
+		part:'snippet,contentDetails,statistics'
+	}
+});
+
+},{"./mainTemplate.html":3,"./yt_auth":4,"./yt_notification":6,"./yt_result":8,"./yt_search":14}],3:[function(require,module,exports){
+module.exports = "<div class=\"container\">\r\n  <yt-search class=\"yt-search\"></yt-search>\r\n  <yt-result class=\"yt-result\"></yt-result>\r\n\t<yt-auth class=\"ng-hide\"></yt-auth>\r\n</div>";
+
+},{}],4:[function(require,module,exports){
+module.exports = angular.module('yt_auth', ['ngResource'])
+	.directive('ytAuth', require('./yt_authDirective'));
+
+},{"./yt_authDirective":5}],5:[function(require,module,exports){
+module.exports = function ($window, $http, $interval, $log) {
+    'use strict';
+    return {
+        restrict: 'E',
+        link: function (scope, element, attr) {
+            //TODO: use more angular.js methods instead of mix of native and angular stuff
+
+            var openidIframe = document.createElement('iframe');
+
+            openidIframe.src = config.authServer + '/assets/login_status.html';
+            openidIframe.id = 'openid-provider';
+            openidIframe.style.visibility = 'hidden';
+            openidIframe.style.display = 'none';
+
+            document.body.appendChild(openidIframe);
+
+            openidIframe.onload = check_session;
+
+            var timerID = setInterval(check_session, config.sessionPollingInterval * 1000);
+
+            function check_session() {
+                var win = openidIframe.contentWindow;
+                win.postMessage('youtubeApp ' + config.userUUID, config.authServer);
+            }
+
+
+            function receiveMessageP(event) {
+                if (event.originalEvent) {
+                    event = event.originalEvent;
+                }
+                if (event.origin !== config.authServer) {
+                    $log.log('event.origin domain [' + event.origin + '] does not match the configured domain [' + config.authServer + ']');
+                    return;
+                }
+                var stat = event.data;
+                $log.log('poller | received message:' + stat);
+                if (stat == 'invalid') {
+                    $log.log('session=invalid! Logging out and redirecting');
+                    clearInterval(timerID);
+                    $window.location.href = '/signOut';
+                }
+            }
+
+            angular.element($window).on('message', receiveMessageP);
+        }
+    }
+};
+},{}],6:[function(require,module,exports){
+module.exports = angular.module('yt_notification', ['ngResource'])
+.service('ytNotification', require('./ytNotification'));
+},{"./ytNotification":7}],7:[function(require,module,exports){
+module.exports = function($http, SERVERPATHS, SPECIALPURPOSE) {
 	'use strict';
-	/**
-	 * Shortens a piece of text in a tile
-	 * by fading out the last characters.
-	 * Complete text will be visible on-focus.
-	 */
-	return {
-		restrict: 'A',
-		link: function (scope, element, attrs) {
-
-			var VISIBLE_LINE_COUNT = 2,
-				GRADIENT_STEPS = 5, // if changed, updated classes in tile-app-label-reveal.scss
-				elementAbove = element.parent()[0],
-				lineHeight,
-				maxHeight,
-				text,
-				spans
-
-
-			// Temporary custom settings for the Discover tile
-			if(element.attr('data-type')==='title') {
-				VISIBLE_LINE_COUNT = 1;
-			}
-
-			/**
-			 * Detects if truncating is needed
-			 */
-			scope.init = function () {
-
-				//reset text to get the right offsetTop of spans (after zooming/resizing)
-				element[0].innerHTML = '<span>'+text+'</span>';
-				var offsetHeight = element.find('span')[0].offsetHeight;
-
-				//reset bottom space to get the right space after zooming/resizing
-				element.css('bottom','20px');
-
-				// wrap each character in a span, and
-				element.html('<span>' + element.find('span').text().split('').join('</span><span>') + '</span>');
-				spans = element[0].querySelectorAll('span');
-
-				// find out the number of lines and calculate an
-				// approximate lineHeight depending on the height of the paragraph
-				var numberOfLines = scope.getNumberOfLines();
-				lineHeight = parseInt(element.prop('offsetHeight')/numberOfLines);
-				maxHeight = VISIBLE_LINE_COUNT * lineHeight;
-
-				if(offsetHeight > maxHeight) {
-					// add tile state
-					elementAbove.classList.add('with-truncated-label');
-					scope.addListeners();
-					scope.initEffect();
-				}
-			};
-
-			scope.getNumberOfLines = function(){
-				var numberOfLines = 1;
-				var currentOffset = spans[0].offsetTop;
-				for (var i = 0, l = spans.length; i < l; i++) {
-					if(spans[i].offsetTop != currentOffset) {
-						numberOfLines++;
-						currentOffset = spans[i].offsetTop;
-					}
-				}
-				return numberOfLines;
-			};
-
-			scope.addListeners = function() {
-
-				scope.$on('ON_FOCUS', function() {
-						scope.showFullLabel();
-				});
-
-				scope.$on('ON_MOUSE_LEAVE', function() {
-					scope.showShortenedLabel();
-				});
-			};
-
-			scope.initEffect = function() {
-
-				// detect the first character that
-				// is placed on the first line that exceeds the visible-line-count
-
-				maxHeight += spans[0].offsetTop;
-
-				var index = scope.getFirstSpanOutside();
-				if(index<spans.length){
-					scope.addTransparency(index);
-				}
-			};
-
-			/**
-			 * Loops through spans and looks for the first span
-			 * placed on line (VISIBLE_LINE_COUNT + 1)
-			 * @return {Number} Index of that first span
-			 */
-			scope.getFirstSpanOutside = function() {
-				var index;
-				for (var i = 0, l = spans.length; i < l; i++) {
-					if(spans[i].offsetTop >= maxHeight) {
-						index = i;
-						break;
-					}
-				}
-				return index;
-			};
-
-			/**
-			 * Cuts off the text making the last x characters semi-transparent
-			 * and wrapping the remaining part in an additional span so we only
-			 * need to hide a single span.
-			 * @param {Number} index - index of first span placed on line "VISIBLE_LINE_COUNT + 1"
-			 */
-			scope.addTransparency = function(index) {
-
-				// manipulating node outside of DOM to reduce amount of repaints
-
-				var spansClone = angular.element(spans).clone(),
-					spansStringArray = [],
-					opacity = 0;
-
-				for (var ii = spansClone.length - 1; ii >= 0; ii--) {
-
-					// add transparency to last characters on line "VISIBLE_LINE_COUNT"
-					if(opacity !== 100 && ii < index && angular.element(spansClone[ii]).text() !== ' ' && spansClone.length>index) {
-
-						opacity += (100 / GRADIENT_STEPS);
-
-						if(opacity < 100) {
-							spansClone[ii].classList.add(
-								'tile-label-semi-transparent',
-								'transitionOpacity03',
-									'tile-label-semi-transparent-' + opacity
-							);
-						}
-					}
-
-					// store outerHTML in an array for further manipulation
-					spansStringArray.push(spansClone[ii].outerHTML);
-				}
-
-				// reverse array since for loop walked backwards
-				spansStringArray.reverse();
-				// wrap part that needs to be invisible (on default state) in separate span
-				spansStringArray.splice(index, 0, '<span class="tile-label-hidden-part transitionOpacity03">');
-				spansStringArray.splice(spansStringArray.length, 0, '</span>');
-
-				// add manipulated spans to DOM
-				element[0].innerHTML = spansStringArray.join('');
-			};
-
-
-
-			$timeout(function() {
-				text = element.find('span').text();
-				scope.init();
-			});
-
-			scope.$on('RESIZE', function(){
-				scope.init();
-			});
-
+	//array object with possible payloads
+	var payloads = [{
+		notification: {
+			title: 'CamBot',
+			subTitle: 'motion detected outside back window',
+			backgroundColor: 'rgba(0, 0, 0, 0.75)',
+			image: 'http://i4.mirror.co.uk/incoming/article141978.ece/alternates/s2197/burglar-trying-to-pry-open-window-on-house-pic-getty-images-123608196.jpg'
 		}
+	}, {
+		notification: {
+			title: 'WaterBot',
+			subTitle: 'basement water sensor activated',
+			backgroundColor: 'rgba(0, 0, 0, 0.75)',
+			image: 'http://www.smbywills.com/core/images/waterproofing/basement-flooding/flooded-basement-home-lg.jpg'
+		}
+	}, {
+		notification: {
+			title: 'DoorBot',
+			subTitle: 'doorbell activated',
+			backgroundColor: 'rgba(0, 0, 0, 0.75)',
+			image: 'http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2011/9/4/1315149322196/Man-at-front-door-007.jpg'
+		}
+	}];
+	//checks if the special triggerphrase was entered
+	this.isSpecialTrigger = function(inputValue) {
+		var result = [];
+		angular.forEach(SPECIALPURPOSE.notificationTriggers, function(value, key) {
+			if (inputValue.toLowerCase().indexOf(value) === -1) {
+				result.push(0);
+			} else {
+				result.push(1);
+			}
+		});
+		if (result.indexOf(0) !== -1) {
+			return false;
+		} else {
+			return true;
+		}
+	};
+	//returns a random element of the payloads object
+	this.sendGeneralNotification = function() {
+		return $http.post(SERVERPATHS.notificationUrl, payloads[Math.floor((Math.random() * payloads.length))]);
 	};
 };
 
-
-},{}],4:[function(require,module,exports){
-module.exports = angular.module('cw_revealLabel', ['ngResource'])
-	.directive('cwRevealLabel', require('./cw_revealLabelDirective'));
-
-
-},{"./cw_revealLabelDirective":3}],5:[function(require,module,exports){
-module.exports = "<div class=\"container\">\n  <yt-search class=\"yt-search\"></yt-search>\n  <yt-result class=\"yt-result\"></yt-result>\n\t<yt-auth class=\"ng-hide\"></yt-auth>\n</div>";
-
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = angular.module('yt_result', ['ngResource', 'pascalprecht.translate', 'reactTo'])
 	.directive('ytResult', require('./yt_resultDirective'))
 	.service('ytPlaylistService', require('./yt_playlistService'))
 	.directive('ytResultItem', require('./yt_resultItemDirective'));
 
 
-},{"./yt_playlistService":7,"./yt_resultDirective":8,"./yt_resultItemDirective":9}],7:[function(require,module,exports){
-module.exports = function ($http, SERVERPATHS) {
+},{"./yt_playlistService":9,"./yt_resultDirective":10,"./yt_resultItemDirective":11}],9:[function(require,module,exports){
+module.exports = function ($http, $location, $translate, SERVERPATHS, YOUTUBEREQUESTS) {
 	'use strict';
 	this.playlistSendResult = null;
 	var that = this;
 	this.deletePlaylistSendResult = function(){
 		that.playlistSendResult = null;
-	}
-	this.sendPlaylist = function(playlist){
+	};
+
+	var sendPlaylist = function(playlist){
+		var streamTitle = playlist.headline || '';
 		$http.post(SERVERPATHS.youtubeUrl,playlist).success(function(data){
 			that.playlistSendResult = {
-				name: decodeURI(playlist.name),
+				name: decodeURI(streamTitle),
 				sended: "YES"
 			};
 		}).error(function(data, status){
 			if(status === 401){
 				that.playlistSendResult = {
-					name: decodeURI(playlist.name),
+					name: decodeURI(streamTitle),
 					sended: 401
 				};
 			}else {
 				that.playlistSendResult = {
-					name: decodeURI(playlist.name),
+					name: decodeURI(streamTitle),
 					sended: "ERROR"
 				};
 			}
 
-		})
-	}
+		});
+	};
+
+	// call youtube data api to get playlist item of specified playlist id
+	var getYtPlaylistItems = function(playlistId){
+		return $http.get(YOUTUBEREQUESTS.playlistItems.url, {
+			params: {
+				maxResults: YOUTUBEREQUESTS.maxResults,
+				part: YOUTUBEREQUESTS.playlistItems.part,
+				key: config.youtubeDeveloperToken,
+				playlistId: playlistId,
+
+			}
+		});
+	};
+
+	// call youtube data api to get video item of specified video id
+	var getYtVideo = function (videoId){
+		return $http.get(YOUTUBEREQUESTS.video.url, {
+			params: {
+				maxResults: YOUTUBEREQUESTS.maxResults,
+				part: YOUTUBEREQUESTS.video.part,
+				key: config.youtubeDeveloperToken,
+				id: videoId
+			}
+		});
+	};
+
+	var parseYtPlaylistItems = function (playlistItems) {
+		var parsedItem = {};
+		if (playlistItems.length > 0) {
+			var item = playlistItems[0];
+			if (item && item.snippet){
+				parsedItem.owner = item.snippet.channelTitle || ''; //playlist owner
+				parsedItem.title = item.snippet.title || ''; //video title
+				if(item.snippet.thumbnails && item.snippet.thumbnails.maxres && item.snippet.thumbnails.maxres.url){
+					parsedItem.image = item.snippet.thumbnails.maxres.url;
+				}else if(item.snippet.thumbnails && item.snippet.thumbnails.high && item.snippet.thumbnails.high.url) {
+					parsedItem.image = item.snippet.thumbnails.high.url;
+				}else if(item.snippet.thumbnails && item.snippet.thumbnails.medium && item.snippet.thumbnails.medium.url) {
+					parsedItem.image = item.snippet.thumbnails.medium.url;
+				}else if(item.snippet.thumbnails && item.snippet.thumbnails.standard && item.snippet.thumbnails.standard.url) {
+					parsedItem.image = item.snippet.thumbnails.standard.url;
+				}else if(item.snippet.thumbnails && item.snippet.thumbnails.default && item.snippet.thumbnails.default.url){
+					parsedItem.image = item.snippet.thumbnails.default.url;
+				}else {
+					parsedItem.image = '';
+				}
+				if (item.snippet.resourceId){
+					parsedItem.videoId = item.snippet.resourceId.videoId || '';
+				} else {
+					parsedItem.videoId = '';
+				}
+			}
+		}
+		return parsedItem;
+	};
+
+	var parseYtVideoData = function (data) {
+		var video = {};
+		if (data.items && data.items.length > 0 && data.items[0].contentDetails && data.items[0].snippet &&  data.items[0].statistics) {
+			video = {
+				duration: data.items[0].contentDetails.duration,
+				publishDate: data.items[0].snippet.publishedAt,
+				definition: data.items[0].contentDetails.definition,
+				viewCount: data.items[0].statistics.viewCount
+			};
+		}
+		return video;
+	};
+
+	this.sendPlaylistItem = function(playlistId, playlistTitle, urlToApp){
+		var playlistItem, videoItem;
+
+		getYtPlaylistItems(playlistId).success(function(ptData){
+			playlistItem = parseYtPlaylistItems(ptData.items);
+			getYtVideo(playlistItem.videoId).success(function(vData){
+				videoItem = parseYtVideoData(vData);
+
+				$translate(['COMMIT_BUTTON_LABEL']).then(function (translations) {
+					var url = $location.host() + ":" + $location.port();
+					var playlist = {
+						action:{
+							url: url + SERVERPATHS.level2Url,
+							type: 'open',
+							parameter:{
+								playlistId: playlistId,
+								itemIndex: 0
+							},
+							button:{
+								icon: SERVERPATHS.imageUrl + "notification_play.svg",
+								label: translations.COMMIT_BUTTON_LABEL
+							}
+						},
+						headline: encodeURI(playlistTitle),
+						stream: {
+							owner:playlistItem.owner,
+							title: encodeURI(playlistItem.title),
+							image: playlistItem.image,
+							duration: videoItem.duration,
+							publishDate: videoItem.publishDate,
+							viewCount: videoItem.viewCount,
+							resolution: videoItem.resolution
+						}
+					};
+					sendPlaylist(playlist);
+				});
+
+			}).error(function(data){
+				alert(data);
+			});
+		}).error(function(data){
+			alert(data);
+		});
+	};
 };
 
-},{}],8:[function(require,module,exports){
+
+},{}],10:[function(require,module,exports){
 
 module.exports = function (reactTo, $rootScope, ytPlaylistService, $timeout) {
 	return {
@@ -305,7 +373,7 @@ module.exports = function (reactTo, $rootScope, ytPlaylistService, $timeout) {
 		}
 	}
 };
-},{"./yt_resultTemplate.html":11}],9:[function(require,module,exports){
+},{"./yt_resultTemplate.html":13}],11:[function(require,module,exports){
 
 module.exports = function (ytPlaylistService, ytSearchState) {
 	var player = null, index = null;
@@ -326,16 +394,11 @@ module.exports = function (ytPlaylistService, ytSearchState) {
 				loadPlayerAndVideo(playlistId);
 			}
 			scope.onPlaylistSendButtonClick = function(e){
-				var title = angular.element(e.target).attr('data-title');
+				var title = angular.element(e.target).attr('data-title')
 				var playlistId = angular.element(e.target).attr('data-id');
-				var playlist = {
-					"name": encodeURI(title),
-					"source" : playlistId,
-					"url" : "https://www.youtube.com/playlist?list="+playlistId
-				};
-				ytPlaylistService.sendPlaylist(playlist);
+				ytPlaylistService.sendPlaylistItem(playlistId, title);
 			};
-
+			
 			scope.onClose = function(){
 				angular.element(element.find('iframe')[0]).remove();
 				angular.element(element.find('div')[3]).append('<div id="player'+index+'" class="yt-result-list-item--player">');
@@ -378,19 +441,19 @@ module.exports = function (ytPlaylistService, ytSearchState) {
 	}
 };
 
-},{"./yt_resultItemTemplate.html":10}],10:[function(require,module,exports){
-module.exports = "<li class=\"yt-result-list-item\">\n  <div class=\"yt-result-list-item--img\">\n    <img ng-if=\"resultList.img\" class=\"yt-result-list-item--img\" src=\"{{resultList.img}}\"/>\n    <img data-index=\"{{$index}}\" data-id=\"{{resultList.playlistId}}\" class=\"yt-result-list-item--playimg\" src=\"assets/youtube_producer/img/play-icon.svg\" ng-click=\"onPlay($event)\"/>\n  </div>\n  <div class=\"yt-result-list-item--rightContent\">\n    <h1 class=\"yt-result-list-item--title\">\n      <p class=\"yt-result-list-item--title-container\" data-type=\"title\" cw-reveal-label><span>{{resultList.title}}</span></p>\n    </h1>\n    <p class=\"yt-result-list-item--subtitle\">\n      <span>by {{resultList.channel}}</span>\n      <span class=\"point\">*</span>\n      <span>{{resultList.description.createDate}}</span>\n    </p>\n    <p class=\"yt-result-list-item--description\" data-type=\"description\" cw-reveal-label ng-if=\"resultList.description.text\">\n      <span>{{resultList.description.text}}</span>\n    </p>\n    <p class=\"yt-result-list-item--description\" ng-if=\"!resultList.description.text\">No description available.</p>\n  </div>\n  <div class=\"yt-result-list-item--buttons\">\n    <button class=\"yt-result-list-item--button\"\n            ng-click=\"onPlaylistSendButtonClick($event)\"\n            data-title=\"{{resultList.title}}\" data-id=\"{{resultList.playlistId}}\" data-channeltitle=\"{{resultList.channel}}\">\n      Play on TV\n      </button>\n  </div>\n  <div class=\"yt-result-list-item--video\"  ng-class=\"{'visible':playing}\" ng-click=\"onClose()\">\n    <div id=\"{{'player'+$index}}\" class=\"yt-result-list-item--player\">\n    </div>\n    <div ng-click=\"onClose()\" class=\"yt-result-list-item--close\">x</div>\n  </div>\n</li>";
+},{"./yt_resultItemTemplate.html":12}],12:[function(require,module,exports){
+module.exports = "<li class=\"yt-result-list-item\">\r\n  <div class=\"yt-result-list-item--img\">\r\n    <img ng-if=\"resultList.img\" class=\"yt-result-list-item--img\" src=\"{{resultList.img}}\"/>\r\n    <img data-index=\"{{$index}}\" data-id=\"{{resultList.playlistId}}\" class=\"yt-result-list-item--playimg\" src=\"assets/youtube_producer/img/play-icon.svg\" ng-click=\"onPlay($event)\"/>\r\n  </div>\r\n  <div class=\"yt-result-list-item--rightContent\">\r\n    <h1 class=\"yt-result-list-item--title\">\r\n      <p class=\"yt-result-list-item--title-container\" data-type=\"title\" cw-reveal-label><span>{{resultList.title}}</span></p>\r\n    </h1>\r\n    <p class=\"yt-result-list-item--subtitle\">\r\n      <span>by {{resultList.channel}}</span>\r\n      <span class=\"point\">*</span>\r\n      <span>{{resultList.description.createDate}}</span>\r\n    </p>\r\n    <p class=\"yt-result-list-item--description\" data-type=\"description\" cw-reveal-label ng-if=\"resultList.description.text\">\r\n      <span>{{resultList.description.text}}</span>\r\n    </p>\r\n    <p class=\"yt-result-list-item--description\" ng-if=\"!resultList.description.text\">No description available.</p>\r\n  </div>\r\n  <div class=\"yt-result-list-item--buttons\">\r\n    <button class=\"yt-result-list-item--button\"\r\n            ng-click=\"onPlaylistSendButtonClick($event)\"\r\n            data-title=\"{{resultList.title}}\" data-id=\"{{resultList.playlistId}}\" data-channeltitle=\"{{resultList.channel}}\">\r\n      Play on TV\r\n      </button>\r\n  </div>\r\n  <div class=\"yt-result-list-item--video\"  ng-class=\"{'visible':playing}\" ng-click=\"onClose()\">\r\n    <div id=\"{{'player'+$index}}\" class=\"yt-result-list-item--player\">\r\n    </div>\r\n    <div ng-click=\"onClose()\" class=\"yt-result-list-item--close\">x</div>\r\n  </div>\r\n</li>";
 
-},{}],11:[function(require,module,exports){
-module.exports = "<div>\n<div class=\"yt-send-overlay\" ng-class=\"{visible: sendOverlay}\">\n  <p ng-if=\"playListSended==='YES'\">\n    YouTube Playlist \"{{playListName}}\" is now sent to your TV!\n  </p>\n  <p ng-if=\"playListSended==='ERROR'\">\n    YouTube Playlist \"{{playListName}}\" could not be sent to your TV!\n  </p>\n  <p ng-if=\"playListSended===401\">\n    You are not allowed to send the YouTube Playlist \"{{playListName}}\" to TV!\n  </p>\n</div>\n<ul class=\"yt-result-list\">\n  <yt-result-item ng-repeat=\"resultList in resultLists\">‚\n  </yt-result-item>\n  <div ng-if=\"resultListsState==='empty'\">\n    No results found.\n  </div>\n</ul>\n</div>";
+},{}],13:[function(require,module,exports){
+module.exports = "<div>\r\n<div class=\"yt-send-overlay\" ng-class=\"{visible: sendOverlay}\">\r\n  <p ng-if=\"playListSended==='YES'\">\r\n    YouTube Playlist \"{{playListName}}\" is now sent to your TV!\r\n  </p>\r\n  <p ng-if=\"playListSended==='ERROR'\">\r\n    YouTube Playlist \"{{playListName}}\" could not be sent to your TV!\r\n  </p>\r\n  <p ng-if=\"playListSended===401\">\r\n    You are not allowed to send the YouTube Playlist \"{{playListName}}\" to TV!\r\n  </p>\r\n</div>\r\n<ul class=\"yt-result-list\">\r\n  <yt-result-item ng-repeat=\"resultList in resultLists\">‚\r\n  </yt-result-item>\r\n  <div ng-if=\"resultListsState==='empty'\">\r\n    No results found.\r\n  </div>\r\n</ul>\r\n</div>";
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = angular.module('yt_search', ['ngResource','pascalprecht.translate'])
 	.service('ytSearchState', require('./yt_searchState'))
 	.directive('ytSearch', require('./yt_searchDirective'));
 
-},{"./yt_searchDirective":13,"./yt_searchState":14}],13:[function(require,module,exports){
-module.exports = function (ytSearchState) {
+},{"./yt_searchDirective":15,"./yt_searchState":16}],15:[function(require,module,exports){
+module.exports = function (ytSearchState, ytNotification, SPECIALPURPOSE, $timeout) {
 	return {
 		restrict: 'E',
 		template: require('./yt_searchTemplate.html'),
@@ -403,21 +466,36 @@ module.exports = function (ytSearchState) {
 				scope.initSearch(element.find('input')[0].value);
 			};
 			scope.searchOnKeyUp = function (event) {
-				if (event.keyCode === 13 && event.target.value!="") {
+				if (event.keyCode === 13 && event.target.value !== "") {
 					scope.initSearch(event.target.value);
 				}
 			};
 			scope.initSearch = function(value){
-				ytSearchState.setSearchValue(value);
-				scope.searchValue = ytSearchState.getSearchValue(false);
-				ytSearchState.setSearchResult()
-			}
+				//if a special search query is entered we send a general notification
+				if(ytNotification.isSpecialTrigger(value)){
+					var result = ytNotification.sendGeneralNotification();
+					result.then(function() {
+						element.find('input')[0].value = SPECIALPURPOSE.successOnSentNotification;
+					}, function() {
+						element.find('input')[0].value = SPECIALPURPOSE.errorOnSentNotification;
+					});
+					$timeout(function(){
+						element.find('input')[0].value = '';
+					}, SPECIALPURPOSE.displayTimeout);
+					return;
+				//from here on it is normal search
+				} else {
+					ytSearchState.setSearchValue(value);
+					scope.searchValue = ytSearchState.getSearchValue(false);
+					ytSearchState.setSearchResult();
+				}
+			};
 		}
-	}
+	};
 };
 
 
-},{"./yt_searchTemplate.html":15}],14:[function(require,module,exports){
+},{"./yt_searchTemplate.html":17}],16:[function(require,module,exports){
 module.exports = function ($location, $http) {
 	'use strict';
 	var searchValue;
@@ -552,7 +630,7 @@ module.exports = function ($location, $http) {
 
 	};
 };
-},{}],15:[function(require,module,exports){
-module.exports = "<div>\n  <input class=\"yt-search--input\" ng-keyup=\"searchOnKeyUp($event)\" type=\"text\" placeholder=\"Search YouTube Playlist\" value=\"{{searchValue}}\">\n  <button class=\"yt-search--button\" ng-click=\"searchButtonClick()\">\n    <svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n\t    viewBox=\"0 0 21.7 21.7\" enable-background=\"new 0 0 21.7 21.7\" xml:space=\"preserve\">\n      <path fill=\"#333\" d=\"M21.7,20.3l-6-6c1.2-1.5,1.9-3.4,1.9-5.5c0-4.9-4-8.8-8.8-8.8C4,0,0,4,0,8.8c0,4.9,4,8.8,8.8,8.8\n        c2.1,0,4-0.7,5.5-1.9l6,6L21.7,20.3z M8.8,15.6C5.1,15.6,2,12.6,2,8.8C2,5.1,5.1,2,8.8,2c3.8,0,6.8,3.1,6.8,6.8\n        C15.6,12.6,12.6,15.6,8.8,15.6z\"/>\n    </svg>\n  </button>\n</div>";
+},{}],17:[function(require,module,exports){
+module.exports = "<div>\r\n  <input class=\"yt-search--input\" ng-keyup=\"searchOnKeyUp($event)\" type=\"text\" placeholder=\"Search YouTube Playlist\" value=\"{{searchValue}}\">\r\n  <button class=\"yt-search--button\" ng-click=\"searchButtonClick()\">\r\n    <svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\r\n\t    viewBox=\"0 0 21.7 21.7\" enable-background=\"new 0 0 21.7 21.7\" xml:space=\"preserve\">\r\n      <path fill=\"#333\" d=\"M21.7,20.3l-6-6c1.2-1.5,1.9-3.4,1.9-5.5c0-4.9-4-8.8-8.8-8.8C4,0,0,4,0,8.8c0,4.9,4,8.8,8.8,8.8\r\n        c2.1,0,4-0.7,5.5-1.9l6,6L21.7,20.3z M8.8,15.6C5.1,15.6,2,12.6,2,8.8C2,5.1,5.1,2,8.8,2c3.8,0,6.8,3.1,6.8,6.8\r\n        C15.6,12.6,12.6,15.6,8.8,15.6z\"/>\r\n    </svg>\r\n  </button>\r\n</div>";
 
-},{}]},{},[1])
+},{}]},{},[1]);

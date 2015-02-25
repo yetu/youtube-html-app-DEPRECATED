@@ -12,6 +12,7 @@ import com.yetu.youtube.models.{SimpleFrontendConfig, FrontendConfig}
 import com.yetu.youtube.services.InboxService
 import com.yetu.youtube.utils.ConfigLoader
 import com.yetu.youtube.utils.ConfigLoader.FrontendConfiguration
+import com.yetu.youtube.utils.ConfigLoader.Inbox._
 import com.yetu.youtube.views
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
@@ -53,7 +54,21 @@ class YoutubeController @Inject()(implicit val env: Environment[User, SessionAut
     for {
       info: Option[OAuth2Info] <- oauth2Dao.find(request.identity.loginInfo)
       accessToken: String = info.map(_.accessToken).getOrElse("Invalid access token")
-      wsResponse <- InboxService.sendToInbox(request.body, accessToken)
+      wsResponse <- InboxService.sendToInbox(request.body, accessToken, youtubeEventName)
+      response = wsResponseToPlayResponse(wsResponse)
+    } yield response
+
+  }
+
+	/**
+   * Handles the "general notification" request, this will be moved to a separate application one day
+   */
+  def notification = SecuredAction.async(parse.json) { implicit request =>
+
+    for {
+      info: Option[OAuth2Info] <- oauth2Dao.find(request.identity.loginInfo)
+      accessToken: String = info.map(_.accessToken).getOrElse("Invalid access token")
+      wsResponse <- InboxService.sendToInbox(request.body, accessToken, notificationEventName)
       response = wsResponseToPlayResponse(wsResponse)
     } yield response
 
