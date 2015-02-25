@@ -22,7 +22,7 @@ This project is divided into the following two parts
         * path to app is /level2TV
         * parameters, which should be append to the url, are the following:
             * playlistId: id of the youtube playlist
-            * playlistItemIndex: number of item which should be shown
+            * itemIndex: number of playlist item which should be shown
             * lang: "en/de" - the language, which should be used in the viewer
         * Technologies: AngularJS, styl
         * Build-Process: gulp
