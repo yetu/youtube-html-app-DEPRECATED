@@ -20,6 +20,7 @@ describe('message-client', function () {
 		expect(yetu.onActionEnter).toBeDefined();
 		expect(yetu.onActionMenu).toBeDefined();
 		expect(yetu.onActionRewind).toBeDefined();
+		expect(yetu.onReceiveMessage).toBeDefined();
 		expect(yetu.sendFeedItemIndex).toBeDefined();
 		expect(yetu.sendMessage).toBeDefined();
 		expect(yetu.sendQuit).toBeDefined();

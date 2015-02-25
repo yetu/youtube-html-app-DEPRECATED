@@ -125,6 +125,18 @@ module.exports =  function ($interval, CONFIG, reactTo, ytv_playerState) {
                         skip(CONFIG.video.FAST_FORWARD);
                         ytv_playerState.toggleForward = !ytv_playerState.toggleForward;
                     };
+                    yetu.onReceiveMessage = function(data){
+                        if(data.message === 'notification arrived'){
+                            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                                player.pauseVideo();
+                            }
+                        }
+                        else if(data.message === 'notification closed'){
+                            if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                                player.playVideo();
+                            }
+                        }
+                    };
                 }
 				react(ytv_playerState, 'preview', function (n) {
 					if (typeof player === 'undefined' || player === null) {

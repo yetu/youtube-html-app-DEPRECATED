@@ -76,25 +76,47 @@ yetu
 
 ###Callbacks
 
+
+####Action Callbacks
 These callbacks are supported by the yetu-tv-message-client.
 
-onAnyActionDetected
-onActionUp
-onActionDown
-onActionLeft
-onActionRight
-onActionEnter
-onActionBack
-onActionMenu
-onActionPlay
-onActionRewind
-onActionForward
+* onAnyActionDetected
+* onActionUp
+* onActionDown
+* onActionLeft
+* onActionRight
+* onActionEnter
+* onActionBack
+* onActionMenu
+* onActionPlay
+* onActionRewind
+* onActionForward
 
 These are all actions the yetu remote control currently can produce except:
 
 * The home button, which is supposed to reload the whole homescreen.
 
 ![RemoteControl](https://github.com/yetu/yetu-tv-message-client/blob/master/yetu_remote.png)
+
+####Message Callback
+
+Furthermore there is one callback which allows you to handle messages from the tv experience.
+
+onReceiveMessage(data)
+
+*Arguments*
+
+field: first
+type: object
+description: data is an object, which contains the message as a field.
+
+For now there are two messages defined:
+
+* message = "notification arrived"
+* message = "notification closed"
+
+When the first message is sent, the tv experience displays an overlay for a incoming notification. Your app is
+in background then. If you play some content, you should stop playing it, when you receive this message.
 
 ###Operations
 

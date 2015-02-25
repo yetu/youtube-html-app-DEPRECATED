@@ -7,15 +7,6 @@ module.exports = function (config) {
 		// frameworks to use
 		frameworks: ['jasmine'],
 
-
-		// list of files / patterns to load in the browser
-		files: [
-			'bower_components/flyer/index.js',
-			'scripts/*.js',
-			'example/*.js',
-			'test/*.js'
-		],
-
 		preprocessors: {
 			'scripts/*.js': 'coverage'
 		},
