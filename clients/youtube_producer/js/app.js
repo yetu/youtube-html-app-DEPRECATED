@@ -7,8 +7,7 @@ var youtubeApp = angular.module('youtubeApp',
 		require('./yt_result').name,
 		require('./yt_search').name,
 		require('./yt_auth').name,
-		require('./yt_notification').name,
-                require('./cw_revealLabel').name,
+		require('./yt_notification').name
 	]);
 
 youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
@@ -48,12 +47,13 @@ youtubeApp.constant("SPECIALPURPOSE", {
 });
 
 youtubeApp.constant("YOUTUBEREQUESTS", {
-	maxResults: 1,
-	playlistItems:{
-		url: 'https://www.googleapis.com/youtube/v3/playlistItems',
-		part: 'snippet'
-	},
-	video: {
-		url: 'https://www.googleapis.com/youtube/v3/videos',
-		part:'snippet,contentDetails,statistics'
-	}
+    maxResults: 1,
+    playlistItems: {
+        url: 'https://www.googleapis.com/youtube/v3/playlistItems',
+        part: 'snippet'
+    },
+    video: {
+        url: 'https://www.googleapis.com/youtube/v3/videos',
+        part: 'snippet,contentDetails,statistics'
+    }
+});
