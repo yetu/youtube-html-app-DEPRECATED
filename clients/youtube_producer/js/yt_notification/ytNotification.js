@@ -2,24 +2,21 @@ module.exports = function($http, SERVERPATHS, SPECIALPURPOSE) {
 	'use strict';
 	//array object with possible payloads
 	var payloads = [{
+        headline: 'CamBot',
 		notification: {
-			title: 'CamBot',
 			subTitle: 'motion detected outside back window',
-			backgroundColor: 'rgba(0, 0, 0, 0.75)',
 			image: 'http://i4.mirror.co.uk/incoming/article141978.ece/alternates/s2197/burglar-trying-to-pry-open-window-on-house-pic-getty-images-123608196.jpg'
 		}
 	}, {
+        headline: 'WaterBot',
 		notification: {
-			title: 'WaterBot',
 			subTitle: 'basement water sensor activated',
-			backgroundColor: 'rgba(0, 0, 0, 0.75)',
 			image: 'http://www.smbywills.com/core/images/waterproofing/basement-flooding/flooded-basement-home-lg.jpg'
 		}
 	}, {
+        headline: 'DoorBot',
 		notification: {
-			title: 'DoorBot',
 			subTitle: 'doorbell activated',
-			backgroundColor: 'rgba(0, 0, 0, 0.75)',
 			image: 'http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2011/9/4/1315149322196/Man-at-front-door-007.jpg'
 		}
 	}];

@@ -1,9 +1,8 @@
 /**
- * Service to share the data for the opened detailed view between
- * Dashboard and Detail view.
- * @Class DetailService
+ * Service to load playlist data
+ * @Class informationService
  */
-module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
+module.exports = function ($http, ytv_dataGenerator, CONFIG, ytv_paramsService) {
     'use strict';
     var that = this;
     var defaultIndex = 0;
@@ -30,19 +29,12 @@ module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
     };
 
     this.getPlaylistId = function() {
-        var params = that.getParams();
+        var params =  ytv_paramsService.getParams();
         return params.playlistId;
     };
     
-    this.getParams = function(){
-        return location.search.split('\?').join('').split('\&').reduce(function(acc, pair){
-                                         var res= pair.split('=')
-                                         acc[res[0]] = res[1]
-                                         return acc
-                                         }, {})}
-    
     this.setPlaylistItemIndex = function(){
-        var params = that.getParams();
+        var params = ytv_paramsService.getParams();
         if(params.itemIndex){
             that.playlistItemIndex = parseInt(params.itemIndex)
         }

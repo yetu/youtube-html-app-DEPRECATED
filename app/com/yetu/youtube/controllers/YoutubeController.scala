@@ -14,7 +14,7 @@ import com.yetu.youtube.utils.ConfigLoader
 import com.yetu.youtube.utils.ConfigLoader.FrontendConfiguration
 import com.yetu.youtube.utils.ConfigLoader.Inbox._
 import com.yetu.youtube.views
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, Result}
 
@@ -45,33 +45,29 @@ class YoutubeController @Inject()(implicit val env: Environment[User, SessionAut
     val config = SimpleFrontendConfig(youtubeDeveloperToken = FrontendConfiguration.devToken)
     Ok(views.html.youtubeViewerLevel2TV(Json.toJson(config)))
   }
+  
+  def sendNotification(request: SecuredRequest[JsValue], eventName:String) = {
+    for {
+      info: Option[OAuth2Info] <- oauth2Dao.find(request.identity.loginInfo)
+      accessToken: String = info.map(_.accessToken).getOrElse("Invalid access token")
+      wsResponse <- InboxService.sendToInbox(request.body, accessToken, eventName)
+      response = wsResponseToPlayResponse(wsResponse)
+    } yield response
+    
+  }
 
   /**
    * Handles the "send to TV" request
    */
   def playlist = SecuredAction.async(parse.json) { implicit request =>
-
-    for {
-      info: Option[OAuth2Info] <- oauth2Dao.find(request.identity.loginInfo)
-      accessToken: String = info.map(_.accessToken).getOrElse("Invalid access token")
-      wsResponse <- InboxService.sendToInbox(request.body, accessToken, youtubeEventName)
-      response = wsResponseToPlayResponse(wsResponse)
-    } yield response
-
+    sendNotification(request,youtubeEventName)
   }
 
 	/**
    * Handles the "general notification" request, this will be moved to a separate application one day
    */
   def notification = SecuredAction.async(parse.json) { implicit request =>
-
-    for {
-      info: Option[OAuth2Info] <- oauth2Dao.find(request.identity.loginInfo)
-      accessToken: String = info.map(_.accessToken).getOrElse("Invalid access token")
-      wsResponse <- InboxService.sendToInbox(request.body, accessToken, notificationEventName)
-      response = wsResponseToPlayResponse(wsResponse)
-    } yield response
-
+    sendNotification(request,notificationEventName)
   }
 
   private def wsResponseToPlayResponse(response: WSResponse): Result = {

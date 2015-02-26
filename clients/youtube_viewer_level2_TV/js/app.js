@@ -27,8 +27,8 @@ youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvi
     $translateProvider.preferredLanguage('en');
 });
 
-youtubeViewerApp.run(function($location,$translate,ytv_informationService){
-    var params = ytv_informationService.getParams();
+youtubeViewerApp.run(function($location,$translate,ytv_paramsService){
+    var params = ytv_paramsService.getParams();
     if(params.lang){
         $translate.use(params.lang);
     }

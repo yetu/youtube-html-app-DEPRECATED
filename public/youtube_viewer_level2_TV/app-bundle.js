@@ -30,8 +30,8 @@ youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvi
     $translateProvider.preferredLanguage('en');
 });
 
-youtubeViewerApp.run(function($location,$translate,ytv_informationService){
-    var params = ytv_informationService.getParams();
+youtubeViewerApp.run(function($location,$translate,ytv_paramsService){
+    var params = ytv_paramsService.getParams();
     if(params.lang){
         $translate.use(params.lang);
     }
@@ -65,15 +65,16 @@ youtubeViewerApp.constant('i18n', {
 });
 
 
-},{"./mainTemplate.html":3,"./ytv_information":4,"./ytv_view":7}],3:[function(require,module,exports){
+},{"./mainTemplate.html":3,"./ytv_information":4,"./ytv_view":8}],3:[function(require,module,exports){
 module.exports = "<div class=\"detail-view-wrapper\"\n     ng-controller=\"ytv_MainController\">\n    <div ng-if=\"data\">\n        <div ytv-player\n             class=\"detail-view-content\">\n        </div>\n        <ytv-preview-overlay></ytv-preview-overlay>\n        <ytv-topbar></ytv-topbar>\n        <ytv-controlbar></ytv-controlbar>\n    </div>\n    <div ng-if=\"error\">\n        Error. No youtube data available.\n    </div>\n</div>";
 
 },{}],4:[function(require,module,exports){
 module.exports = angular.module('ytv_information',[])
     .service('ytv_informationService', require('./ytv_informationService'))
+    .service('ytv_paramsService', require('./ytv_paramsService'))
     .service('ytv_dataGenerator', require('./ytv_dataGenerator'));
 
-},{"./ytv_dataGenerator":5,"./ytv_informationService":6}],5:[function(require,module,exports){
+},{"./ytv_dataGenerator":5,"./ytv_informationService":6,"./ytv_paramsService":7}],5:[function(require,module,exports){
 module.exports = function ($q) {
     'use strict';
 
@@ -193,11 +194,10 @@ module.exports = function ($q) {
 }
 },{}],6:[function(require,module,exports){
 /**
- * Service to share the data for the opened detailed view between
- * Dashboard and Detail view.
- * @Class DetailService
+ * Service to load playlist data
+ * @Class informationService
  */
-module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
+module.exports = function ($http, ytv_dataGenerator, CONFIG, ytv_paramsService) {
     'use strict';
     var that = this;
     var defaultIndex = 0;
@@ -224,19 +224,12 @@ module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
     };
 
     this.getPlaylistId = function() {
-        var params = that.getParams();
+        var params =  ytv_paramsService.getParams();
         return params.playlistId;
     };
     
-    this.getParams = function(){
-        return location.search.split('\?').join('').split('\&').reduce(function(acc, pair){
-                                         var res= pair.split('=')
-                                         acc[res[0]] = res[1]
-                                         return acc
-                                         }, {})}
-    
     this.setPlaylistItemIndex = function(){
-        var params = that.getParams();
+        var params = ytv_paramsService.getParams();
         if(params.itemIndex){
             that.playlistItemIndex = parseInt(params.itemIndex)
         }
@@ -244,6 +237,18 @@ module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
 };
 
 },{}],7:[function(require,module,exports){
+module.exports = function () {
+    'use strict';
+    this.getParams = function(){
+        return location.search.split('\?').join('').split('\&').reduce(function(acc, pair){
+            var res= pair.split('=');
+            acc[res[0]] = res[1];
+            return acc
+        }, {})}
+
+};
+
+},{}],8:[function(require,module,exports){
 module.exports = angular.module('ytv_view', ['ytv_information', 'pascalprecht.translate'])
     .service('ytv_playerState', require('./ytv_playerState'))
     .controller('ytv_MainController', require('./ytv_mainController'))
@@ -254,7 +259,7 @@ module.exports = angular.module('ytv_view', ['ytv_information', 'pascalprecht.tr
     .filter('ytv_ControlbarTimeFilter', require('./ytv_controlbar/ytv_controlbarTimeFilter'))
 ;
 
-},{"./ytv_controlbar/ytv_controlbarDirective":8,"./ytv_controlbar/ytv_controlbarTimeFilter":10,"./ytv_mainController":11,"./ytv_player/ytv_playerDirective":12,"./ytv_playerState":14,"./ytv_preview/ytv_previewOverlayDirective":15,"./ytv_topbar/ytv_topbarDirective":17}],8:[function(require,module,exports){
+},{"./ytv_controlbar/ytv_controlbarDirective":9,"./ytv_controlbar/ytv_controlbarTimeFilter":11,"./ytv_mainController":12,"./ytv_player/ytv_playerDirective":13,"./ytv_playerState":15,"./ytv_preview/ytv_previewOverlayDirective":16,"./ytv_topbar/ytv_topbarDirective":18}],9:[function(require,module,exports){
 module.exports = function ($timeout, CONFIG, reactTo, ytv_playerState) {
     'use strict';
     return {
@@ -300,10 +305,10 @@ module.exports = function ($timeout, CONFIG, reactTo, ytv_playerState) {
         }
     }
 };
-},{"./ytv_controlbarTemplate.html":9}],9:[function(require,module,exports){
+},{"./ytv_controlbarTemplate.html":10}],10:[function(require,module,exports){
 module.exports = "<div class=\"controlbar-overlay-container\" style=\"transform: translate(0px, 400px);\" ng-style=\"{'transform': cbIsVisible ? 'translate(0px,0px)':'translate(0px, 400px)'}\">\n  <div class=\"controlbar-container\">\n    <div id=\"btn_rewind\" ng-class=\"{highlight: highlightRewind }\"></div>\n    <div id=\"btn_pause\" ng-show=\"info.isPlaying\"></div>\n    <div id=\"btn_play\" ng-show=\"!info.isPlaying\"></div>\n    <div id=\"btn_forward\" ng-class=\"{highlight: highlightForward }\"></div>\n\n    <div id=\"actTime\">{{info.actTime | ytv_ControlbarTimeFilter}}</div>\n    <progress id=\"progressbar\" max=\"100\" value=\"{{info.percentage}}\"></progress>\n    <div id=\"duration\">{{ info.duration | ytv_ControlbarTimeFilter }}</div>\n  </div>\n  <div class=\"controlbar-title\">\n    {{data.feed.entries[currentIndex].title}}\n  </div>\n</div>\n";
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function () {
 	'use strict';
 
@@ -324,7 +329,7 @@ module.exports = function () {
 	};
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * @class ytv_mainController
  */
@@ -361,7 +366,7 @@ module.exports = function (ytv_informationService, $scope, reactTo, CONFIG) {
 
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports =  function ($interval, CONFIG, reactTo, ytv_playerState) {
 		'use strict';
 		return {
@@ -549,17 +554,17 @@ module.exports =  function ($interval, CONFIG, reactTo, ytv_playerState) {
 		};
 	};
 
-},{"./ytv_playerTemplate.html":13}],13:[function(require,module,exports){
+},{"./ytv_playerTemplate.html":14}],14:[function(require,module,exports){
 module.exports = "<div id=\"player\"></div>";
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 module.exports = function () {
 	this.preview = false;
     this.toggleRewind = true;
     this.toggleForward = true;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function (ytv_playerState, ytv_informationService) {
     'use strict';
 
@@ -646,10 +651,10 @@ module.exports = function (ytv_playerState, ytv_informationService) {
     };
 };
 
-},{"./ytv_previewOverlayTemplate.html":16}],16:[function(require,module,exports){
+},{"./ytv_previewOverlayTemplate.html":17}],17:[function(require,module,exports){
 module.exports = "<div class=\"preview-overlay-container\" ng-if=\"show\">\n  <div class=\"preview-overlay-title\">{{data.name}}</div>\n  <div class=\"preview-grid-container\" ng-style=\"{'transform': translate}\">\n    <div ng-repeat=\"item in data.feed.entries\" class=\"preview-grid\"\n         ng-style=\"item.imageUrl && item.imageUrl !== '' && {'background-image':'url('+item.imageUrl+')', 'opacity' : selectedIndex===$index ? '1' : '0.3'}\">\n      <img ng-if=\"!item.imageUrl && data.logo\" class=\"preview-logo\" ng-src=\"{{data.logo}}\" alt=\"logo\">\n\n      <div class=\"preview-grid-content\" ng-if=\"!item.imageUrl\">\n        {{item.title}}\n      </div>\n    </div>\n  </div>\n  <div class=\"active-element\"></div>\n  <div class=\"active-element-title\">{{data.feed.entries[selectedIndex].title}}</div>\n</div>";
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = function () {
 	'use strict';
 	return {
@@ -668,7 +673,7 @@ module.exports = function () {
 	};
 };
 
-},{"./ytv_topbarTemplate.html":18}],18:[function(require,module,exports){
+},{"./ytv_topbarTemplate.html":19}],19:[function(require,module,exports){
 module.exports = "<div class=\"topbar-overlay-container\" style=\"transform: translate(0px, -200px);\" ng-style=\"{'transform': tbIsVisible ? 'translate(0px,0px)':'translate(0px, -200px)'}\">\n  <div class=\"topbar-title-container\">\n    <div class=\"topbar-title-typo-bold\">{{'TOPBAR_SIMILAR' | translate}}</div>\n    <div class=\"topbar-title-typo\">{{'TOPBAR_WATCH_LATER' | translate}}</div>\n    <div class=\"topbar-title-typo\">{{'TOPBAR_SHARE' | translate}}</div>\n    <div class=\"topbar-menu-icon\"></div>\n  </div>\n</div>\n";
 
 },{}]},{},[1])
