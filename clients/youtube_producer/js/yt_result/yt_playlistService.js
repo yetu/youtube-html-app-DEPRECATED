@@ -106,7 +106,7 @@ module.exports = function ($http, $location, $translate, SERVERPATHS, YOUTUBEREQ
 				videoItem = parseYtVideoData(vData);
 
 				$translate(['COMMIT_BUTTON_LABEL']).then(function (translations) {
-					var url = $location.host() + ":" + $location.port();
+					var url =  $location.protocol() + '://' + $location.host() + ":" + $location.port();
 					var playlist = {
 						action:{
 							url: url + SERVERPATHS.level2Url,
