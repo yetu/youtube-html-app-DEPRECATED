@@ -12,15 +12,12 @@ youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvi
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode(false);
 
 	$routeProvider
 		.when('/', {
 			template: require('./mainTemplate.html')
 		})
-		.otherwise({
-			redirectTo: '/'
-		});
 
     //initialize the $translateProvider with all languages including their strings that are in i18n config file
     for(var i=0; i<i18n.languagesAvailable.length; i++){
@@ -30,8 +27,8 @@ youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvi
     $translateProvider.preferredLanguage('en');
 });
 
-youtubeViewerApp.run(function($location,$translate){
-    var params = $location.search();
+youtubeViewerApp.run(function($location,$translate,ytv_informationService){
+    var params = ytv_informationService.getParams();
     if(params.lang){
         $translate.use(params.lang);
     }

@@ -15,15 +15,12 @@ youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvi
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode(false);
 
 	$routeProvider
 		.when('/', {
 			template: require('./mainTemplate.html')
 		})
-		.otherwise({
-			redirectTo: '/'
-		});
 
     //initialize the $translateProvider with all languages including their strings that are in i18n config file
     for(var i=0; i<i18n.languagesAvailable.length; i++){
@@ -33,8 +30,8 @@ youtubeViewerApp.config(function ($routeProvider, $translateProvider, $httpProvi
     $translateProvider.preferredLanguage('en');
 });
 
-youtubeViewerApp.run(function($location,$translate){
-    var params = $location.search();
+youtubeViewerApp.run(function($location,$translate,ytv_informationService){
+    var params = ytv_informationService.getParams();
     if(params.lang){
         $translate.use(params.lang);
     }
@@ -227,12 +224,19 @@ module.exports = function ($http, ytv_dataGenerator, CONFIG, $location) {
     };
 
     this.getPlaylistId = function() {
-        var params = $location.search();
+        var params = that.getParams();
         return params.playlistId;
     };
     
+    this.getParams = function(){
+        return location.search.split('\?').join('').split('\&').reduce(function(acc, pair){
+                                         var res= pair.split('=')
+                                         acc[res[0]] = res[1]
+                                         return acc
+                                         }, {})}
+    
     this.setPlaylistItemIndex = function(){
-        var params = $location.search();
+        var params = that.getParams();
         if(params.itemIndex){
             that.playlistItemIndex = parseInt(params.itemIndex)
         }
