@@ -14,7 +14,7 @@ class InboxServiceSpec extends BaseSpec {
   "InboxService" must {
     "send Message to Inbox and receives OK" in {
 
-      val responseFuture = InboxService.sendToInbox(jsonDummyValue, fakeValidJWTAccessToken)
+      val responseFuture = InboxService.sendToInbox(jsonDummyValue, fakeValidJWTAccessToken, "stream")
 
       whenReady(responseFuture){
         (x:WSResponse) =>
@@ -27,7 +27,7 @@ class InboxServiceSpec extends BaseSpec {
 
     "send Message with invalid access token to Inbox and receives 401" in {
 
-      val responseFuture = InboxService.sendToInbox(jsonDummyValue, "invalid_access_token")
+      val responseFuture = InboxService.sendToInbox(jsonDummyValue, "invalid_access_token", "stream")
 
       whenReady(responseFuture){
         (x:WSResponse) =>
