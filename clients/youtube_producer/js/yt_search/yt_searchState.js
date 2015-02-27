@@ -127,7 +127,7 @@ module.exports = function ($location, $http) {
 		}).success(function(data){
 			fillResultList(data);
 		}).error(function(data){
-			console.log("error happening on .setSearchResult:", data);
+			console.error("error happening on .setSearchResult:", data);
 		});
 
 	};
