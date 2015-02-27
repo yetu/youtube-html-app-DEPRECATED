@@ -135,10 +135,10 @@ module.exports = function ($http, $location, $translate, SERVERPATHS, YOUTUBEREQ
 				});
 
 			}).error(function(data){
-				alert(data);
+                console.log("error happening on getYtVideo: ", data);
 			});
 		}).error(function(data){
-			alert(data);
+            console.log("error happening on getYtPlaylistItems: ", data);
 		});
 	};
 };
