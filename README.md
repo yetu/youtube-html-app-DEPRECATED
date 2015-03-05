@@ -104,3 +104,4 @@ Currently please contact dev-support@yetu.com to obtain OAuth2 credentials.
 For more information on how to develop yetu apps, please see [this page](https://github.com/yetu/app-development-workflow/wiki/How-to-develop-Apps-for-the-yetu-platform%3F)
 
 You also have to obtain a youtube developer token, please refer to the official youtube documentation for this.
+
