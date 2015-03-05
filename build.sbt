@@ -4,8 +4,6 @@ scalaVersion := "2.11.4"
 
 name := """youtube-html-app"""
 
-version := "2.0-SNAPSHOT"
-
 resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
 resolvers += Resolver.sonatypeRepo("snapshots")
