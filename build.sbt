@@ -2,7 +2,9 @@ import play.PlayScala
 
 scalaVersion := "2.11.4"
 
-name := """youtube-html-app"""
+name := """youtube"""
+
+organization := """com.yetu"""
 
 resolvers := ("Atlassian Releases" at "https://maven.atlassian.com/public/") +: resolvers.value
 
