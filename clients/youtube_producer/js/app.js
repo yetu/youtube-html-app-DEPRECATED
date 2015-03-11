@@ -10,7 +10,7 @@ var youtubeApp = angular.module('youtubeApp',
 		require('./yt_notification').name
 	]);
 
-youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpProvider, $locationProvider) {
+youtubeApp.config(function ($routeProvider, $translateProvider, $httpProvider, $locationProvider, i18n) {
 	$httpProvider.defaults.useXDomain = true;
 	delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
@@ -24,12 +24,19 @@ youtubeApp.config(function ($provide, $routeProvider, $translateProvider, $httpP
 			redirectTo: '/'
 		});
 
-	$translateProvider.translations('en', {
-		COMMIT_BUTTON_LABEL: 'Play'
-	});
+	//initialize the $translateProvider with all languages including their strings that are in i18n config file
+    for(var i=0; i<i18n.languagesAvailable.length; i++){
+        var language = i18n.languagesAvailable[i];
+        $translateProvider.translations(language, i18n.languages[language]);
+    };
+    $translateProvider.preferredLanguage('en');
+});
 
-	$translateProvider.preferredLanguage('en');
-
+youtubeApp.run(function($location,$translate){
+    var params = $location.search();
+    if(params.lang){
+        $translate.use(params.lang);
+    }
 });
 
 youtubeApp.constant("SERVERPATHS", {
@@ -55,5 +62,16 @@ youtubeApp.constant("YOUTUBEREQUESTS", {
     video: {
         url: 'https://www.googleapis.com/youtube/v3/videos',
         part: 'snippet,contentDetails,statistics'
+    }
+});
+youtubeApp.constant('i18n', {
+    languagesAvailable: ['en', 'de'],
+    languages: {
+        en:{
+            COMMIT_BUTTON_LABEL: 'Play'
+        },
+        de:{
+            COMMIT_BUTTON_LABEL: 'Abspielen'
+        }
     }
 });
