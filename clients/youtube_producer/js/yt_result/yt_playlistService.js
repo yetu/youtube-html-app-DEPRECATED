@@ -116,7 +116,7 @@ module.exports = function ($http, $location, $translate, SERVERPATHS, YOUTUBEREQ
 								itemIndex: 0
 							},
 							button:{
-								icon: SERVERPATHS.imageUrl + "notification_play.svg",
+								icon: url + SERVERPATHS.imageUrl + "notification_play.svg",
 								label: translations.COMMIT_BUTTON_LABEL
 							}
 						},
