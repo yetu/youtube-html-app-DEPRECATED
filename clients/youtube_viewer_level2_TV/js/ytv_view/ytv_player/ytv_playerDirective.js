@@ -30,13 +30,21 @@ module.exports = function($interval, CONFIG, reactTo, ytv_playerState) {
 				}
 			};
 
-			var onStateChange = function(event) {
+			var forceResolution = function(event){
 				var actualPlaybackQuality = event.target.getPlaybackQuality();
 				var idealQuality = 'hd720';
 
 				if (actualPlaybackQuality !== idealQuality) {
 					event.target.setPlaybackQuality(idealQuality);
 				}
+			};
+
+			var onReady = function(event){
+				forceResolution(event);
+			};
+
+			var onStateChange = function(event) {
+				forceResolution(event);
 				if (typeof player === 'undefined' || player === null || scope.info.isYoutube === false) {
 					return;
 				}
@@ -111,7 +119,8 @@ module.exports = function($interval, CONFIG, reactTo, ytv_playerState) {
 						},
 						videoId: scope.data.feed.entries[scope.currentIndex].videourl,
 						events: {
-							'onStateChange': onStateChange
+							'onStateChange': onStateChange,
+							'onReady': onReady
 						}
 					});
 				}
