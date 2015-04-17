@@ -1,5 +1,6 @@
 {
   "label": "YouTube",
+  "description": "YouTube on yetu TV: allowing you to watch your favorite videos on the best screen in your house.",
   "backgroundColor": "#C4110B",
   "controlsType": "form",
   "tileType": "app",
