@@ -673,20 +673,20 @@ module.exports = function (ytv_playerState, ytv_informationService) {
 module.exports = "<div class=\"preview-overlay-container\" ng-if=\"show\">\n  <div class=\"preview-overlay-title\">{{data.name}}</div>\n  <div class=\"preview-grid-container\" ng-style=\"{'transform': translate}\">\n    <div ng-repeat=\"item in data.feed.entries\" class=\"preview-grid\"\n         ng-style=\"item.imageUrl && item.imageUrl !== '' && {'background-image':'url('+item.imageUrl+')', 'opacity' : selectedIndex===$index ? '1' : '0.3'}\">\n      <img ng-if=\"!item.imageUrl && data.logo\" class=\"preview-logo\" ng-src=\"{{data.logo}}\" alt=\"logo\">\n\n      <div class=\"preview-grid-content\" ng-if=\"!item.imageUrl\">\n        {{item.title}}\n      </div>\n    </div>\n  </div>\n  <div class=\"active-element\"></div>\n  <div class=\"active-element-title\">{{data.feed.entries[selectedIndex].title}}</div>\n</div>";
 
 },{}],18:[function(require,module,exports){
-module.exports = function () {
+module.exports = function() {
 	'use strict';
 	return {
 		restrict: 'E',
 		template: require('./ytv_topbarTemplate.html'),
-		link: function (scope, element, attrs) {
+		link: function(scope, element, attrs) {
 			scope.tbIsVisible = false;
-            if(yetu){
-            	yetu.onActionUp = function(){
-                        scope.$apply(function () {
-						scope.tbIsVisible = !scope.tbIsVisible;
-					})
-			    }
-			}
+//			if (yetu) {
+//				yetu.onActionUp = function() {
+//					scope.$apply(function() {
+//						scope.tbIsVisible = !scope.tbIsVisible;
+//					})
+//				}
+//			}
 		}
 	};
 };
