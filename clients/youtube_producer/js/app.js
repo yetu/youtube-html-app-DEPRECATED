@@ -6,7 +6,6 @@ var youtubeApp = angular.module('youtubeApp',
 		'reactTo',
 		require('./yt_result').name,
 		require('./yt_search').name,
-		require('./yt_auth').name,
 		require('./yt_notification').name
 	]);
 
