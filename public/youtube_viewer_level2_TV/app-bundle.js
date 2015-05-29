@@ -43,7 +43,7 @@ youtubeViewerApp.constant('CONFIG',{
         FAST_FORWARD: 20,
         FAST_REWIND: -20
     },
-    SUGGESTED_QUALITY: 'highres',
+    SUGGESTED_QUALITY: 'small',
     playlistMaxItemCount: 20,
     pathToLogo: '/assets/appMetaData/assets/logo.svg'
 });
@@ -401,7 +401,7 @@ module.exports = function($interval, CONFIG, reactTo, ytv_playerState) {
 
 			var forceResolution = function(event){
 				var actualPlaybackQuality = event.target.getPlaybackQuality();
-				var idealQuality = 'small';
+				var idealQuality = CONFIG.SUGGESTED_QUALITY;
 
 				if (actualPlaybackQuality !== idealQuality) {
 					event.target.setPlaybackQuality(idealQuality);

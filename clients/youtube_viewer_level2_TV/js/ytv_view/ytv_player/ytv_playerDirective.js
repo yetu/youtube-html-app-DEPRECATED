@@ -32,7 +32,7 @@ module.exports = function($interval, CONFIG, reactTo, ytv_playerState) {
 
 			var forceResolution = function(event){
 				var actualPlaybackQuality = event.target.getPlaybackQuality();
-				var idealQuality = 'small';
+				var idealQuality = CONFIG.SUGGESTED_QUALITY;
 
 				if (actualPlaybackQuality !== idealQuality) {
 					event.target.setPlaybackQuality(idealQuality);
