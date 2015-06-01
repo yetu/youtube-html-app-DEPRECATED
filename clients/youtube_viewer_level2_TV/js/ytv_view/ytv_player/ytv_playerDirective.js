@@ -110,8 +110,6 @@ module.exports = function($interval, CONFIG, reactTo, ytv_playerState) {
 			var loadPlayerAndVideo = function() {
 				if (typeof player === 'undefined' || player === null) {
 					player = new YT.Player('player', {
-						height: '1080',
-						width: '1920',
 						playerVars: {
 							'autoplay': 1,
 							'controls': 0,
