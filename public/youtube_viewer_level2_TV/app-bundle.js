@@ -409,11 +409,11 @@ module.exports = function($interval, CONFIG, reactTo, ytv_playerState) {
 			};
 
 			var onReady = function(event){
-				forceResolution(event);
+//				forceResolution(event);
 			};
 
 			var onStateChange = function(event) {
-				forceResolution(event);
+//				forceResolution(event);
 				if (typeof player === 'undefined' || player === null || scope.info.isYoutube === false) {
 					return;
 				}
@@ -490,9 +490,18 @@ module.exports = function($interval, CONFIG, reactTo, ytv_playerState) {
 							'onReady': onReady
 						}
 					});
+					var playerWidth = document.getElementById('player').width;
+					var fullHdWidth = 1920;
+					var scaleFactor = fullHdWidth/playerWidth;
+
+					if (scaleFactor !== 1){
+						document.getElementById('player').style.transform = 'scale('+ scaleFactor +')';
+					} else {
+						document.getElementById('player').style.transform = '';
+					}
 				}
 				if (player.getVideoUrl && player.getVideoUrl().indexOf(scope.data.feed.entries[scope.currentIndex].videourl) === -1) {
-					player.loadVideoById(scope.data.feed.entries[scope.currentIndex].videourl, 0, CONFIG.SUGGESTED_QUALITY);
+					player.loadVideoById(scope.data.feed.entries[scope.currentIndex].videourl, 0);
 				} else if (player.getPlayerState && player.getPlayerState() !== YT.PlayerState.PLAYING) {
 					player.playVideo();
 				}

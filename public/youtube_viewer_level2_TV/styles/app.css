@@ -23,8 +23,9 @@ body {
   overflow: hidden;
 }
 #player {
-  width: 1920px;
-  height: 1080px;
+  -webkit-transform-origin: top left;
+  -ms-transform-origin: top left;
+  transform-origin: top left;
 }
 .topbar-overlay-container {
   width: 1920px;
@@ -146,8 +147,9 @@ controlbar {
   width: 700px;
   text-align: center;
 }
-controlbar {
-  position: fixed;
+ytv-controlbar {
+  position: absolute;
+  top: 1080px;
 }
 .controlbar-overlay-container {
   width: 1920px;
